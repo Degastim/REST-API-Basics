@@ -4,6 +4,7 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.sql.GiftCertificateSql;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.ResourceNotAddedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -47,7 +49,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             return preparedStatement;
         }, keyHolder);
         if (keyHolder.getKey() == null) {
-            throw new ResourceNotAddedException("GiftCertificate not Add.No KeyHolder");
+            throw new ResourceNotAddedException("GiftCertificate not Add.No KeyHolder", ExceptionCauseCode.GIFT_CERTIFICATE);
         }
         return keyHolder.getKey().longValue();
     }
@@ -64,14 +66,12 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void update(GiftCertificate giftCertificate) {
-        jdbcTemplate.update(GiftCertificateSql.UPDATE_BY_ID, giftCertificate.getName(), giftCertificate.getDescription(),
-                giftCertificate.getPrice(), giftCertificate.getDuration(), giftCertificate.getLastUpdateDate(),
-                giftCertificate.getId());
+    public void executeSqlUpdate(StringBuilder sql) {
+        jdbcTemplate.update(sql.toString());
     }
 
     @Override
-    public List<GiftCertificate> executeSql(StringBuilder sql) {
+    public List<GiftCertificate> executeSqlSelect(StringBuilder sql) {
         return jdbcTemplate.query(sql.toString(), mapper);
     }
 
@@ -81,8 +81,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public Optional<GiftCertificate> findByName(String name) {
-        List<GiftCertificate> giftCertificateList = jdbcTemplate.query(GiftCertificateSql.FIND_BY_NAME, mapper, name);
+    public Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description, BigDecimal price, Integer duration) {
+        List<GiftCertificate> giftCertificateList = jdbcTemplate.query(GiftCertificateSql.FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION, mapper, name, description, price, duration);
         return returnGiftCertificate(giftCertificateList);
     }
 

@@ -2,6 +2,7 @@ package com.epam.esm.dao;
 
 import com.epam.esm.entity.GiftCertificate;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,18 +35,18 @@ public interface GiftCertificateDao {
     Optional<GiftCertificate> findById(long id);
 
     /**
-     * Updates the gift certificate.
-     *
-     * @param giftCertificate new object.
-     */
-    void update(GiftCertificate giftCertificate);
-
-    /**
-     * Execute custom sql command.
+     * Execute custom sql update command.
      *
      * @param sql contains sql command.
      */
-    List<GiftCertificate> executeSql(StringBuilder sql);
+    void executeSqlUpdate(StringBuilder sql);
+
+    /**
+     * Execute custom sql select command.
+     *
+     * @param sql contains sql command.
+     */
+    List<GiftCertificate> executeSqlSelect(StringBuilder sql);
 
     /**
      * Finds all the certificates.
@@ -55,10 +56,14 @@ public interface GiftCertificateDao {
     List<GiftCertificate> findAll();
 
     /**
-     * Finds the certificate by its name.
+     * Finds the certificate by its name,description,price,duration.
      *
-     * @param name of the object to be found.
+     * @param name        of the object to be found.
+     * @param description of the object to be found.
+     * @param price       of the object to be found.
+     * @param duration    of the object to be found
      * @return optional object with found certificate.
      */
-    Optional<GiftCertificate> findByName(String name);
+    Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description,
+                                                                          BigDecimal price, Integer duration);
 }

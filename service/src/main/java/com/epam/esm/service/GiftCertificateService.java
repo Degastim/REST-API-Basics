@@ -51,5 +51,7 @@ public interface GiftCertificateService {
      * @param sortByLastUpdateDate           the sort param by create date.
      * @return list with found items.
      */
-    List<GiftCertificate> findGiftCertificateByIdWithTagsAndParams(String tagName, String partGiftCertificateName, String partGiftCertificateDescription, String sortByName, String sortByCreateDate, String sortByLastUpdateDate);
+    List<GiftCertificate> findGiftCertificateByIdWithTagsAndParams(String tagName, String partGiftCertificateName,
+                                                                   String partGiftCertificateDescription, String sortByName,
+                                                                   String sortByCreateDate, String sortByLastUpdateDate);
 }

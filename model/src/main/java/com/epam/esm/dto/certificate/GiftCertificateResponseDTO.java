@@ -1,16 +1,13 @@
-package com.epam.esm.entity;
+package com.epam.esm.dto.certificate;
+
+import com.epam.esm.entity.Tag;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Entity of a gift certificate.
- *
- * @author Yauheni Tsitou
- */
-public class GiftCertificate {
+public class GiftCertificateResponseDTO {
     private long id;
     private String name;
     private String description;
@@ -20,10 +17,7 @@ public class GiftCertificate {
     private LocalDateTime lastUpdateDate;
     private List<Tag> tags;
 
-    public GiftCertificate() {
-    }
-
-    public GiftCertificate(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
+    public GiftCertificateResponseDTO(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -31,14 +25,6 @@ public class GiftCertificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
-
-    public GiftCertificate(String name, String description, BigDecimal price, Integer duration, List<Tag> tags) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
         this.tags = tags;
     }
 
@@ -114,7 +100,7 @@ public class GiftCertificate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GiftCertificate that = (GiftCertificate) o;
+        GiftCertificateResponseDTO that = (GiftCertificateResponseDTO) o;
         if (id != that.id) {
             return false;
         }

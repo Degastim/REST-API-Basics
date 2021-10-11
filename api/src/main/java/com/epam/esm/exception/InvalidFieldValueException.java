@@ -1,27 +1,27 @@
 package com.epam.esm.exception;
 
 /**
- * Custom ResourceNotAdded exception.
+ * Custom InvalidFieldValue exception.
  *
  * @author Yauheni Tsitov
  */
-public class ResourceNotAddedException extends RuntimeException {
+public class InvalidFieldValueException extends RuntimeException {
     private final int codeExceptionCause;
 
     /**
-     * Construct a new ResourceNotAddedException with message.
+     * Construct a new InvalidFieldValueException with message.
      *
      * @param message the message
      */
-    public ResourceNotAddedException(String message, int codeExceptionCause) {
+    public InvalidFieldValueException(String message, int codeExceptionCause) {
         super(message);
         this.codeExceptionCause = codeExceptionCause;
     }
 
     /**
-     * Get code exceotion cause
+     * Return code exception cause.
      *
-     * @return int code
+     * @return code exception cause.
      */
     public int getCodeExceptionCause() {
         return codeExceptionCause;

@@ -1,4 +1,6 @@
-package com.epam.esm.entity;
+package com.epam.esm.dto.certificate;
+
+import com.epam.esm.entity.Tag;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -6,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Entity of a gift certificate.
+ * Entity of a gift certificate for request and response.
  *
  * @author Yauheni Tsitou
  */
-public class GiftCertificate {
+public class GiftCertificateDTO {
     private long id;
     private String name;
     private String description;
@@ -19,28 +21,6 @@ public class GiftCertificate {
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
     private List<Tag> tags;
-
-    public GiftCertificate() {
-    }
-
-    public GiftCertificate(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
-
-    public GiftCertificate(String name, String description, BigDecimal price, Integer duration, List<Tag> tags) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.tags = tags;
-    }
 
     public long getId() {
         return id;
@@ -114,10 +94,7 @@ public class GiftCertificate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GiftCertificate that = (GiftCertificate) o;
-        if (id != that.id) {
-            return false;
-        }
+        GiftCertificateDTO that = (GiftCertificateDTO) o;
         if (tags != null ? !tags.equals(that.tags) : that.tags == null) {
             return false;
         }
@@ -125,6 +102,9 @@ public class GiftCertificate {
             return false;
         }
         if (description != null ? !description.equals(that.description) : that.description != null) {
+            return false;
+        }
+        if (duration != null ? !duration.equals(that.duration) : that.duration != null) {
             return false;
         }
         if (price != null ? !price.equals(that.price) : that.price != null) {
@@ -136,7 +116,7 @@ public class GiftCertificate {
         if (lastUpdateDate != null ? !lastUpdateDate.equals(that.lastUpdateDate) : that.lastUpdateDate != null) {
             return false;
         }
-        return duration != null ? duration.equals(that.duration) : that.duration == null;
+        return id == that.id;
     }
 
     @Override
@@ -150,5 +130,20 @@ public class GiftCertificate {
         result = result + 11 * (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = result + 13 * (tags != null ? tags.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GiftCertificateDTO{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", price=").append(price);
+        sb.append(", duration=").append(duration);
+        sb.append(", createDate=").append(createDate);
+        sb.append(", lastUpdateDate=").append(lastUpdateDate);
+        sb.append(", tags=").append(tags);
+        sb.append('}');
+        return sb.toString();
     }
 }

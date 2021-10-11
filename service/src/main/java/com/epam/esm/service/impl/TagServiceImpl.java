@@ -3,10 +3,10 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificatesTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.InvalidFieldValueException;
+import com.epam.esm.error.ExceptionCauseCode;
+import com.epam.esm.exception.ResourceAlreadyExistException;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,28 +32,21 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> findAll() {
-        List<Tag> tagList = tagDao.findAll();
-        if (tagList.size() != 0) {
-            return tagList;
-        } else {
-            throw new ResourceNotFoundedException("Requested resource not found (All)");
-        }
+        return tagDao.findAll();
     }
 
     @Override
     @Transactional
     public void add(Tag tag) {
         String tagName = tag.getName();
-        Optional<Tag> daoTag = tagDao.findByName(tagName);
-        if (daoTag.isPresent()) {
-            throw new InvalidFieldValueException("There is already a tag with the same name.");
+        long tadId = tag.getId();
+        if (tadId != 0 && tagDao.findById(tadId).isPresent()) {
+            throw new ResourceAlreadyExistException("There is already a tag with the same id.", ExceptionCauseCode.TAG);
         }
-        if (TagValidator.isNameValid(tagName)) {
-            tagDao.add(tag);
-        } else {
-            throw new InvalidFieldValueException("Invalid tag name.");
+        if (tagDao.findByName(tagName).isPresent()) {
+            throw new ResourceAlreadyExistException("There is already a tag with the same name.", ExceptionCauseCode.TAG);
         }
-
+        tagDao.add(tag);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class TagServiceImpl implements TagService {
         if (tagOptional.isPresent()) {
             return tagOptional.get();
         } else {
-            throw new ResourceNotFoundedException("Requested resource not found (id)=" + id);
+            throw new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG);
         }
     }
 
@@ -74,7 +67,7 @@ public class TagServiceImpl implements TagService {
             giftCertificatesTagDao.deleteByTagId(id);
             tagDao.delete(id);
         } else {
-            throw new ResourceNotFoundedException("Requested resource not found (id)=" + id);
+            throw new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG);
         }
     }
 }

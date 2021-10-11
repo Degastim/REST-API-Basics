@@ -1,24 +1,13 @@
-package com.epam.esm.entity;
+package com.epam.esm.dto.tag;
 
-/**
- * Entity of a tag.
- *
- * @author Yauheni Tsitou
- */
-public class Tag {
+public class TagResponseDTO {
+
     private long id;
     private String name;
 
-    public Tag(long id, String name) {
+    public TagResponseDTO(long id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public Tag(String name) {
-        this.name = name;
-    }
-
-    public Tag() {
     }
 
     public long getId() {
@@ -45,7 +34,7 @@ public class Tag {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Tag tag = (Tag) o;
+        TagResponseDTO tag = (TagResponseDTO) o;
         if (id != tag.id) {
             return false;
         }

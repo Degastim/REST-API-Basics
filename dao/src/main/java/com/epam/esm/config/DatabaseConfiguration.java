@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class DatabaseConfiguration {
     private static final String DATABASE_PROPERTY_FILE_PATH = "/databaseConfig.properties";
-    private static final String CREATE_DATABASE_SCRIPT = "classpath:script/database.sql";
+    private static final String CREATE_DATABASE_SCRIPT = "script/database.sql";
     private static final String INSERT_DATA_SQL = "script/data_insertion.sql";
 
     /**

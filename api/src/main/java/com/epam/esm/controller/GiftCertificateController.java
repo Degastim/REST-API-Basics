@@ -1,14 +1,23 @@
 package com.epam.esm.controller;
 
 
+import com.epam.esm.dto.certificate.GiftCertificateCreationDTO;
+import com.epam.esm.dto.certificate.GiftCertificateDTO;
+import com.epam.esm.dto.certificate.GiftCertificateResponseDTO;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.mapper.certificate.GiftCertificateCreationDTOMapper;
+import com.epam.esm.mapper.certificate.GiftCertificateDTOMapper;
+import com.epam.esm.mapper.certificate.GiftCertificateResponseDTOMapper;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.validator.GiftCertificateCreationDTOValidator;
+import com.epam.esm.validator.GiftCertificateDTOValidator;
+import com.epam.esm.validator.ParamValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Gift certificates controller class.
@@ -19,13 +28,22 @@ import java.util.List;
 @RequestMapping("/certificates")
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateCreationDTOMapper giftCertificateCreationDTOMapper;
+    private final GiftCertificateDTOMapper giftCertificateDTOMapper;
+    private final GiftCertificateResponseDTOMapper giftCertificateResponseDTOMapper;
 
     /**
      * Init the gift certificates controller class.
      */
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService,
+                                     GiftCertificateCreationDTOMapper giftCertificateCreationDTOMapper,
+                                     GiftCertificateDTOMapper giftCertificateDTOMapper,
+                                     GiftCertificateResponseDTOMapper giftCertificateResponseDTOMapper) {
         this.giftCertificateService = giftCertificateService;
+        this.giftCertificateCreationDTOMapper = giftCertificateCreationDTOMapper;
+        this.giftCertificateDTOMapper = giftCertificateDTOMapper;
+        this.giftCertificateResponseDTOMapper = giftCertificateResponseDTOMapper;
     }
 
     /**
@@ -40,25 +58,30 @@ public class GiftCertificateController {
      * @return list with found items.
      */
     @GetMapping
-    public List<GiftCertificate> findGiftCertificates(@RequestParam(required = false) String tagName,
-                                                      @RequestParam(required = false) String partGiftCertificateName,
-                                                      @RequestParam(required = false) String partGiftCertificateDescription,
-                                                      @RequestParam(required = false) String sortByName,
-                                                      @RequestParam(required = false) String sortByCreateDate,
-                                                      @RequestParam(required = false) String sortByLastUpdateDate) {
-        return giftCertificateService.findGiftCertificateByIdWithTagsAndParams(tagName, partGiftCertificateName, partGiftCertificateDescription, sortByName, sortByCreateDate, sortByLastUpdateDate);
+    public List<GiftCertificateResponseDTO> findGiftCertificates(@RequestParam(required = false) String tagName,
+                                                                 @RequestParam(required = false) String partGiftCertificateName,
+                                                                 @RequestParam(required = false) String partGiftCertificateDescription,
+                                                                 @RequestParam(required = false) String sortByName,
+                                                                 @RequestParam(required = false) String sortByCreateDate,
+                                                                 @RequestParam(required = false) String sortByLastUpdateDate) {
+        ParamValidator.isParamValid(tagName,partGiftCertificateName,partGiftCertificateDescription,sortByName,
+                sortByCreateDate,sortByLastUpdateDate);
+        return giftCertificateService.findGiftCertificateByIdWithTagsAndParams(tagName, partGiftCertificateName,
+                        partGiftCertificateDescription, sortByName, sortByCreateDate, sortByLastUpdateDate).stream().
+                map(giftCertificateResponseDTOMapper::toDto).collect(Collectors.toList());
     }
 
     /**
      * Create a new gift certificate;
      *
-     * @param giftCertificate an object to be created
-     * @return ResponseEntity object with response status and some information about creating.
+     * @param giftCertificateCreationDTO an object that contain object request
      */
     @PostMapping
-    public ResponseEntity<String> addGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addGiftCertificate(@RequestBody GiftCertificateCreationDTO giftCertificateCreationDTO) {
+        GiftCertificateCreationDTOValidator.isGiftCertificateCreationDTOValid(giftCertificateCreationDTO);
+        GiftCertificate giftCertificate = giftCertificateCreationDTOMapper.toGiftCertificate(giftCertificateCreationDTO);
         giftCertificateService.add(giftCertificate);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Gift certificate added successfully");
     }
 
     /**
@@ -68,31 +91,32 @@ public class GiftCertificateController {
      * @return found gift certificate object.
      */
     @GetMapping("/{id}")
-    public GiftCertificate findGiftCertificateById(@PathVariable long id) {
-        return giftCertificateService.findById(id);
+    public GiftCertificateResponseDTO findGiftCertificateById(@PathVariable long id) {
+        GiftCertificate giftCertificate = giftCertificateService.findById(id);
+        return giftCertificateResponseDTOMapper.toDto(giftCertificate);
     }
 
     /**
      * Deletes gift certificate.
      *
      * @param id the id of gift certificate to be deleted.
-     * @return Response entity with removal information.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteGiftCertificateByID(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGiftCertificateByID(@PathVariable long id) {
         giftCertificateService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Gift certificate deleted successfully");
     }
 
     /**
      * Updates gift certificate.
      *
      * @param id the id of gift certificate to be updated.
-     * @return Response entity with updating information.
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateGiftCertificate(@PathVariable long id, @RequestBody GiftCertificate newGiftCertificate) {
-        giftCertificateService.update(id, newGiftCertificate);
-        return ResponseEntity.status(HttpStatus.OK).body("Gift certificate updated successfully");
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateGiftCertificate(@PathVariable long id,
+                                      @RequestBody GiftCertificateDTO giftCertificateDTO) {
+        GiftCertificateDTOValidator.isGiftCertificateDTOValid(giftCertificateDTO);
+        giftCertificateService.update(id, giftCertificateDTOMapper.toGiftCertificate(giftCertificateDTO));
     }
 }

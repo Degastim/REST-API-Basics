@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificatesTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.ResourceAlreadyExistException;
 import com.epam.esm.service.TagService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagServiceImplTest {
@@ -45,7 +46,7 @@ class TagServiceImplTest {
     @Test
     void add() {
         Mockito.when(tagDao.findByName(tag.getName())).thenReturn(Optional.empty());
-        assertDoesNotThrow(() -> service.add(tag));
+        assertThrows(ResourceAlreadyExistException.class, () -> service.add(tag));
     }
 
     @Test

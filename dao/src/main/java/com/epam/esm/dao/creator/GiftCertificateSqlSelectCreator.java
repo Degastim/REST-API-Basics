@@ -1,12 +1,15 @@
 package com.epam.esm.dao.creator;
 
 /**
- * The Sql query creator.
+ * The Sql select query creator.
  *
  * @author Yauheni Tstiov
  */
-public class SqlCreator {
-    private final StringBuilder sql = new StringBuilder("SELECT gift_certificates.*,tags.* FROM gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id");
+public class GiftCertificateSqlSelectCreator {
+    private final StringBuilder sql = new StringBuilder("SELECT gift_certificates.*,tags.* FROM gift_certificates ")
+            .append("LEFT JOIN gift_certificates_tags ")
+            .append("ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id ")
+            .append("LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id ");
     private boolean hasCondition = false;
     private boolean hasOrderBy = false;
     private static final String LIKE_SQL = "LIKE";
@@ -27,7 +30,8 @@ public class SqlCreator {
      */
     public void addWhereLike(String param, String value) {
         addWhere();
-        sql.append(param).append(SPACE_SYMBOL).append(LIKE_SQL).append(SPACE_SYMBOL).append(APOSTROPHE_SYMBOL).append(PERCENTAGE_SYMBOL).append(value).append(PERCENTAGE_SYMBOL).append(APOSTROPHE_SYMBOL);
+        sql.append(param).append(SPACE_SYMBOL).append(LIKE_SQL).append(SPACE_SYMBOL).append(APOSTROPHE_SYMBOL)
+                .append(PERCENTAGE_SYMBOL).append(value).append(PERCENTAGE_SYMBOL).append(APOSTROPHE_SYMBOL);
     }
 
     /**
@@ -38,7 +42,8 @@ public class SqlCreator {
      */
     public void addWhereEquality(String param, String value) {
         addWhere();
-        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL).append(SPACE_SYMBOL);
+        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL)
+                .append(SPACE_SYMBOL);
     }
 
     /**
@@ -58,15 +63,6 @@ public class SqlCreator {
     }
 
     /**
-     * Returns the collected sql request
-     *
-     * @return StringBuild sql for execute
-     */
-    public StringBuilder getSql() {
-        return sql;
-    }
-
-    /**
      * Add WHERE clause  with =
      */
     private void addWhere() {
@@ -76,5 +72,14 @@ public class SqlCreator {
             sql.append(SPACE_SYMBOL).append(WHERE_SQL).append(SPACE_SYMBOL);
             hasCondition = true;
         }
+    }
+
+    /**
+     * Returns the collected sql request
+     *
+     * @return StringBuild sql for execute
+     */
+    public StringBuilder getSql() {
+        return sql;
     }
 }

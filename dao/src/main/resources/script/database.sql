@@ -1,7 +1,7 @@
 CREATE TABLE gift_certificates
 (
     gift_certificate_id   bigint         NOT NULL AUTO_INCREMENT,
-    gift_certificate_name varchar(256)   NOT NULL UNIQUE,
+    gift_certificate_name varchar(256)   NOT NULL,
     description           text           NOT NULL,
     price                 decimal(10, 0) NOT NULL,
     duration              int            NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE gift_certificates
 CREATE TABLE tags
 (
     tag_id  bigint        NOT NULL AUTO_INCREMENT,
-    tag_name varchar(256) NOT NULL UNIQUE,
+    tag_name varchar(256) NOT NULL,
     PRIMARY KEY (tag_id)
 );
 

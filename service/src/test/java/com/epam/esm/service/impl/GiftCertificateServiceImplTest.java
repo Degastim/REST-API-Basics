@@ -5,7 +5,7 @@ import com.epam.esm.dao.GiftCertificatesTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.InvalidFieldValueException;
+import com.epam.esm.exception.ResourceAlreadyExistException;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.service.GiftCertificateService;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.any;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GiftCertificateServiceImplTest {
@@ -40,16 +41,6 @@ class GiftCertificateServiceImplTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
         service = new GiftCertificateServiceImpl(giftCertificateDao, tagDao, giftCertificatesTagDao);
-    }
-
-    @Test
-    void add() {
-        Tag tag = new Tag(1, "Name");
-        List<GiftCertificate> tagList = new ArrayList<>();
-        Mockito.when(giftCertificateDao.findAll()).thenReturn(tagList);
-        Mockito.when(giftCertificateDao.add(giftCertificate)).thenReturn(1L);
-        Mockito.when(tagDao.findByName(Mockito.any())).thenReturn(Optional.of(tag));
-        assertThrows(InvalidFieldValueException.class, () -> service.add(giftCertificate));
     }
 
     @Test
@@ -79,8 +70,9 @@ class GiftCertificateServiceImplTest {
     void findGiftCertificateByIdWithTagsAndParams() {
         List<GiftCertificate> expected = new ArrayList<>();
         expected.add(giftCertificate);
-        Mockito.when(giftCertificateDao.executeSql(Mockito.any())).thenReturn(expected);
-        List<GiftCertificate> actual = service.findGiftCertificateByIdWithTagsAndParams(null, null, null, null, null, null);
+        Mockito.when(giftCertificateDao.executeSqlSelect(Mockito.any())).thenReturn(expected);
+        List<GiftCertificate> actual = service.findGiftCertificateByIdWithTagsAndParams(null, null,
+                null, null, null, null);
         assertEquals(expected, actual);
     }
 }

@@ -23,13 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GiftCertificateDaoImplTest {
     private static final GiftCertificateDao giftCertificateDao = new GiftCertificateDaoImpl(new JdbcTemplate(new DatabaseConfiguration().embeddedDataSource()), new GiftCertificateMapper());
 
-    @Test
-    @Order(1)
-    void findByName() {
-        Optional<GiftCertificate> actual = giftCertificateDao.findByName("BMV");
-        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246), 300, LocalDateTime.of(2022, 10, 25, 11, 11, 11), LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
-        assertEquals(actual.get(), expected);
-    }
 
     @Test
     @Order(2)
@@ -51,20 +44,13 @@ class GiftCertificateDaoImplTest {
     @Order(4)
     void executeSql() {
         String sql = "SELECT gift_certificates.gift_certificate_id, gift_certificate_name,description, price, duration, create_date, last_update_date, tags.tag_id, tag_name FROM gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.tag_id";
-        List<GiftCertificate> actualList = giftCertificateDao.executeSql(new StringBuilder(sql));
+        List<GiftCertificate> actualList = giftCertificateDao.executeSqlSelect(new StringBuilder(sql));
         long expected = 6;
         assertEquals(actualList.size(), expected);
     }
 
     @Test
     @Order(5)
-    void update() {
-        GiftCertificate giftCertificate = new GiftCertificate(6, "Bam", "Big bam", BigDecimal.valueOf(133), 186, LocalDateTime.of(2000, 10, 25, 11, 11, 11), LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
-        assertDoesNotThrow(() -> giftCertificateDao.update(giftCertificate));
-    }
-
-    @Test
-    @Order(6)
     void add() {
         GiftCertificate giftCertificate = new GiftCertificate(1, "Sun", "Yellow",
                 new BigDecimal("23"), 67, LocalDateTime.of(2020, 11, 23, 14, 12, 15),
@@ -75,7 +61,7 @@ class GiftCertificateDaoImplTest {
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     void delete() {
         assertDoesNotThrow(() -> giftCertificateDao.delete(6));
     }
