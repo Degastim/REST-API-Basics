@@ -1,6 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.tag.TagCreationDTO;
+import com.epam.esm.dto.tag.TagResponseDTO;
 
 import java.util.List;
 
@@ -15,14 +16,15 @@ public interface TagService {
      *
      * @return list of the found tags.
      */
-    List<Tag> findAll();
+    List<TagResponseDTO> findAll();
 
     /**
      * Adds new tag.
      *
-     * @param tag an object to be added.
+     * @param tagCreationDTO an object to be added.
+     * @return TagResponseDTO object for response
      */
-    void add(Tag tag);
+    TagResponseDTO add(TagCreationDTO tagCreationDTO);
 
     /**
      * Finds tag by id.
@@ -30,7 +32,7 @@ public interface TagService {
      * @param id of the object to be found.
      * @return found tag object
      */
-    Tag findById(long id);
+    TagResponseDTO findById(long id);
 
     /**
      * Deletes tag.

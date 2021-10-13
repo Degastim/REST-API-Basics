@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.math.BigDecimal;
@@ -16,8 +17,9 @@ public interface GiftCertificateDao {
      * Adds gift certificate to the database.
      *
      * @param giftCertificate object to be added.
+     * @return giftСertificate which was created.
      */
-    long add(GiftCertificate giftCertificate);
+    GiftCertificate add(GiftCertificate giftCertificate);
 
     /**
      * Deletes gift certificate from the database.
@@ -37,16 +39,16 @@ public interface GiftCertificateDao {
     /**
      * Execute custom sql update command.
      *
-     * @param sql contains sql command.
+     * @param giftCertificate contain parameters for update gift certificate.
      */
-    void executeSqlUpdate(StringBuilder sql);
+    void update(GiftCertificate giftCertificate);
 
     /**
      * Execute custom sql select command.
      *
-     * @param sql contains sql command.
+     * @param paramContainer contain parameters for found gift certificate.
      */
-    List<GiftCertificate> executeSqlSelect(StringBuilder sql);
+    List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer);
 
     /**
      * Finds all the certificates.

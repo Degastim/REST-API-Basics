@@ -1,8 +1,13 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.constant.column.GiftCertificateColumnName;
+import com.epam.esm.dao.constant.column.TagColumnName;
 import com.epam.esm.dao.constant.sql.GiftCertificateSql;
+import com.epam.esm.dao.creator.GiftCertificateSqlSelectCreator;
+import com.epam.esm.dao.creator.GiftCertificateSqlUpdateCreator;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
+import com.epam.esm.dto.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.ResourceNotAddedException;
@@ -16,6 +21,7 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,22 +42,29 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public long add(GiftCertificate giftCertificate) {
+    public GiftCertificate add(GiftCertificate giftCertificate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        String name = giftCertificate.getName();
+        String description = giftCertificate.getDescription();
+        BigDecimal price = giftCertificate.getPrice();
+        Integer duration = giftCertificate.getDuration();
+        LocalDateTime createDate = giftCertificate.getCreateDate();
+        LocalDateTime lastUpdateDate = giftCertificate.getLastUpdateDate();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(GiftCertificateSql.ADD_GIFT_CERTIFICATE, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, giftCertificate.getName());
-            preparedStatement.setString(2, giftCertificate.getDescription());
-            preparedStatement.setBigDecimal(3, giftCertificate.getPrice());
-            preparedStatement.setInt(4, giftCertificate.getDuration());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, description);
+            preparedStatement.setBigDecimal(3, price);
+            preparedStatement.setInt(4, duration);
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(createDate));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(lastUpdateDate));
             return preparedStatement;
         }, keyHolder);
         if (keyHolder.getKey() == null) {
             throw new ResourceNotAddedException("GiftCertificate not Add.No KeyHolder", ExceptionCauseCode.GIFT_CERTIFICATE);
         }
-        return keyHolder.getKey().longValue();
+        long giftCertificateId = keyHolder.getKey().longValue();
+        return new GiftCertificate(giftCertificateId, name, description, price, duration, createDate, lastUpdateDate);
     }
 
     @Override
@@ -66,12 +79,62 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void executeSqlUpdate(StringBuilder sql) {
+    public void update(GiftCertificate giftCertificate) {
+        long id = giftCertificate.getId();
+        String giftCertificateName = giftCertificate.getName();
+        String giftCertificateDescription = giftCertificate.getDescription();
+        BigDecimal price = giftCertificate.getPrice();
+        Integer duration = giftCertificate.getDuration();
+        GiftCertificateSqlUpdateCreator giftCertificateSqlUpdateCreator = new GiftCertificateSqlUpdateCreator();
+        if (giftCertificateName != null) {
+            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.NAME, giftCertificateName);
+        }
+        if (giftCertificateDescription != null) {
+            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.DESCRIPTION,
+                    giftCertificateDescription);
+        }
+        if (price != null) {
+            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.PRICE, price.toString());
+        }
+        if (duration != null) {
+            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.DURATION, String.valueOf(duration));
+        }
+        giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.LAST_UPDATE_DATE,
+                LocalDateTime.now().toString());
+        giftCertificateSqlUpdateCreator.addWhereEquality(GiftCertificateColumnName.ID, Long.toString(id));
+        StringBuilder sql = giftCertificateSqlUpdateCreator.getSql();
         jdbcTemplate.update(sql.toString());
     }
 
     @Override
-    public List<GiftCertificate> executeSqlSelect(StringBuilder sql) {
+    public List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer) {
+        String tagName = paramContainer.getTagName();
+        String partGiftCertificateName = paramContainer.getPartGiftCertificateName();
+        String partGiftCertificateDescription = paramContainer.getPartGiftCertificateDescription();
+        String sortByName = paramContainer.getSortByName();
+        String sortByCreateDate = paramContainer.getSortByCreateDate();
+        String sortByLastUpdateDate = paramContainer.getSortByLastUpdateDate();
+        GiftCertificateSqlSelectCreator giftCertificateSqlSelectCreator = new GiftCertificateSqlSelectCreator();
+        if (tagName != null) {
+            giftCertificateSqlSelectCreator.addWhereEquality(TagColumnName.TAG_NAME, tagName);
+        }
+        if (partGiftCertificateName != null) {
+            giftCertificateSqlSelectCreator.addWhereLike(GiftCertificateColumnName.NAME, partGiftCertificateName);
+        }
+        if (partGiftCertificateDescription != null) {
+            giftCertificateSqlSelectCreator.addWhereLike(GiftCertificateColumnName.DESCRIPTION,
+                    partGiftCertificateDescription);
+        }
+        if (sortByName != null) {
+            giftCertificateSqlSelectCreator.addOrderBy(GiftCertificateColumnName.NAME, sortByName);
+        }
+        if (sortByCreateDate != null) {
+            giftCertificateSqlSelectCreator.addOrderBy(GiftCertificateColumnName.NAME, sortByCreateDate);
+        }
+        if (sortByLastUpdateDate != null) {
+            giftCertificateSqlSelectCreator.addOrderBy(GiftCertificateColumnName.LAST_UPDATE_DATE, sortByLastUpdateDate);
+        }
+        StringBuilder sql = giftCertificateSqlSelectCreator.getSql();
         return jdbcTemplate.query(sql.toString(), mapper);
     }
 

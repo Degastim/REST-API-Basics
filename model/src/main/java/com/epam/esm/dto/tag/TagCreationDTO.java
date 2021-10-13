@@ -6,6 +6,7 @@ package com.epam.esm.dto.tag;
  * @author Yauheni Tsitou
  */
 public class TagCreationDTO {
+    private long id;
     private String name;
 
     public TagCreationDTO() {
@@ -19,6 +20,14 @@ public class TagCreationDTO {
         this.name = name;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -28,11 +37,14 @@ public class TagCreationDTO {
             return false;
         }
         TagCreationDTO tag = (TagCreationDTO) o;
+        if (tag.id != id) {
+            return false;
+        }
         return name != null ? name.equals(tag.name) : tag.name == null;
     }
 
     @Override
     public int hashCode() {
-        return 31 * (name != null ? name.hashCode() : 0);
+        return 31 * Long.hashCode(id) + (name != null ? name.hashCode() : 0);
     }
 }

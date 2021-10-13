@@ -18,6 +18,6 @@ public class TagCreationDTOMapper {
      * @return giftCertificate which contains the object after mapping.
      */
     public Tag toTag(TagCreationDTO tagCreationDTO) {
-        return new Tag(tagCreationDTO.getName());
+        return new Tag(tagCreationDTO.getId(), tagCreationDTO.getName());
     }
 }

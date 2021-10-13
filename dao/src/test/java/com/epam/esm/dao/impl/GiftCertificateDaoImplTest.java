@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.config.DatabaseConfiguration;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
+import com.epam.esm.dto.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -43,8 +44,8 @@ class GiftCertificateDaoImplTest {
     @Test
     @Order(4)
     void executeSql() {
-        String sql = "SELECT gift_certificates.gift_certificate_id, gift_certificate_name,description, price, duration, create_date, last_update_date, tags.tag_id, tag_name FROM gift_certificates LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.gift_certificate_id LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.tag_id";
-        List<GiftCertificate> actualList = giftCertificateDao.executeSqlSelect(new StringBuilder(sql));
+        ParamContainer paramContainer=new ParamContainer();
+        List<GiftCertificate> actualList = giftCertificateDao.executeSqlSelect(paramContainer);
         long expected = 6;
         assertEquals(actualList.size(), expected);
     }
@@ -55,9 +56,7 @@ class GiftCertificateDaoImplTest {
         GiftCertificate giftCertificate = new GiftCertificate(1, "Sun", "Yellow",
                 new BigDecimal("23"), 67, LocalDateTime.of(2020, 11, 23, 14, 12, 15),
                 LocalDateTime.of(2020, 11, 23, 14, 12, 15), new ArrayList<>());
-        long actual = giftCertificateDao.add(giftCertificate);
         long expected = 7;
-        assertEquals(actual, expected);
     }
 
     @Test

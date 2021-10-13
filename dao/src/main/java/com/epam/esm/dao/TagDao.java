@@ -15,9 +15,9 @@ public interface TagDao {
      * Adds tag to the table.
      *
      * @param tag object to be added.
-     * @return returns id of added tag.
+     * @return Tag which was created
      */
-    long add(Tag tag);
+    Tag addWithoutId(Tag tag);
 
     /**
      * Finds all the tags.
@@ -55,4 +55,8 @@ public interface TagDao {
      * @param id of the object to be deleted.
      */
     void delete(long id);
+
+    Optional<Tag> findByIdAndName(long id, String name);
+
+    Tag addWithId(Tag tag);
 }

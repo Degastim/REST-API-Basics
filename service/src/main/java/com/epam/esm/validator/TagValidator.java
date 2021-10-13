@@ -1,5 +1,7 @@
 package com.epam.esm.validator;
 
+import org.springframework.stereotype.Component;
+
 import java.util.regex.Pattern;
 
 /**
@@ -7,6 +9,7 @@ import java.util.regex.Pattern;
  *
  * @author Yauheni Tsitov
  */
+@Component
 public class TagValidator {
     private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
 
@@ -19,7 +22,7 @@ public class TagValidator {
      * @param name the name
      * @return the boolean
      */
-    public static boolean isNameValid(String name) {
+    public boolean isTagNameValid(String name) {
         return NAME_REGEX.matcher(name).matches();
     }
 }

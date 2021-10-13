@@ -95,4 +95,5 @@ public class GiftCertificateCreationDTO {
         result = result + 7 * (tags != null ? tags.hashCode() : 0);
         return result;
     }
+
 }

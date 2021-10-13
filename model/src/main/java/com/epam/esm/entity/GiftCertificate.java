@@ -34,6 +34,17 @@ public class GiftCertificate {
         this.tags = tags;
     }
 
+    public GiftCertificate(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
+
     public GiftCertificate(String name, String description, BigDecimal price, Integer duration, List<Tag> tags) {
         this.name = name;
         this.description = description;

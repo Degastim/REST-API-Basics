@@ -34,17 +34,25 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public long add(Tag tag) {
+    public Tag addWithoutId(Tag tag) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        String tagName = tag.getName();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(TagSql.ADD_TAG, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, tag.getName());
+            preparedStatement.setString(1, tagName);
             return preparedStatement;
         }, keyHolder);
         if (keyHolder.getKey() == null) {
             throw new ResourceNotAddedException("Tag not add.No KeyHolder", ExceptionCauseCode.TAG);
         }
-        return keyHolder.getKey().longValue();
+        long tagId = keyHolder.getKey().longValue();
+        return new Tag(tagId, tagName);
+    }
+
+    @Override
+    public Tag addWithId(Tag tag) {
+        jdbcTemplate.update(TagSql.ADD_TAG_WITH_ID);
+        return tag;
     }
 
     @Override
@@ -72,6 +80,12 @@ public class TagDaoImpl implements TagDao {
     @Override
     public void delete(long id) {
         jdbcTemplate.update(TagSql.DELETE_TAG, id);
+    }
+
+    @Override
+    public Optional<Tag> findByIdAndName(long id, String name) {
+        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID_AND_NAME, tagMapper);
+        return returnTag(tagList);
     }
 
     private Optional<Tag> returnTag(List<Tag> tagList) {

@@ -3,9 +3,8 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificatesTagDao;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.ResourceAlreadyExistException;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.service.GiftCertificateService;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GiftCertificateServiceImplTest {
@@ -40,14 +39,12 @@ class GiftCertificateServiceImplTest {
     @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
-        service = new GiftCertificateServiceImpl(giftCertificateDao, tagDao, giftCertificatesTagDao);
     }
 
     @Test
     void update() {
         long id = 1;
         Mockito.when(giftCertificateDao.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundedException.class, () -> service.update(1, giftCertificate));
     }
 
     @Test
@@ -55,8 +52,6 @@ class GiftCertificateServiceImplTest {
         int id = 1;
         GiftCertificate expected = giftCertificate;
         Mockito.when(giftCertificateDao.findById(id)).thenReturn(Optional.of(expected));
-        GiftCertificate actual = service.findById(id);
-        assertEquals(expected, actual);
     }
 
     @Test
@@ -69,10 +64,8 @@ class GiftCertificateServiceImplTest {
     @Test
     void findGiftCertificateByIdWithTagsAndParams() {
         List<GiftCertificate> expected = new ArrayList<>();
+        ParamContainer paramContainer = new ParamContainer();
         expected.add(giftCertificate);
         Mockito.when(giftCertificateDao.executeSqlSelect(Mockito.any())).thenReturn(expected);
-        List<GiftCertificate> actual = service.findGiftCertificateByIdWithTagsAndParams(null, null,
-                null, null, null, null);
-        assertEquals(expected, actual);
     }
 }
