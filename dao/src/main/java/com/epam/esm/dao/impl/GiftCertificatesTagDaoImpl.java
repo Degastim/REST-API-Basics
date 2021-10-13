@@ -45,7 +45,8 @@ public class GiftCertificatesTagDaoImpl implements GiftCertificatesTagDao {
 
     @Override
     public Optional<GiftCertificatesTag> findByGiftCertificateIdAndTagId(long giftCertificateId, long tagId) {
-        List<GiftCertificatesTag> list=jdbcTemplate.query(GiftCertificatesTagSql.FIND_BY_GIFT_CERTIFICATE_ID_AND_TAG_ID, giftCertificatesTagMapper);
+        List<GiftCertificatesTag> list = jdbcTemplate.query(GiftCertificatesTagSql.FIND_BY_GIFT_CERTIFICATE_ID_AND_TAG_ID,
+                giftCertificatesTagMapper, giftCertificateId, tagId);
         if (list.size() != 0) {
             return Optional.of(list.get(0));
         } else {

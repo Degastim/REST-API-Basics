@@ -1,6 +1,8 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.certificate.GiftCertificateDTO;
+import com.epam.esm.dto.certificate.GiftCertificateResponseDTO;
+import com.epam.esm.entity.GiftCertificate;
 
 public interface GiftCertificateDTOService {
     /**
@@ -9,5 +11,5 @@ public interface GiftCertificateDTOService {
      * @param id                 of the object to be updated.
      * @param giftCertificateDTO contain parameters for update.
      */
-    void update(long id, GiftCertificateDTO giftCertificateDTO);
+    GiftCertificateResponseDTO update(long id, GiftCertificateDTO giftCertificateDTO);
 }

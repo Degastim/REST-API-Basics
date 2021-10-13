@@ -12,6 +12,11 @@ public class TagCreationDTO {
     public TagCreationDTO() {
     }
 
+    public TagCreationDTO(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

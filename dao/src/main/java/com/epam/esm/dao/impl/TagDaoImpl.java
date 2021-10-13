@@ -51,7 +51,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag addWithId(Tag tag) {
-        jdbcTemplate.update(TagSql.ADD_TAG_WITH_ID);
+        jdbcTemplate.update(TagSql.ADD_TAG_WITH_ID, tag.getId(), tag.getName());
         return tag;
     }
 
@@ -84,7 +84,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Optional<Tag> findByIdAndName(long id, String name) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID_AND_NAME, tagMapper);
+        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID_AND_NAME, tagMapper, id, name);
         return returnTag(tagList);
     }
 

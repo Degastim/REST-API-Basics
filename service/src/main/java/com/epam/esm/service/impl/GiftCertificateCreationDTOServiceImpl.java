@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateCreationDTOServiceImpl implements GiftCertificateCreationDTOService {
@@ -53,13 +55,14 @@ public class GiftCertificateCreationDTOServiceImpl implements GiftCertificateCre
         giftCertificate.setLastUpdateDate(localDateTime);
         giftCertificate = giftCertificateDao.add(giftCertificate);
         long giftCertificateId = giftCertificate.getId();
+        deleteTagRepetition(tagList);
         if (tagList != null) {
             for (Tag tag : tagList) {
                 long tagId = tag.getId();
                 long addTagId = tagId;
                 String tagName = tag.getName();
                 if (tagId != 0) {
-                    if (tagName != null) {
+                    if (tagName != null && !tagDao.findByIdAndName(tagId, tagName).isPresent()) {
                         tagDao.addWithId(tag);
                     }
                 } else {
@@ -72,5 +75,26 @@ public class GiftCertificateCreationDTOServiceImpl implements GiftCertificateCre
         }
         giftCertificate.setTags(tagList);
         return giftCertificateResponseDTOMapper.toDto(giftCertificate);
+    }
+
+    private void deleteTagRepetition(List<Tag> tagList) {
+        if (tagList != null) {
+            for (Tag tag : tagList) {
+                long tagId = tag.getId();
+                String tagName = tag.getName();
+                if (tagId != 0 && tagName == null) {
+                    Tag daoTag = tagDao.findById(tagId).get();
+                    tag.setName(daoTag.getName());
+                }
+                if (tagId == 0) {
+                    Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
+                    if (daoTagOptional.isPresent()) {
+                        Tag daoTag = daoTagOptional.get();
+                        tag.setId(daoTag.getId());
+                    }
+                }
+            }
+            tagList = tagList.stream().distinct().collect(Collectors.toList());
+        }
     }
 }

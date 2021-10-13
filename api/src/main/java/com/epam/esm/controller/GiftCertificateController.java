@@ -58,7 +58,6 @@ public class GiftCertificateController {
      * @param giftCertificateCreationDTO an object that contain object request
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public GiftCertificateResponseDTO addGiftCertificate(@RequestBody GiftCertificateCreationDTO giftCertificateCreationDTO) {
         return giftCertificateCreationDTOService.add(giftCertificateCreationDTO);
     }
@@ -91,9 +90,8 @@ public class GiftCertificateController {
      * @param id the id of gift certificate to be updated.
      */
     @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateGiftCertificate(@PathVariable long id,
-                                      @RequestBody GiftCertificateDTO giftCertificateDTO) {
-        giftCertificateDTOService.update(id, giftCertificateDTO);
+    public GiftCertificateResponseDTO updateGiftCertificate(@PathVariable long id,
+                                                            @RequestBody GiftCertificateDTO giftCertificateDTO) {
+        return giftCertificateDTOService.update(id, giftCertificateDTO);
     }
 }

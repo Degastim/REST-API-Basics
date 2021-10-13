@@ -40,8 +40,7 @@ public class GiftCertificateSqlUpdateCreator {
      */
     public void addWhereEquality(String param, String value) {
         addWhere();
-        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL)
-                .append(SPACE_SYMBOL);
+        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL);
     }
 
     /**

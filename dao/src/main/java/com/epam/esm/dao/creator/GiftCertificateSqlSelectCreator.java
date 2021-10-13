@@ -9,7 +9,7 @@ public class GiftCertificateSqlSelectCreator {
     private final StringBuilder sql = new StringBuilder("SELECT gift_certificates.*,tags.* FROM gift_certificates ")
             .append("LEFT JOIN gift_certificates_tags ")
             .append("ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id ")
-            .append("LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id ");
+            .append("LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id");
     private boolean hasCondition = false;
     private boolean hasOrderBy = false;
     private static final String LIKE_SQL = "LIKE";
@@ -42,8 +42,7 @@ public class GiftCertificateSqlSelectCreator {
      */
     public void addWhereEquality(String param, String value) {
         addWhere();
-        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL)
-                .append(SPACE_SYMBOL);
+        sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL);
     }
 
     /**

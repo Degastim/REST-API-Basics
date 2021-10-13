@@ -15,9 +15,6 @@ public class GiftCertificateSql {
     public static final String FIND_BY_ID = "SELECT gift_certificates.*, tags.* FROM gift_certificates " +
             "LEFT JOIN gift_certificates_tags ON gift_certificates.gift_certificate_id = gift_certificates_tags.gift_certificate_id " +
             "LEFT JOIN tags ON tags.tag_id = gift_certificates_tags.tag_id WHERE gift_certificates.gift_certificate_id = ? ";
-    public static final String FIND_BY_ALL = "SELECT gift_certificates.*, tags.* FROM gift_certificates " +
-            "LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.gift_certificate_id " +
-            "LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.tag_id";
     public static final String FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION = "SELECT gift_certificates.*, tags.* " +
             "FROM gift_certificates " +
             "LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.gift_certificate_id " +

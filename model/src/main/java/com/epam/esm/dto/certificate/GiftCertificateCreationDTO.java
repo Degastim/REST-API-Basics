@@ -21,6 +21,13 @@ public class GiftCertificateCreationDTO {
     public GiftCertificateCreationDTO() {
     }
 
+    public GiftCertificateCreationDTO(String name, String description, BigDecimal price, Integer duration) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+    }
+
     public String getName() {
         return name;
     }
@@ -95,5 +102,4 @@ public class GiftCertificateCreationDTO {
         result = result + 7 * (tags != null ? tags.hashCode() : 0);
         return result;
     }
-
 }

@@ -15,10 +15,6 @@ public class ParamValidator {
     private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
     private static final Pattern TAG_NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
 
-    @Autowired
-    private ParamValidator() {
-    }
-
     public void isParamValid(ParamContainer paramContainer) {
         String tagName = paramContainer.getTagName();
         String partGiftCertificateName = paramContainer.getPartGiftCertificateName();
@@ -62,7 +58,7 @@ public class ParamValidator {
         return NAME_REGEX.matcher(partGiftCertificateName).matches();
     }
 
-    public boolean isTagNameValid(String name) {
+    private boolean isTagNameValid(String name) {
         return TAG_NAME_REGEX.matcher(name).matches();
     }
 }

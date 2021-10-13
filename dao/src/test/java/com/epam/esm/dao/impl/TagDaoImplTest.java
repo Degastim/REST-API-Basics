@@ -10,9 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,45 +19,65 @@ class TagDaoImplTest {
 
     @Test
     @Order(1)
-    void findAll() {
-        long expected = 5;
-        List<Tag> actual = tagDao.findAll();
-        assertEquals(expected, actual.size());
+    void addWithoutId() {
+        Tag tag = new Tag("oi");
+        Tag actual = tagDao.addWithoutId(tag);
+        tag.setId(6);
+        assertEquals(tag, actual);
     }
 
     @Test
     @Order(2)
-    void findByName() {
-        String tagName = "a";
-        Tag tag = new Tag(1, tagName);
-        Optional<Tag> tagOptional = tagDao.findByName(tagName);
-        assertEquals(tag, tagOptional.get());
+    void addWithId() {
+        Tag tag = new Tag(7, "db");
+        Tag actual = tagDao.addWithId(tag);
+        assertEquals(tag, actual);
     }
 
     @Test
     @Order(3)
-    void findById() {
-        long tagId = 1;
-        Tag tag = new Tag(1, "a");
-        Optional<Tag> tagOptional = tagDao.findById(tagId);
-        assertEquals(tag, tagOptional.get());
+    void findAll() {
+        int actual = tagDao.findAll().size();
+        int expected = 7;
+        assertEquals(expected, actual);
     }
 
     @Test
     @Order(4)
+    void findByName() {
+        Tag actual = tagDao.findByName("db").get();
+        Tag expected = new Tag(7, "db");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(5)
+    void findById() {
+        Tag actual = tagDao.findById(7).get();
+        Tag expected = new Tag(7, "db");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(6)
     void update() {
-        Tag tag = new Tag(2, "Ff");
+        Tag tag = new Tag(7, "abs");
         assertDoesNotThrow(() -> tagDao.update(tag));
     }
 
     @Test
-    void add() {
-        long expected = 6;
-        Tag tag = new Tag(1, "Tag");
+    @Order(7)
+    void delete() {
+        assertDoesNotThrow(() -> tagDao.delete(7));
     }
 
     @Test
-    void delete() {
-        assertDoesNotThrow(() -> tagDao.delete(5));
+    @Order(8)
+    void findByIdAndName() {
+        long id = 6;
+        String name = "oi";
+        Tag expected = new Tag(id, name);
+        Tag actual = tagDao.findByIdAndName(id, name).get();
+        assertEquals(expected, actual);
     }
 }

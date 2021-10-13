@@ -34,4 +34,21 @@ public class GiftCertificatesTag {
     public void setTagId(long tagId) {
         this.tagId = tagId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GiftCertificatesTag that = (GiftCertificatesTag) o;
+        return id == that.id && giftCertificateId == that.giftCertificateId && tagId == that.tagId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id + 2 * giftCertificateId + 3 * tagId);
+    }
 }

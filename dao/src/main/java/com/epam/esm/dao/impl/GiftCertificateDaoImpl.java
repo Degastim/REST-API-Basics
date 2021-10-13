@@ -139,11 +139,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return jdbcTemplate.query(GiftCertificateSql.FIND_BY_ALL, mapper);
-    }
-
-    @Override
     public Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description, BigDecimal price, Integer duration) {
         List<GiftCertificate> giftCertificateList = jdbcTemplate.query(GiftCertificateSql.FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION, mapper, name, description, price, duration);
         return returnGiftCertificate(giftCertificateList);

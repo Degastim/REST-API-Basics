@@ -51,13 +51,6 @@ public interface GiftCertificateDao {
     List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer);
 
     /**
-     * Finds all the certificates.
-     *
-     * @return list with found certificates
-     */
-    List<GiftCertificate> findAll();
-
-    /**
      * Finds the certificate by its name,description,price,duration.
      *
      * @param name        of the object to be found.

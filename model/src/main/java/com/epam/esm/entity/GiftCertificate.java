@@ -2,7 +2,6 @@ package com.epam.esm.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +41,6 @@ public class GiftCertificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
     }
 
     public GiftCertificate(String name, String description, BigDecimal price, Integer duration, List<Tag> tags) {
@@ -51,6 +49,15 @@ public class GiftCertificate {
         this.price = price;
         this.duration = duration;
         this.tags = tags;
+    }
+
+    public GiftCertificate(String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public long getId() {
@@ -114,7 +121,7 @@ public class GiftCertificate {
     }
 
     public void setTags(List<Tag> tags) {
-        this.tags = new ArrayList<>(tags);
+        this.tags = tags;
     }
 
     @Override
@@ -129,7 +136,7 @@ public class GiftCertificate {
         if (id != that.id) {
             return false;
         }
-        if (tags != null ? !tags.equals(that.tags) : that.tags == null) {
+        if (tags != null ? !tags.equals(that.tags) : that.tags != null) {
             return false;
         }
         if (name != null ? !name.equals(that.name) : that.name != null) {
@@ -161,5 +168,20 @@ public class GiftCertificate {
         result = result + 11 * (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = result + 13 * (tags != null ? tags.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GiftCertificate{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", price=").append(price);
+        sb.append(", duration=").append(duration);
+        sb.append(", createDate=").append(createDate);
+        sb.append(", lastUpdateDate=").append(lastUpdateDate);
+        sb.append(", tags=").append(tags);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -43,7 +43,6 @@ public class TagController {
      * @param tagCreationDTO an object that contain object request
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public TagResponseDTO addTag(@RequestBody TagCreationDTO tagCreationDTO) {
         return tagService.add(tagCreationDTO);
     }

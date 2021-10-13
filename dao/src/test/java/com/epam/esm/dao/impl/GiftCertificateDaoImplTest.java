@@ -14,8 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,44 +22,58 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GiftCertificateDaoImplTest {
     private static final GiftCertificateDao giftCertificateDao = new GiftCertificateDaoImpl(new JdbcTemplate(new DatabaseConfiguration().embeddedDataSource()), new GiftCertificateMapper());
 
+    @Test
+    @Order(1)
+    void add() {
+        GiftCertificate giftCertificate = new GiftCertificate("ABC", "Dig", BigDecimal.TEN, 12,
+                LocalDateTime.of(2020, 3, 14, 23, 42, 11),
+                LocalDateTime.of(2020, 3, 14, 23, 42, 11));
+        GiftCertificate actual = giftCertificateDao.add(giftCertificate);
+        giftCertificate.setId(7);
+        assertEquals(giftCertificate, actual);
+    }
 
     @Test
     @Order(2)
     void findById() {
-        Optional<GiftCertificate> actual = giftCertificateDao.findById(6);
-        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246), 300, LocalDateTime.of(2022, 10, 25, 11, 11, 11), LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
-        assertEquals(actual.get(), expected);
+        long id = 6;
+        GiftCertificate actual = giftCertificateDao.findById(id).get();
+        GiftCertificate expected = new GiftCertificate(id, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
+                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
+                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
+        assertEquals(expected, actual);
     }
 
     @Test
     @Order(3)
-    void findAll() {
-        List<GiftCertificate> actualList = giftCertificateDao.findAll();
-        long expected = 6;
-        assertEquals(actualList.size(), expected);
+    void executeSqlSelect() {
+        ParamContainer paramContainer = new ParamContainer();
+        paramContainer.setPartGiftCertificateName("B");
+        System.out.println(giftCertificateDao.executeSqlSelect(new ParamContainer()));
+        GiftCertificate actual = giftCertificateDao.executeSqlSelect(paramContainer).get(0);
+        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
+                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
+                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
+        assertEquals(expected, actual);
     }
 
     @Test
     @Order(4)
-    void executeSql() {
-        ParamContainer paramContainer=new ParamContainer();
-        List<GiftCertificate> actualList = giftCertificateDao.executeSqlSelect(paramContainer);
-        long expected = 6;
-        assertEquals(actualList.size(), expected);
+    void findByNameAndDescriptionAndPriceAndDuration() {
+        GiftCertificate actual = giftCertificateDao.findByNameAndDescriptionAndPriceAndDuration("BMV", "Fast and comfortable car", BigDecimal.valueOf(1246), 300).get();
+        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
+                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
+                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
+        assertEquals(expected, actual);
     }
 
     @Test
     @Order(5)
-    void add() {
-        GiftCertificate giftCertificate = new GiftCertificate(1, "Sun", "Yellow",
-                new BigDecimal("23"), 67, LocalDateTime.of(2020, 11, 23, 14, 12, 15),
-                LocalDateTime.of(2020, 11, 23, 14, 12, 15), new ArrayList<>());
-        long expected = 7;
-    }
-
-    @Test
-    @Order(6)
-    void delete() {
-        assertDoesNotThrow(() -> giftCertificateDao.delete(6));
+    void update() {
+        long id = 6;
+        GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setId(id);
+        giftCertificate.setName("ABS");
+        assertDoesNotThrow(() -> giftCertificateDao.update(giftCertificate));
     }
 }

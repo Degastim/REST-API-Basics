@@ -75,7 +75,7 @@ public class GiftCertificateCreationDTOValidator {
                         errorMessage.append("Tag with this id=").append(tagId).append("is not founded.");
                     }
                 }
-                if (!isTagNameValid(tagName)) {
+                if (tagName != null && !isTagNameValid(tagName)) {
                     errorMessage.append("Tag name ").append(tagName).append(" is not valid. ");
                 }
             }
@@ -103,7 +103,8 @@ public class GiftCertificateCreationDTOValidator {
     private boolean isDurationValid(int duration) {
         return duration > 0;
     }
-    public boolean isTagNameValid(String name) {
+
+    private boolean isTagNameValid(String name) {
         return TAG_NAME_REGEX.matcher(name).matches();
     }
 }
