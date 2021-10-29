@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public class CustomEntity {
+public abstract class AbstractCustomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;

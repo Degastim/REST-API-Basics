@@ -1,7 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.PaginationContainer;
-import com.epam.esm.entity.CustomEntity;
+import com.epam.esm.entity.AbstractCustomEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class Paginator<T extends CustomEntity> {
+public class Paginator<T extends AbstractCustomEntity> {
     public List<T> paginate(List<T> list, PaginationContainer paginationContainer) {
         int page = paginationContainer.getPage();
         int size = paginationContainer.getSize();

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "order_id"))
-public class Order extends CustomEntity {
+public class Order extends AbstractCustomEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;

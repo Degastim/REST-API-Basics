@@ -4,7 +4,6 @@ import com.epam.esm.audit.AuditListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +17,7 @@ import java.util.Set;
 @Table(name = "gift_certificates")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "gift_certificate_id"))
-public class GiftCertificate extends CustomEntity {
+public class GiftCertificate extends AbstractCustomEntity {
     @Column(name = "gift_certificate_name")
     private String giftCertificateName;
     @Column

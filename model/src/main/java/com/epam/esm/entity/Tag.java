@@ -15,10 +15,11 @@ import java.util.Set;
 @Table(name = "tags")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "tag_id"))
-public class Tag extends CustomEntity {
+public class Tag extends AbstractCustomEntity {
     @Column(name = "tag_name")
     private String name;
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "gift_certificates_tags", joinColumns =@JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "gift_certificate_id") )
     private Set<GiftCertificate> giftCertificateSet = new HashSet<>();
 
     public Tag() {

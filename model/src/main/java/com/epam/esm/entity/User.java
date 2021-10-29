@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "users")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-public class User extends CustomEntity {
+public class User extends AbstractCustomEntity {
     @Column(name = "user_name")
     private String name;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
