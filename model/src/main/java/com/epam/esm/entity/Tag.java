@@ -1,13 +1,28 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.audit.AuditListener;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Entity of a tag.
  *
  * @author Yauheni Tsitou
  */
-public class Tag {
-    private long id;
+@Entity
+@Table(name = "tags")
+@EntityListeners(AuditListener.class)
+@AttributeOverride(name = "id", column = @Column(name = "tag_id"))
+public class Tag extends CustomEntity {
+    @Column(name = "tag_name")
     private String name;
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
+    private Set<GiftCertificate> giftCertificateSet = new HashSet<>();
+
+    public Tag() {
+    }
 
     public Tag(long id, String name) {
         this.id = id;
@@ -18,7 +33,12 @@ public class Tag {
         this.name = name;
     }
 
-    public Tag() {
+    public Set<GiftCertificate> getGiftCertificateSet() {
+        return giftCertificateSet;
+    }
+
+    public void setGiftCertificateSet(Set<GiftCertificate> giftCertificateSet) {
+        this.giftCertificateSet = giftCertificateSet;
     }
 
     public long getId() {
@@ -35,6 +55,10 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addGiftCertificate(GiftCertificate giftCertificate) {
+        giftCertificateSet.add(giftCertificate);
     }
 
     @Override
@@ -55,5 +79,15 @@ public class Tag {
     @Override
     public int hashCode() {
         return 31 * (name != null ? name.hashCode() : 0) + Long.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Tag{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", giftCertificateSet=").append(giftCertificateSet);
+        sb.append('}');
+        return sb.toString();
     }
 }

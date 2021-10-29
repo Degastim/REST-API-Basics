@@ -1,7 +1,7 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.tag.TagCreationDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.InvalidFieldValueException;
 import com.epam.esm.exception.ResourceAlreadyExistException;
@@ -28,18 +28,14 @@ public class TagCreationDTOValidator {
     /**
      * Is name TagCreationDTO valid.
      *
-     * @param tagCreationDTO the object for validation.
+     * @param tagDTO the object for validation.
      */
-    public void isTagCreationDTOValid(TagCreationDTO tagCreationDTO) {
-        long tagId = tagCreationDTO.getId();
-        String tagName = tagCreationDTO.getName();
-        if (tagId != 0 && tagDao.findById(tagId).isPresent()) {
-            throw new ResourceAlreadyExistException("There is already a tag with the same id.", ExceptionCauseCode.TAG);
-        }
+    public void isTagCreationDTOValid(TagDTO tagDTO) {
+        String tagName = tagDTO.getName();
         if (tagDao.findByName(tagName).isPresent()) {
             throw new ResourceAlreadyExistException("There is already a tag with the same name.", ExceptionCauseCode.TAG);
         }
-        if (!NAME_REGEX.matcher(tagCreationDTO.getName()).matches()) {
+        if (!NAME_REGEX.matcher(tagDTO.getName()).matches()) {
             throw new InvalidFieldValueException("Tag name is not valid", ExceptionCauseCode.TAG);
         }
     }

@@ -5,14 +5,15 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+
 
 /**
  * Database configuration class.
@@ -20,11 +21,13 @@ import javax.sql.DataSource;
  * @author Yauheni Tstiov
  */
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement()
 public class DatabaseConfiguration {
     private static final String DATABASE_PROPERTY_FILE_PATH = "/databaseConfig.properties";
     private static final String CREATE_DATABASE_SCRIPT = "script/database.sql";
     private static final String INSERT_DATA_SQL = "script/data_insertion.sql";
+    private static final String PACKAGE_WITH_ENTITY = "com.epam.esm.entity";
+
 
     /**
      * Creates the data source for dev profile.
@@ -53,14 +56,12 @@ public class DatabaseConfiguration {
                 .build();
     }
 
-    /**
-     * Creates the jdbcTemplate.
-     *
-     * @return JdbcTemplate object
-     */
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    @Bean("sessionFactory")
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan(PACKAGE_WITH_ENTITY);
+        return sessionFactory;
     }
 
     /**
@@ -68,8 +69,10 @@ public class DatabaseConfiguration {
      *
      * @return PlatformTransactionManager object
      */
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    @Bean(name = "transactionManager")
+    public HibernateTransactionManager hibernateTransactionManager() {
+        HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
+        hibernateTransactionManager.setSessionFactory(sessionFactory().getObject());
+        return hibernateTransactionManager;
     }
 }

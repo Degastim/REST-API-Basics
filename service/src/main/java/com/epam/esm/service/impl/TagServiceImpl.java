@@ -1,15 +1,16 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.GiftCertificatesTagDao;
+import com.epam.esm.Paginator;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.tag.TagCreationDTO;
-import com.epam.esm.dto.tag.TagResponseDTO;
+import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.ResourceNotFoundedException;
-import com.epam.esm.mapper.tag.TagCreationDTOMapper;
-import com.epam.esm.mapper.tag.TagResponseDTOMapper;
+import com.epam.esm.mapper.TagDTOMapper;
 import com.epam.esm.service.TagService;
+import com.epam.esm.validator.PaginationContainerValidator;
 import com.epam.esm.validator.TagCreationDTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,51 +28,45 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
-    private final GiftCertificatesTagDao giftCertificatesTagDao;
-    private final TagResponseDTOMapper tagResponseDTOMapper;
-    private final TagCreationDTOMapper tagCreationDTOMapper;
+    private final TagDTOMapper tagDTOMapper;
     private final TagCreationDTOValidator tagCreationDTOValidator;
+    private final PaginationContainerValidator paginationContainerValidator;
+    private final Paginator<Tag> paginator;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, GiftCertificatesTagDao giftCertificatesTagDao,
-                          TagResponseDTOMapper tagResponseDTOMapper,
-                          TagCreationDTOMapper tagCreationDTOMapper,
-                          TagCreationDTOValidator tagCreationDTOValidator) {
+    public TagServiceImpl(TagDao tagDao, TagDTOMapper tagDTOMapper,
+                          TagCreationDTOValidator tagCreationDTOValidator,
+                          PaginationContainerValidator paginationContainerValidator, Paginator<Tag> paginator) {
         this.tagDao = tagDao;
-        this.giftCertificatesTagDao = giftCertificatesTagDao;
-        this.tagResponseDTOMapper = tagResponseDTOMapper;
-        this.tagCreationDTOMapper = tagCreationDTOMapper;
+        this.tagDTOMapper = tagDTOMapper;
         this.tagCreationDTOValidator = tagCreationDTOValidator;
+        this.paginationContainerValidator = paginationContainerValidator;
+        this.paginator = paginator;
     }
 
     @Override
-    public List<TagResponseDTO> findAll() {
-        return tagDao.findAll().stream().map(tagResponseDTOMapper::toTagResponseDTO).collect(Collectors.toList());
+    public List<TagDTO> findAll(PaginationContainer paginationContainer) {
+        paginationContainerValidator.isPaginationContainerValid(paginationContainer);
+        List<Tag> tagList = tagDao.findAll();
+        List<Tag> paginateList = paginator.paginate(tagList, paginationContainer);
+        return paginateList.stream().map(tagDTOMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public TagResponseDTO add(TagCreationDTO tagCreationDTO) {
-        tagCreationDTOValidator.isTagCreationDTOValid(tagCreationDTO);
-        Tag tag = tagCreationDTOMapper.toTag(tagCreationDTO);
-        String tagName = tag.getName();
-        long tagId = tag.getId();
-        if (tagId != 0) {
-            if (tagName != null) {
-                tagDao.addWithId(tag);
-            }
-        } else {
-            Tag newTag = tagDao.addWithoutId(tag);
-            tag.setId(newTag.getId());
-        }
-        return tagResponseDTOMapper.toTagResponseDTO(tag);
+    public TagDTO add(TagDTO tagDTO) {
+        tagCreationDTOValidator.isTagCreationDTOValid(tagDTO);
+        Tag tag = tagDTOMapper.toEntity(tagDTO);
+        Tag newTag = tagDao.add(tag);
+        tag.setId(newTag.getId());
+        return tagDTOMapper.toDTO(tag);
     }
 
     @Override
-    public TagResponseDTO findById(long id) {
+    public TagDTO findById(long id) {
         Tag tag = tagDao.findById(id).orElseThrow(() ->
                 new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG));
-        return tagResponseDTOMapper.toTagResponseDTO(tag);
+        return tagDTOMapper.toDTO(tag);
     }
 
     @Override
@@ -79,10 +74,16 @@ public class TagServiceImpl implements TagService {
     public void delete(long id) {
         Optional<Tag> tagOptional = tagDao.findById(id);
         if (tagOptional.isPresent()) {
-            giftCertificatesTagDao.deleteByTagId(id);
-            tagDao.delete(id);
+            Tag tag=tagOptional.get();
+            tagDao.delete(tag);
         } else {
             throw new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG);
         }
+    }
+
+    @Override
+    public TagDTO findMostWidelyTagUsersHighestCostOrders() {
+        Tag tag=tagDao.findMostWidelyTagUsersHighestCostOrders();
+        return tagDTOMapper.toDTO(tag);
     }
 }

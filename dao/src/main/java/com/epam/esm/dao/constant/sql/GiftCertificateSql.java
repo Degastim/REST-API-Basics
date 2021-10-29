@@ -20,4 +20,7 @@ public class GiftCertificateSql {
             "LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id = gift_certificates.gift_certificate_id " +
             "LEFT JOIN tags ON gift_certificates_tags.tag_id = tags.tag_id " +
             "WHERE gift_certificate_name=? AND description=? AND price=? AND duration=?";
+    public static final String FIND_BY_TAG_NAME="SELECT gift_certificates.*,tags.* FROM gift_certificates " +
+            "LEFT JOIN gift_certificates_tags ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id " +
+            "LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id WHERE tag_name=?";
 }

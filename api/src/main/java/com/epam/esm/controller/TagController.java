@@ -1,7 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.tag.TagCreationDTO;
-import com.epam.esm.dto.tag.TagResponseDTO;
+import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,18 +34,18 @@ public class TagController {
      * @return list with TagDTO which contain information about the found tags.
      */
     @GetMapping
-    public List<TagResponseDTO> findAllTags() {
-        return tagService.findAll();
+    public List<TagDTO> findAllTags(@ModelAttribute PaginationContainer paginationContainer) {
+        return tagService.findAll(paginationContainer);
     }
 
     /**
      * Add tag to database
      *
-     * @param tagCreationDTO an object that contain object request
+     * @param tagDTO an object that contain object request
      */
     @PostMapping
-    public TagResponseDTO addTag(@RequestBody TagCreationDTO tagCreationDTO) {
-        return tagService.add(tagCreationDTO);
+    public TagDTO addTag(@RequestBody TagDTO tagDTO) {
+        return tagService.add(tagDTO);
     }
 
     /**
@@ -54,7 +55,7 @@ public class TagController {
      * @return TagDTO which contain information about the found tag.
      */
     @GetMapping("/{id}")
-    public TagResponseDTO findById(@PathVariable long id) {
+    public TagDTO findById(@PathVariable long id) {
         return tagService.findById(id);
     }
 
@@ -67,6 +68,11 @@ public class TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable long id) {
         tagService.delete(id);
+    }
+
+    @GetMapping("/mostWidelyTagUsersHighestCostOrders")
+    public TagDTO findMostWidelyTagUsersHighestCostOrders() {
+        return tagService.findMostWidelyTagUsersHighestCostOrders();
     }
 }
 

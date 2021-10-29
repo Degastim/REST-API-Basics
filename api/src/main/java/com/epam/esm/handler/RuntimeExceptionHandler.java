@@ -1,10 +1,7 @@
 package com.epam.esm.handler;
 
 import com.epam.esm.entity.ResponseExceptionEntity;
-import com.epam.esm.exception.InvalidFieldValueException;
-import com.epam.esm.exception.ResourceAlreadyExistException;
-import com.epam.esm.exception.ResourceNotAddedException;
-import com.epam.esm.exception.ResourceNotFoundedException;
+import com.epam.esm.exception.*;
 import com.epam.esm.util.ErrorCodeCounter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +29,20 @@ public class RuntimeExceptionHandler {
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
-
+    /**
+     * Handle InvalidFieldValueException.
+     *
+     * @param e the exception that handler handle.
+     * @return the response entity
+     */
+    @ExceptionHandler(InvalidURLParameterException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleInvalidURLParameterException(InvalidURLParameterException e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = e.getLocalizedMessage();
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, e.getCodeExceptionCause());
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
     /**
      * Handle ResourceNotAddedException.
      *

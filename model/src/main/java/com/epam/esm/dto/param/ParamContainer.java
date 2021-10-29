@@ -1,0 +1,33 @@
+package com.epam.esm.dto.param;
+
+import java.util.List;
+
+public class ParamContainer {
+    private List<String> column;
+    private List<String> type;
+    private List<String> param;
+
+    public List<String> getColumn() {
+        return column;
+    }
+
+    public void setColumn(List<String> columnList) {
+        this.column = columnList;
+    }
+
+    public List<String> getType() {
+        return type;
+    }
+
+    public void setType(List<String> typeList) {
+        this.type = typeList;
+    }
+
+    public List<String> getParam() {
+        return param;
+    }
+
+    public void setParam(List<String> paramList) {
+        this.param = paramList;
+    }
+}

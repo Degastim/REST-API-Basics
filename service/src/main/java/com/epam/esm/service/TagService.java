@@ -1,7 +1,8 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.tag.TagCreationDTO;
-import com.epam.esm.dto.tag.TagResponseDTO;
+import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.TagDTO;
 
 import java.util.List;
 
@@ -16,15 +17,15 @@ public interface TagService {
      *
      * @return list of the found tags.
      */
-    List<TagResponseDTO> findAll();
+    List<TagDTO> findAll(PaginationContainer paginationContainer);
 
     /**
      * Adds new tag.
      *
-     * @param tagCreationDTO an object to be added.
+     * @param tagDTO an object to be added.
      * @return TagResponseDTO object for response
      */
-    TagResponseDTO add(TagCreationDTO tagCreationDTO);
+    TagDTO add(TagDTO tagDTO);
 
     /**
      * Finds tag by id.
@@ -32,7 +33,7 @@ public interface TagService {
      * @param id of the object to be found.
      * @return found tag object
      */
-    TagResponseDTO findById(long id);
+    TagDTO findById(long id);
 
     /**
      * Deletes tag.
@@ -40,4 +41,6 @@ public interface TagService {
      * @param id of the object to be deleted.
      */
     void delete(long id);
+
+    TagDTO findMostWidelyTagUsersHighestCostOrders();
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dto.ParamContainer;
+import com.epam.esm.dto.param.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.util.Optional;
  *
  * @author Yauheni Tstiov
  */
-public interface GiftCertificateDao {
+public interface GiftCertificateDao{
     /**
      * Adds gift certificate to the database.
      *
@@ -26,7 +26,7 @@ public interface GiftCertificateDao {
      *
      * @param id of the object to be deleted.
      */
-    void delete(long id);
+    void delete(GiftCertificate giftCertificate);
 
     /**
      * Finds the certificate by id.

@@ -2,18 +2,12 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.sql.TagSql;
-import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.error.ExceptionCauseCode;
-import com.epam.esm.exception.ResourceNotAddedException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,68 +18,53 @@ import java.util.Optional;
  */
 @Repository
 public class TagDaoImpl implements TagDao {
-    private final JdbcTemplate jdbcTemplate;
-    private final TagMapper tagMapper;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public TagDaoImpl(JdbcTemplate jdbcTemplate, TagMapper tagMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.tagMapper = tagMapper;
+    public TagDaoImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Tag addWithoutId(Tag tag) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Tag add(Tag tag) {
         String tagName = tag.getName();
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(TagSql.ADD_TAG, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, tagName);
-            return preparedStatement;
-        }, keyHolder);
-        if (keyHolder.getKey() == null) {
-            throw new ResourceNotAddedException("Tag not add.No KeyHolder", ExceptionCauseCode.TAG);
-        }
-        long tagId = keyHolder.getKey().longValue();
+        Long tagId = (Long) sessionFactory.openSession().save(tag);
         return new Tag(tagId, tagName);
     }
 
     @Override
-    public Tag addWithId(Tag tag) {
-        jdbcTemplate.update(TagSql.ADD_TAG_WITH_ID, tag.getId(), tag.getName());
-        return tag;
-    }
-
-    @Override
     public List<Tag> findAll() {
-        return jdbcTemplate.query(TagSql.FIND_ALL, tagMapper);
+        return sessionFactory.openSession().createSQLQuery(TagSql.FIND_ALL).addEntity(Tag.class).list();
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_NAME, tagMapper, name);
+        List<Tag> tagList = (List<Tag>) sessionFactory.openSession().createSQLQuery(TagSql.FIND_BY_NAME).setParameter(1, name).addEntity(Tag.class).list();
         return returnTag(tagList);
     }
 
     @Override
     public Optional<Tag> findById(long id) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID, tagMapper, id);
-        return returnTag(tagList);
+        Session session = sessionFactory.openSession();
+        Tag tag = session.find(Tag.class, id);
+        return Optional.ofNullable(tag);
     }
 
     @Override
     public void update(Tag tag) {
-        jdbcTemplate.update(TagSql.UPDATE_BY_ID, tag.getName(), tag.getId());
+        sessionFactory.openSession().update(tag);
     }
 
     @Override
-    public void delete(long id) {
-        jdbcTemplate.update(TagSql.DELETE_TAG, id);
+    public void delete(Tag tag) {
+        sessionFactory.openSession().delete(tag);
     }
 
     @Override
-    public Optional<Tag> findByIdAndName(long id, String name) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID_AND_NAME, tagMapper, id, name);
-        return returnTag(tagList);
+    public Tag findMostWidelyTagUsersHighestCostOrders() {
+        Session session = sessionFactory.openSession();
+        List<Tag> list = session.createSQLQuery("SELECT tags.* FROM users LEFT JOIN orders ON users.user_id=orders.user_id LEFT JOIN gift_certificates ON gift_certificates.gift_certificate_id=orders.order_gift_certificate_id LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id=gift_certificates.gift_certificate_id LEFT JOIN tags ON tags.tag_id=gift_certificates_tags.tag_id WHERE users.user_id= (SELECT user_id FROM orders GROUP BY user_id ORDER BY SUM(price) DESC LIMIT 1) group by tag_id ORDER BY COUNT(tags.tag_id) DESC LIMIT 1").addEntity(Tag.class).list();
+        return list.get(0);
     }
 
     private Optional<Tag> returnTag(List<Tag> tagList) {
