@@ -12,19 +12,18 @@ import java.util.Optional;
  *
  * @author Yauheni Tstiov
  */
-public interface GiftCertificateDao{
+public interface GiftCertificateDao {
     /**
      * Adds gift certificate to the database.
      *
      * @param giftCertificate object to be added.
-     * @return giftСertificate which was created.
      */
-    GiftCertificate add(GiftCertificate giftCertificate);
+    void add(GiftCertificate giftCertificate);
 
     /**
      * Deletes gift certificate from the database.
      *
-     * @param id of the object to be deleted.
+     * @param giftCertificate contain object to be deleted.
      */
     void delete(GiftCertificate giftCertificate);
 

@@ -4,6 +4,7 @@ import com.epam.esm.audit.AuditListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,11 +27,13 @@ public class GiftCertificate extends AbstractCustomEntity {
     private BigDecimal price;
     @Column
     private Integer duration;
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
     @OneToMany(mappedBy = "giftCertificate", cascade = CascadeType.ALL)
     private List<Order> orderList;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "gift_certificate_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags;
 
     public GiftCertificate() {
     }
@@ -57,6 +60,12 @@ public class GiftCertificate extends AbstractCustomEntity {
         this.tags = tags;
     }
 
+    public GiftCertificate(String giftCertificateName, String description, BigDecimal price, Integer duration) {
+        this.giftCertificateName = giftCertificateName;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+    }
 
     public long getId() {
         return id;
@@ -114,6 +123,14 @@ public class GiftCertificate extends AbstractCustomEntity {
         this.orderList = orderList;
     }
 
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -138,7 +155,7 @@ public class GiftCertificate extends AbstractCustomEntity {
         if (price != null ? !price.equals(that.price) : that.price != null) {
             return false;
         }
-        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) {
+        if (lastUpdateDate != null ? !lastUpdateDate.equals(that.lastUpdateDate) : that.lastUpdateDate != null) {
             return false;
         }
         return duration != null ? duration.equals(that.duration) : that.duration == null;
@@ -151,7 +168,7 @@ public class GiftCertificate extends AbstractCustomEntity {
         result = result + 3 * (description != null ? description.hashCode() : 0);
         result = result + 5 * (price != null ? price.hashCode() : 0);
         result = result + 7 * (duration != null ? duration.hashCode() : 0);
-        result = result + 9 * (timestamp != null ? timestamp.hashCode() : 0);
+        result = result + 9 * (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = result + 11 * (tags != null ? tags.hashCode() : 0);
         return result;
     }
@@ -164,7 +181,7 @@ public class GiftCertificate extends AbstractCustomEntity {
         sb.append(", description='").append(description).append('\'');
         sb.append(", price=").append(price);
         sb.append(", duration=").append(duration);
-        sb.append(", lastUpdateDate=").append(timestamp);
+        sb.append(", lastUpdateDate=").append(lastUpdateDate);
         sb.append(", tags=").append(tags);
         sb.append('}');
         return sb.toString();

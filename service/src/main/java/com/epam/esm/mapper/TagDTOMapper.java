@@ -10,22 +10,12 @@ import org.springframework.stereotype.Component;
  * @author Yauheni Tstiov
  */
 @Component
-public class TagDTOMapper {
-    /**
-     * Maps a TagCreationDTO as Tag.
-     *
-     * @param tagDTO object object to map.
-     * @return giftCertificate which contains the object after mapping.
-     */
+public class TagDTOMapper implements DTOMapper<Tag, TagDTO> {
+
     public Tag toEntity(TagDTO tagDTO) {
         return new Tag(tagDTO.getId(), tagDTO.getName());
     }
-    /**
-     * Maps a Tag as TagDTO.
-     *
-     * @param tag object object to map.
-     * @return giftCertificate which contains the object after mapping.
-     */
+
     public TagDTO toDTO(Tag tag) {
         return new TagDTO(tag.getId(), tag.getName());
     }

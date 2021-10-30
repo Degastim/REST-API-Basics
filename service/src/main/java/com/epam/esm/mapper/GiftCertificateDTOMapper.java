@@ -15,19 +15,14 @@ import java.util.stream.Collectors;
  * @author Yauheni Tstiov
  */
 @Component
-public class GiftCertificateDTOMapper {
+public class GiftCertificateDTOMapper implements DTOMapper<GiftCertificate, GiftCertificateDTO> {
     private final TagDTOMapper tagDTOMapper;
 
     public GiftCertificateDTOMapper(TagDTOMapper tagDTOMapper) {
         this.tagDTOMapper = tagDTOMapper;
     }
 
-    /**
-     * Maps a giftCertificateDTO as GiftCertificate.
-     *
-     * @param giftCertificateDTO object object to map.
-     * @return giftCertificate which contains the object after mapping.
-     */
+    @Override
     public GiftCertificate toEntity(GiftCertificateDTO giftCertificateDTO) {
         Set<TagDTO> tagDTOSet = giftCertificateDTO.getTags();
         Set<Tag> tagSet = null;
@@ -42,6 +37,7 @@ public class GiftCertificateDTOMapper {
                 tagSet);
     }
 
+    @Override
     public GiftCertificateDTO toDTO(GiftCertificate giftCertificate) {
         Set<Tag> tagSet = giftCertificate.getTags();
         Set<TagDTO> tagDTOSet = null;

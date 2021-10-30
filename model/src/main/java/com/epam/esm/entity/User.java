@@ -5,6 +5,11 @@ import com.epam.esm.audit.AuditListener;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Entity of a user.
+ *
+ * @author Yauheni Tsitou
+ */
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditListener.class)
@@ -87,5 +92,4 @@ public class User extends AbstractCustomEntity {
         sb.append('}');
         return sb.toString();
     }
-
 }

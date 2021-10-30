@@ -2,13 +2,13 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.column.GiftCertificateColumnName;
+import com.epam.esm.dao.constant.sql.GiftCertificateSql;
 import com.epam.esm.dao.creator.GiftCertificateSqlSelectCreator;
 import com.epam.esm.dao.creator.GiftCertificateSqlUpdateCreator;
 import com.epam.esm.dto.param.ParamColumnName;
 import com.epam.esm.dto.param.ParamContainer;
 import com.epam.esm.dto.param.ParamType;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Tag;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +35,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public GiftCertificate add(GiftCertificate giftCertificate) {
+    public void add(GiftCertificate giftCertificate) {
         Long giftCertificateId = (Long) sessionFactory.openSession().save(giftCertificate);
         giftCertificate.setId(giftCertificateId);
-        return giftCertificate;
     }
 
     @Override
@@ -61,30 +60,28 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public void update(GiftCertificate giftCertificate) {
+        Session session = sessionFactory.getCurrentSession();
         long id = giftCertificate.getId();
         String giftCertificateName = giftCertificate.getGiftCertificateName();
         String giftCertificateDescription = giftCertificate.getDescription();
         BigDecimal price = giftCertificate.getPrice();
         Integer duration = giftCertificate.getDuration();
-        GiftCertificateSqlUpdateCreator giftCertificateSqlUpdateCreator = new GiftCertificateSqlUpdateCreator();
+        GiftCertificate daoGiftCertificate = session.find(GiftCertificate.class, id);
+        session.evict(daoGiftCertificate);
         if (giftCertificateName != null) {
-            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.NAME, giftCertificateName);
+            daoGiftCertificate.setGiftCertificateName(giftCertificateName);
         }
         if (giftCertificateDescription != null) {
-            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.DESCRIPTION,
-                    giftCertificateDescription);
+            daoGiftCertificate.setDescription(giftCertificateDescription);
         }
         if (price != null) {
-            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.PRICE, price.toString());
+            daoGiftCertificate.setPrice(price);
         }
         if (duration != null) {
-            giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.DURATION, String.valueOf(duration));
+            daoGiftCertificate.setDuration(duration);
         }
-        giftCertificateSqlUpdateCreator.addParameter(GiftCertificateColumnName.LAST_UPDATE_DATE,
-                LocalDateTime.now().toString());
-        giftCertificateSqlUpdateCreator.addWhereEquality(GiftCertificateColumnName.ID, Long.toString(id));
-        StringBuilder sql = giftCertificateSqlUpdateCreator.getSql();
-        sessionFactory.openSession().update(sql);
+        session.update(daoGiftCertificate);//TODO
+        session.flush();
     }
 
     @Override
@@ -135,7 +132,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description,
                                                                                  BigDecimal price, Integer duration) {
-        List<GiftCertificate> giftCertificateList = (List<GiftCertificate>) sessionFactory.openSession().createSQLQuery("SELECT * FROM gift_certificates WHERE gift_certificate_name=? AND description=? AND price=? AND duration=?").setParameter(1, name).setParameter(2, description).setParameter(3, price).setParameter(4, duration).addEntity(GiftCertificate.class).list();
+        List<GiftCertificate> giftCertificateList = (List<GiftCertificate>) sessionFactory.openSession().createSQLQuery(GiftCertificateSql.FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION).setParameter(1, name).setParameter(2, description).setParameter(3, price).setParameter(4, duration).addEntity(GiftCertificate.class).list();
         return returnGiftCertificate(giftCertificateList);
     }
 

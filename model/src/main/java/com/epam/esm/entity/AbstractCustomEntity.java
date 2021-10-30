@@ -11,8 +11,8 @@ public abstract class AbstractCustomEntity {
     @Column
     protected String operation;
 
-    @Column
-    protected LocalDateTime timestamp;
+    @Column(name = "last_update_date")
+    protected LocalDateTime lastUpdateDate;
 
     public long getId() {
         return id;
@@ -30,11 +30,11 @@ public abstract class AbstractCustomEntity {
         this.operation = operation;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setTimestamp(LocalDateTime lastUpdateDate) {
-        this.timestamp = lastUpdateDate;
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 }

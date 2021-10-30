@@ -1,12 +1,14 @@
 package com.epam.esm.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class OrderDTO extends RepresentationModel<OrderDTO> {
-    private long id;
+/**
+ * Entity of an order for request and response.
+ *
+ * @author Yauheni Tsitou
+ */
+public class OrderDTO extends AbstractCustomDTO<OrderDTO> {
     private BigDecimal price;
     private LocalDateTime creationDate;
     private long giftCertificateId;
@@ -19,14 +21,6 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
         this.price = price;
         this.creationDate = creationDate;
         this.giftCertificateId = giftCertificateId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public BigDecimal getPrice() {
@@ -55,10 +49,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         OrderDTO that = (OrderDTO) o;
@@ -68,15 +59,12 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
         if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) {
             return false;
         }
-        if (giftCertificateId != that.giftCertificateId) {
-            return false;
-        }
-        return id == that.id;
+        return giftCertificateId == that.giftCertificateId;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = super.hashCode();
         result += 3 * (price != null ? price.hashCode() : 0);
         result += 5 * (creationDate != null ? creationDate.hashCode() : 0);
         return result;

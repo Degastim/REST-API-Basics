@@ -1,7 +1,5 @@
 package com.epam.esm.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -10,8 +8,7 @@ import java.util.Set;
  *
  * @author Yauheni Tsitou
  */
-public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> {
-    private long id;
+public class GiftCertificateDTO extends AbstractCustomDTO<GiftCertificateDTO> {
     private String name;
     private String description;
     private BigDecimal price;
@@ -30,13 +27,6 @@ public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> 
         this.tags = tags;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -80,10 +70,7 @@ public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         GiftCertificateDTO that = (GiftCertificateDTO) o;
@@ -99,15 +86,12 @@ public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> 
         if (duration != null ? !duration.equals(that.duration) : that.duration != null) {
             return false;
         }
-        if (price != null ? !price.equals(that.price) : that.price != null) {
-            return false;
-        }
-        return id == that.id;
+        return price != null ? price.equals(that.price) : that.price == null;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = super.hashCode();
         result = result + 2 * (name != null ? name.hashCode() : 0);
         result = result + 3 * (description != null ? description.hashCode() : 0);
         result = result + 5 * (price != null ? price.hashCode() : 0);

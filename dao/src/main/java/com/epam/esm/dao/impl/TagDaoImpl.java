@@ -40,7 +40,11 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Optional<Tag> findByName(String name) {
         List<Tag> tagList = (List<Tag>) sessionFactory.openSession().createSQLQuery(TagSql.FIND_BY_NAME).setParameter(1, name).addEntity(Tag.class).list();
-        return returnTag(tagList);
+        if (tagList.size() != 0) {
+            return Optional.of(tagList.get(0));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -61,13 +65,9 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag findMostWidelyTagUsersHighestCostOrders() {
+    public Optional<Tag> findMostWidelyTagUsersHighestCostOrders() {
         Session session = sessionFactory.openSession();
-        List<Tag> list = session.createSQLQuery("SELECT tags.* FROM users LEFT JOIN orders ON users.user_id=orders.user_id LEFT JOIN gift_certificates ON gift_certificates.gift_certificate_id=orders.order_gift_certificate_id LEFT JOIN gift_certificates_tags ON gift_certificates_tags.gift_certificate_id=gift_certificates.gift_certificate_id LEFT JOIN tags ON tags.tag_id=gift_certificates_tags.tag_id WHERE users.user_id= (SELECT user_id FROM orders GROUP BY user_id ORDER BY SUM(price) DESC LIMIT 1) group by tag_id ORDER BY COUNT(tags.tag_id) DESC LIMIT 1").addEntity(Tag.class).list();
-        return list.get(0);
-    }
-
-    private Optional<Tag> returnTag(List<Tag> tagList) {
+        List<Tag> tagList = session.createSQLQuery(TagSql.FIND_MOST_WIDELY_TAG_USERS_HIGHEST_COST_ORDERS).addEntity(Tag.class).list();
         if (tagList.size() != 0) {
             return Optional.of(tagList.get(0));
         } else {

@@ -1,5 +1,10 @@
 package com.epam.esm.dto;
 
+/**
+ * Container for pagination.
+ *
+ * @author Yauheni Tsitou
+ */
 public class PaginationContainer {
     private int page;
     private int size;

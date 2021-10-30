@@ -6,10 +6,7 @@ package com.epam.esm.dao.creator;
  * @author Yauheni Tstiov
  */
 public class GiftCertificateSqlSelectCreator {
-    private final StringBuilder sql = new StringBuilder("SELECT gift_certificates.*,tags.* FROM gift_certificates ")
-            .append("LEFT JOIN gift_certificates_tags ")
-            .append("ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id ")
-            .append("LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id");
+    private final StringBuilder sql = new StringBuilder("SELECT * FROM gift_certificates");
     private boolean hasCondition = false;
     private boolean hasOrderBy = false;
     private static final String LIKE_SQL = "LIKE";

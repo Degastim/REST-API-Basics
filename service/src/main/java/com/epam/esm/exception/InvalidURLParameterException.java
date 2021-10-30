@@ -1,5 +1,10 @@
 package com.epam.esm.exception;
 
+/**
+ * Custom InvalidURLParameterException exception.
+ *
+ * @author Yauheni Tsitov
+ */
 public class InvalidURLParameterException extends RuntimeException {
     private final int codeExceptionCause;
 

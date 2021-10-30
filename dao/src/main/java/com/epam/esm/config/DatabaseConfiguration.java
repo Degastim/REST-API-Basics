@@ -21,7 +21,7 @@ import javax.sql.DataSource;
  * @author Yauheni Tstiov
  */
 @Configuration
-@EnableTransactionManagement()
+@EnableTransactionManagement
 public class DatabaseConfiguration {
     private static final String DATABASE_PROPERTY_FILE_PATH = "/databaseConfig.properties";
     private static final String CREATE_DATABASE_SCRIPT = "script/database.sql";
@@ -56,11 +56,17 @@ public class DatabaseConfiguration {
                 .build();
     }
 
+    /**
+     * Creates SessionFactory.
+     *
+     * @return LocalSessionFactoryBean
+     */
     @Bean("sessionFactory")
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan(PACKAGE_WITH_ENTITY);
+        System.out.println(111111);
         return sessionFactory;
     }
 
@@ -70,9 +76,9 @@ public class DatabaseConfiguration {
      * @return PlatformTransactionManager object
      */
     @Bean(name = "transactionManager")
-    public HibernateTransactionManager hibernateTransactionManager() {
+    public PlatformTransactionManager hibernateTransactionManager(LocalSessionFactoryBean sessionFactory) {
         HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
-        hibernateTransactionManager.setSessionFactory(sessionFactory().getObject());
+        hibernateTransactionManager.setSessionFactory(sessionFactory.getObject());
         return hibernateTransactionManager;
     }
 }

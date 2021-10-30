@@ -1,31 +1,20 @@
 package com.epam.esm.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import java.util.List;
 
-public class UserDTO extends RepresentationModel<UserDTO> {
-    private long id;
+/**
+ * Entity of a user for request and response.
+ *
+ * @author Yauheni Tsitou
+ */
+public class UserDTO extends AbstractCustomDTO<UserDTO> {
     private String name;
     private List<OrderDTO> orderList;
-
-    public UserDTO(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     public UserDTO(long id, String name, List<OrderDTO> orderList) {
         this.id = id;
         this.name = name;
         this.orderList = orderList;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -46,10 +35,7 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         UserDTO that = (UserDTO) o;
@@ -64,7 +50,7 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = super.hashCode();
         result += 2 * (name != null ? name.hashCode() : 0);
         result += 3 * (orderList != null ? orderList.hashCode() : 0);
         return result;

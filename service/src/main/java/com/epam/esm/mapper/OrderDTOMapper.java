@@ -5,8 +5,13 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * Order and OrderDTO mapper class.
+ *
+ * @author Yauheni Tstiov
+ */
 @Component
-public class OrderDTOMapper {
+public class OrderDTOMapper implements DTOMapper<Order, OrderDTO> {
 
     public Order toEntity(OrderDTO orderDTO) {
         return new Order(orderDTO.getId(), orderDTO.getPrice(), orderDTO.getCreationDate(), new GiftCertificate(orderDTO.getGiftCertificateId()));

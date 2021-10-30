@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.dao.constant.sql.UserSql;
 import com.epam.esm.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,13 +23,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findAll() {
         Session session = sessionFactory.openSession();
-        return (List<User>) session.createSQLQuery("SELECT * FROM users").addEntity(User.class).list();
+        return (List<User>) session.createSQLQuery(UserSql.FIND_ALL).addEntity(User.class).list();
     }
 
     @Override
     public Optional<User> findById(long id) {
         Session session = sessionFactory.openSession();
-        User user=session.find(User.class, id);
+        User user = session.find(User.class, id);
         return Optional.ofNullable(user);
     }
 }

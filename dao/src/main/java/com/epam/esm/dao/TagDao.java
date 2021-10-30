@@ -52,8 +52,14 @@ public interface TagDao {
     /**
      * Deletes tag from the table.
      *
-     * @param id of the object to be deleted.
+     * @param tag of the object to be deleted.
      */
     void delete(Tag tag);
-    Tag findMostWidelyTagUsersHighestCostOrders();
+
+    /**
+     * Find the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return optional which contains tag.
+     */
+    Optional<Tag> findMostWidelyTagUsersHighestCostOrders();
 }

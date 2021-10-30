@@ -2,6 +2,11 @@ package com.epam.esm.dto.param;
 
 import java.util.List;
 
+/**
+ * Container for parameter for searching.
+ *
+ * @author Yauheni Tsitou
+ */
 public class ParamContainer {
     private List<String> column;
     private List<String> type;

@@ -29,6 +29,7 @@ public class RuntimeExceptionHandler {
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
+
     /**
      * Handle InvalidFieldValueException.
      *
@@ -43,6 +44,7 @@ public class RuntimeExceptionHandler {
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
+
     /**
      * Handle ResourceNotAddedException.
      *

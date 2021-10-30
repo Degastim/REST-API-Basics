@@ -19,7 +19,7 @@ public class Tag extends AbstractCustomEntity {
     @Column(name = "tag_name")
     private String name;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "gift_certificates_tags", joinColumns =@JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "gift_certificate_id") )
+    @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "gift_certificate_id"))
     private Set<GiftCertificate> giftCertificateSet = new HashSet<>();
 
     public Tag() {

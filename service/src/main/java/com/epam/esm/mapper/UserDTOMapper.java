@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * User and UserDTO mapper class.
+ *
+ * @author Yauheni Tstiov
+ */
 @Component
-public class UserDTOMapper {
+public class UserDTOMapper implements DTOMapper<User, UserDTO> {
     private final OrderDTOMapper orderDTOMapper;
 
     public UserDTOMapper(OrderDTOMapper orderDTOMapper) {
@@ -24,6 +29,6 @@ public class UserDTOMapper {
 
     public User toEntity(UserDTO userDTO) {
         List<Order> orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
-        return new User(userDTO.getId(), userDTO.getName(),orderList);
+        return new User(userDTO.getId(), userDTO.getName(), orderList);
     }
 }

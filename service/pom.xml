@@ -13,9 +13,6 @@
     <version>1.0.0</version>
     <name>service</name>
     <description>service</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
 
     <dependencies>
         <dependency>

@@ -1,14 +1,11 @@
 package com.epam.esm.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-
 /**
  * Entity of a tag for creation.
  *
  * @author Yauheni Tsitou
  */
-public class TagDTO extends RepresentationModel<TagDTO> {
-    private long id;
+public class TagDTO extends AbstractCustomDTO<TagDTO> {
     private String name;
 
     public TagDTO() {
@@ -27,20 +24,9 @@ public class TagDTO extends RepresentationModel<TagDTO> {
         this.name = name;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         TagDTO tag = (TagDTO) o;
@@ -52,7 +38,7 @@ public class TagDTO extends RepresentationModel<TagDTO> {
 
     @Override
     public int hashCode() {
-        return 31 * Long.hashCode(id) + (name != null ? name.hashCode() : 0);
+        return super.hashCode() + 31 * (name != null ? name.hashCode() : 0);
     }
 
     @Override

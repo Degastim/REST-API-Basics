@@ -104,14 +104,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDTO add(GiftCertificateDTO giftCertificateCreationDTO) {
         giftCertificateDTOValidator.isGiftCertificateDTOAddValid(giftCertificateCreationDTO);
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        giftCertificate.setTimestamp(localDateTime);
-        for(Tag tag:giftCertificate.getTags()){
-            Optional<Tag> tagOptional=tagDao.findByName(tag.getName());
+        giftCertificate.setCreateDate(LocalDateTime.now());
+        for (Tag tag : giftCertificate.getTags()) {
+            Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
             tagOptional.ifPresent(value -> tag.setId(value.getId()));
             tag.addGiftCertificate(giftCertificate);
         }
-        giftCertificate = giftCertificateDao.add(giftCertificate);
+        giftCertificateDao.add(giftCertificate);
         return giftCertificateDTOMapper.toDTO(giftCertificate);
     }
 

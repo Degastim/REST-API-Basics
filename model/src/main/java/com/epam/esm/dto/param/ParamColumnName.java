@@ -1,5 +1,10 @@
 package com.epam.esm.dto.param;
 
+/**
+ * Container for the relationship between parameter name and column name.
+ *
+ * @author Yauheni Tsitou
+ */
 public enum ParamColumnName {
     TAG_NAME("tag_name"),
     GIFT_CERTIFICATE_NAME("gift_certificate_name"),

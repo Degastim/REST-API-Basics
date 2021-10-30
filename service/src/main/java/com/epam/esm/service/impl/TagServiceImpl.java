@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.Paginator;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
@@ -74,7 +73,7 @@ public class TagServiceImpl implements TagService {
     public void delete(long id) {
         Optional<Tag> tagOptional = tagDao.findById(id);
         if (tagOptional.isPresent()) {
-            Tag tag=tagOptional.get();
+            Tag tag = tagOptional.get();
             tagDao.delete(tag);
         } else {
             throw new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG);
@@ -83,7 +82,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO findMostWidelyTagUsersHighestCostOrders() {
-        Tag tag=tagDao.findMostWidelyTagUsersHighestCostOrders();
-        return tagDTOMapper.toDTO(tag);
+        Optional<Tag> optionalTag = tagDao.findMostWidelyTagUsersHighestCostOrders();
+        if (optionalTag.isPresent()) {
+            return tagDTOMapper.toDTO(optionalTag.get());
+        } else {
+            throw new ResourceNotFoundedException("Tag not founded", ExceptionCauseCode.TAG);
+        }
     }
 }

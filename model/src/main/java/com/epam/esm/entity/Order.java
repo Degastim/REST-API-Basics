@@ -1,33 +1,40 @@
 package com.epam.esm.entity;
 
 import com.epam.esm.audit.AuditListener;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Entity of an order.
+ *
+ * @author Yauheni Tsitou
+ */
 @Entity
 @Table(name = "orders")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "order_id"))
 public class Order extends AbstractCustomEntity {
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column
     private BigDecimal price;
     @Column(name = "create_date")
     private LocalDateTime createDate;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_gift_certificate_id",nullable = false)
+    @JoinColumn(name = "order_gift_certificate_id", nullable = false)
     private GiftCertificate giftCertificate;
+
     public Order() {
     }
 
-    public Order(long id, BigDecimal price, LocalDateTime createDate,GiftCertificate giftCertificate) {
+    public Order(long id, BigDecimal price, LocalDateTime createDate, GiftCertificate giftCertificate) {
         this.id = id;
         this.price = price;
         this.createDate = createDate;
-        this.giftCertificate=giftCertificate;
+        this.giftCertificate = giftCertificate;
     }
 
     public long getId() {

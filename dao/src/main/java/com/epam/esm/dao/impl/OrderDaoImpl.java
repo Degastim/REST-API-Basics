@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.OrderDao;
+import com.epam.esm.dao.constant.sql.OrderSql;
 import com.epam.esm.entity.Order;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> findAllByUserId(long userId) {
-        return (List<Order>) sessionFactory.openSession().createSQLQuery("Select * FROM orders WHERE user_id=?").setParameter(1, userId).addEntity(Order.class).list();
+        return (List<Order>) sessionFactory.openSession().createSQLQuery(OrderSql.FIND_ALL_BY_USER_ID).setParameter(1, userId).addEntity(Order.class).list();
     }
 
     @Override

@@ -1,19 +1,22 @@
 CREATE TABLE gift_certificates
 (
     gift_certificate_id   bigint         NOT NULL AUTO_INCREMENT,
-    gift_certificate_name varchar(256)   NOT NULL,
+    gift_certificate_name varchar(40)    NOT NULL,
     description           text           NOT NULL,
     price                 decimal(10, 2) NOT NULL,
     duration              int            NOT NULL,
     create_date           datetime       NOT NULL,
     last_update_date      datetime       NOT NULL,
+    operation             VARCHAR(10)    NOT NULL,
     PRIMARY KEY (gift_certificate_id)
 );
 
 CREATE TABLE tags
 (
-    tag_id   bigint       NOT NULL AUTO_INCREMENT,
-    tag_name varchar(256) NOT NULL,
+    tag_id           bigint       NOT NULL AUTO_INCREMENT,
+    tag_name         varchar(256) NOT NULL,
+    last_update_date datetime     NOT NULL,
+    operation        VARCHAR(10)  NOT NULL,
     PRIMARY KEY (tag_id)
 );
 
@@ -27,17 +30,21 @@ CREATE TABLE gift_certificates_tags
 
 CREATE TABLE users
 (
-    user_id   bigint NOT NULL AUTO_INCREMENT,
-    user_name VARCHAR(40) not null,
+    user_id          bigint      NOT NULL AUTO_INCREMENT,
+    user_name        VARCHAR(40) NOT NULL,
+    last_update_date datetime    NOT NULL,
+    operation        VARCHAR(10) NOT NULL,
     PRIMARY KEY (user_id)
 );
 
 CREATE TABLE orders
 (
-    order_id    BIGINT         NOT NULL AUTO_INCREMENT,
-    price       DECIMAL(10, 2) NOT NULL,
-    create_date datetime       NOT NULL,
-    user_id     BIGINT         NOT NULL REFERENCES users (user_id),
-    order_gift_certificate_id BIGINT NOT NULL REFERENCES gift_certificates(gift_certificate_id),
+    order_id                  BIGINT         NOT NULL AUTO_INCREMENT,
+    price                     DECIMAL(10, 2) NOT NULL,
+    create_date               datetime       NOT NULL,
+    user_id                   BIGINT         NOT NULL REFERENCES users (user_id),
+    order_gift_certificate_id BIGINT         NOT NULL REFERENCES gift_certificates (gift_certificate_id),
+    last_update_date datetime    NOT NULL,
+    operation        VARCHAR(10) NOT NULL,
     PRIMARY KEY (order_id)
 );
