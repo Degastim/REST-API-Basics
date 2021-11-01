@@ -31,10 +31,13 @@ public class GiftCertificateDTOHateoas {
      */
     public void build(GiftCertificateDTO giftCertificateDTO) {
         Link self = linkTo(GiftCertificateController.class).slash(giftCertificateDTO.getId()).withSelfRel();
-        Link delete = linkTo(methodOn(GiftCertificateController.class).findGiftCertificateById(giftCertificateDTO.getId())).withRel("delete");
-        Link update = linkTo(methodOn(GiftCertificateController.class).updateGiftCertificate(giftCertificateDTO.getId(), giftCertificateDTO)).withRel("update");
+        Link delete = linkTo(methodOn(GiftCertificateController.class)
+                .findGiftCertificateById(giftCertificateDTO.getId())).withRel("delete");
+        Link update = linkTo(methodOn(GiftCertificateController.class)
+                .updateGiftCertificate(giftCertificateDTO.getId(), giftCertificateDTO)).withRel("update");
         Link addTagLink = linkTo(methodOn(TagController.class).addTag(new TagDTO())).withRel("add_tag");
-        Link findAllTagsLink = linkTo(methodOn(TagController.class).findAllTags(null)).withRel("find_all_tags");
+        Link findAllTagsLink = linkTo(methodOn(TagController.class)
+                .findAllTags(null)).withRel("find_all_tags");
         Set<TagDTO> tagDTOs = giftCertificateDTO.getTags();
         if (tagDTOs != null) {
             for (TagDTO tagDTO : tagDTOs) {
@@ -52,12 +55,16 @@ public class GiftCertificateDTOHateoas {
      *
      * @param giftCertificateDTOList contains a gift certificate for conversion.
      */
-    public CollectionModel<GiftCertificateDTO> build(List<GiftCertificateDTO> giftCertificateDTOList, PaginationContainer paginationContainer, ParamContainer paramContainer) {
+    public CollectionModel<GiftCertificateDTO> build(List<GiftCertificateDTO> giftCertificateDTOList,
+                                                     PaginationContainer paginationContainer,
+                                                     ParamContainer paramContainer) {
         for (GiftCertificateDTO giftCertificateDTO : giftCertificateDTOList) {
             build(giftCertificateDTO);
         }
-        Link add = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer, paramContainer)).withRel("add");
-        Link self = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer, paramContainer)).withSelfRel();
+        Link add = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer,
+                paramContainer)).withRel("add");
+        Link self = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer,
+                paramContainer)).withSelfRel();
         Link findAllTagsLink = linkTo(methodOn(TagController.class).findAllTags(null)).withRel("find_all_tags");
         Link addTagLink = linkTo(methodOn(TagController.class).addTag(new TagDTO())).withRel("add_tag");
         return CollectionModel.of(giftCertificateDTOList, self, add, findAllTagsLink, addTagLink);

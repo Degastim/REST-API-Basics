@@ -4,10 +4,18 @@ import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.InvalidURLParameterException;
 import org.springframework.stereotype.Component;
-
+/**
+ * Validator for pagination container.
+ *
+ * @author Yauheni Tsitov
+ */
 @Component
 public class PaginationContainerValidator {
-
+    /**
+     * Is PaginationContainer valid.
+     *
+     * @param paginationContainer the object for validation.
+     */
     public void isPaginationContainerValid(PaginationContainer paginationContainer) {
         int page = paginationContainer.getPage();
         int size = paginationContainer.getSize();

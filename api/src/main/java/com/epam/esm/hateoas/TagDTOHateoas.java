@@ -40,8 +40,10 @@ public class TagDTOHateoas {
         for (TagDTO tagDTO : tagDTOList) {
             build(tagDTO);
         }
-        Link self = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TagController.class).findAllTags(paginationContainer)).withSelfRel();
-        Link add = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TagController.class).addTag(new TagDTO())).withRel("add");
+        Link self = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TagController.class)
+                .findAllTags(paginationContainer)).withSelfRel();
+        Link add = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TagController.class)
+                .addTag(new TagDTO())).withRel("add");
         return CollectionModel.of(tagDTOList, self, add);
     }
 }

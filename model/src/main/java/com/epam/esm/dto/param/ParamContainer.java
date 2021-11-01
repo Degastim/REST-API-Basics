@@ -12,6 +12,15 @@ public class ParamContainer {
     private List<String> type;
     private List<String> param;
 
+    public ParamContainer() {
+    }
+
+    public ParamContainer(List<String> column, List<String> type, List<String> param) {
+        this.column = column;
+        this.type = type;
+        this.param = param;
+    }
+
     public List<String> getColumn() {
         return column;
     }

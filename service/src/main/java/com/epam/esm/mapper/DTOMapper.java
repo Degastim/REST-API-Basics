@@ -1,9 +1,9 @@
 package com.epam.esm.mapper;
 
-import com.epam.esm.dto.AbstractCustomDTO;
-import com.epam.esm.entity.AbstractCustomEntity;
+import com.epam.esm.dto.AbstractDTO;
+import com.epam.esm.entity.AbstractEntity;
 
-public interface DTOMapper<T extends AbstractCustomEntity, R extends AbstractCustomDTO> {
+public interface DTOMapper<T extends AbstractEntity, R extends AbstractDTO> {
     /**
      * Maps a DTO as Entity.
      *

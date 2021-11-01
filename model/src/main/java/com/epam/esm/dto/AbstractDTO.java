@@ -2,7 +2,10 @@ package com.epam.esm.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
-public abstract class AbstractCustomDTO<T extends AbstractCustomDTO<? extends T>> extends RepresentationModel<T> {
+/**
+ * Super class for dto
+ */
+public abstract class AbstractDTO<T extends AbstractDTO<? extends T>> extends RepresentationModel<T> {
     protected long id;
 
     public long getId() {
@@ -21,7 +24,7 @@ public abstract class AbstractCustomDTO<T extends AbstractCustomDTO<? extends T>
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AbstractCustomDTO<?> that = (AbstractCustomDTO<?>) o;
+        AbstractDTO<?> that = (AbstractDTO<?>) o;
         return id == that.id;
     }
 

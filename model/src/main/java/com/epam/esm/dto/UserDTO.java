@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Yauheni Tsitou
  */
-public class UserDTO extends AbstractCustomDTO<UserDTO> {
+public class UserDTO extends AbstractDTO<UserDTO> {
     private String name;
     private List<OrderDTO> orderList;
 
@@ -54,15 +54,5 @@ public class UserDTO extends AbstractCustomDTO<UserDTO> {
         result += 2 * (name != null ? name.hashCode() : 0);
         result += 3 * (orderList != null ? orderList.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("UserDTO{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", orderList=").append(orderList);
-        sb.append('}');
-        return sb.toString();
     }
 }

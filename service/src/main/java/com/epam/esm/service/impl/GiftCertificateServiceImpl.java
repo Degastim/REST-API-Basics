@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -79,24 +80,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDTO.setId(id);
         giftCertificateDTOValidator.isGiftCertificateDTOUpdateValid(giftCertificateDTO);
         GiftCertificate newGiftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateDTO);
-        Set<Tag> newTags = newGiftCertificate.getTags();
         newGiftCertificate.setId(id);
-        giftCertificateDao.update(newGiftCertificate);
+        Set<Tag> newTags = newGiftCertificate.getTags();
         if (newTags != null) {
             for (Tag newTag : newTags) {
                 String tagName = newTag.getName();
                 Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
                 if (daoTagOptional.isPresent()) {
                     Tag daoTag = daoTagOptional.get();
-                    daoTag.getId();
-                } else {
-                    tagDao.add(newTag);
+                    newTag.setId(daoTag.getId());
                 }
-
             }
         }
-        GiftCertificate result = giftCertificateDao.findById(id).get();
-        return giftCertificateDTOMapper.toDTO(result);
+        newGiftCertificate = giftCertificateDao.update(newGiftCertificate);
+        return giftCertificateDTOMapper.toDTO(newGiftCertificate);
     }
 
     @Override
@@ -105,18 +102,28 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDTOValidator.isGiftCertificateDTOAddValid(giftCertificateCreationDTO);
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
         giftCertificate.setCreateDate(LocalDateTime.now());
-        for (Tag tag : giftCertificate.getTags()) {
-            Optional<Tag> tagOptional = tagDao.findByName(tag.getName());
-            tagOptional.ifPresent(value -> tag.setId(value.getId()));
-            tag.addGiftCertificate(giftCertificate);
+        Set<Tag> newTags = giftCertificate.getTags();
+        if (newTags != null) {
+            for (Tag newTag : newTags) {
+                String tagName = newTag.getName();
+                Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
+                if (daoTagOptional.isPresent()) {
+                    Tag daoTag = daoTagOptional.get();
+                    newTag.setId(daoTag.getId());
+                }
+            }
+        } else {
+            newTags = new HashSet<>();
         }
+        giftCertificate.setTags(new HashSet<>(newTags));
         giftCertificateDao.add(giftCertificate);
         return giftCertificateDTOMapper.toDTO(giftCertificate);
     }
 
     @Override
     @Transactional
-    public List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer, ParamContainer paramContainer) {
+    public List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer,
+                                                                             ParamContainer paramContainer) {
         paginationContainerValidator.isPaginationContainerValid(paginationContainer);
         paramValidator.isParamValid(paramContainer);
         List<GiftCertificate> giftCertificateList = giftCertificateDao.executeSqlSelect(paramContainer);

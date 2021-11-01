@@ -48,5 +48,6 @@ public interface GiftCertificateService {
      * @param paramContainer contain parameters for found gift certificate
      * @return list with found items.
      */
-    List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer, ParamContainer paramContainer);
+    List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer,
+                                                                      ParamContainer paramContainer);
 }

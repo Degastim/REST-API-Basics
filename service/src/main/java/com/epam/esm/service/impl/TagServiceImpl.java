@@ -10,7 +10,7 @@ import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.mapper.TagDTOMapper;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.PaginationContainerValidator;
-import com.epam.esm.validator.TagCreationDTOValidator;
+import com.epam.esm.validator.TagDTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final TagDTOMapper tagDTOMapper;
-    private final TagCreationDTOValidator tagCreationDTOValidator;
+    private final TagDTOValidator tagDTOValidator;
     private final PaginationContainerValidator paginationContainerValidator;
     private final Paginator<Tag> paginator;
 
     @Autowired
     public TagServiceImpl(TagDao tagDao, TagDTOMapper tagDTOMapper,
-                          TagCreationDTOValidator tagCreationDTOValidator,
+                          TagDTOValidator tagDTOValidator,
                           PaginationContainerValidator paginationContainerValidator, Paginator<Tag> paginator) {
         this.tagDao = tagDao;
         this.tagDTOMapper = tagDTOMapper;
-        this.tagCreationDTOValidator = tagCreationDTOValidator;
+        this.tagDTOValidator = tagDTOValidator;
         this.paginationContainerValidator = paginationContainerValidator;
         this.paginator = paginator;
     }
@@ -54,7 +54,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDTO add(TagDTO tagDTO) {
-        tagCreationDTOValidator.isTagCreationDTOValid(tagDTO);
+        tagDTOValidator.isTagCreationDTOValid(tagDTO);
         Tag tag = tagDTOMapper.toEntity(tagDTO);
         Tag newTag = tagDao.add(tag);
         tag.setId(newTag.getId());

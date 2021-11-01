@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "users")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "user_id"))
-public class User extends AbstractCustomEntity {
+public class User extends AbstractEntity {
     @Column(name = "user_name")
     private String name;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -31,14 +31,6 @@ public class User extends AbstractCustomEntity {
         this.id = id;
         this.name = name;
         this.orderList = orderList;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -59,37 +51,17 @@ public class User extends AbstractCustomEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         User that = (User) o;
-        if (name != null ? !name.equals(that.name) : that.name != null) {
-            return false;
-        }
-        if (orderList != null ? !orderList.equals(that.orderList) : that.orderList != null) {
-            return false;
-        }
-        return id == that.id;
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = super.hashCode();
         result += 2 * (name != null ? name.hashCode() : 0);
-        result += 3 * (orderList != null ? orderList.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", orderList=").append(orderList);
-        sb.append('}');
-        return sb.toString();
     }
 }

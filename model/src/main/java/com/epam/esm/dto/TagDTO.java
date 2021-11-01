@@ -5,7 +5,7 @@ package com.epam.esm.dto;
  *
  * @author Yauheni Tsitou
  */
-public class TagDTO extends AbstractCustomDTO<TagDTO> {
+public class TagDTO extends AbstractDTO<TagDTO> {
     private String name;
 
     public TagDTO() {
@@ -39,14 +39,5 @@ public class TagDTO extends AbstractCustomDTO<TagDTO> {
     @Override
     public int hashCode() {
         return super.hashCode() + 31 * (name != null ? name.hashCode() : 0);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("TagDTO{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 }

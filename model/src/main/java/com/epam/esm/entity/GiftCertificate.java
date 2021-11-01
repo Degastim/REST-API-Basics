@@ -5,7 +5,6 @@ import com.epam.esm.audit.AuditListener;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +17,7 @@ import java.util.Set;
 @Table(name = "gift_certificates")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "gift_certificate_id"))
-public class GiftCertificate extends AbstractCustomEntity {
+public class GiftCertificate extends AbstractEntity {
     @Column(name = "gift_certificate_name")
     private String giftCertificateName;
     @Column
@@ -32,7 +31,8 @@ public class GiftCertificate extends AbstractCustomEntity {
     @OneToMany(mappedBy = "giftCertificate", cascade = CascadeType.ALL)
     private List<Order> orderList;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "gift_certificate_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
     public GiftCertificate() {
@@ -52,7 +52,8 @@ public class GiftCertificate extends AbstractCustomEntity {
         this.tags = tags;
     }
 
-    public GiftCertificate(String giftCertificateName, String description, BigDecimal price, Integer duration, Set<Tag> tags) {
+    public GiftCertificate(String giftCertificateName, String description, BigDecimal price,
+                           Integer duration, Set<Tag> tags) {
         this.giftCertificateName = giftCertificateName;
         this.description = description;
         this.price = price;
@@ -65,14 +66,6 @@ public class GiftCertificate extends AbstractCustomEntity {
         this.description = description;
         this.price = price;
         this.duration = duration;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getGiftCertificateName() {
@@ -115,6 +108,14 @@ public class GiftCertificate extends AbstractCustomEntity {
         this.tags = tags;
     }
 
+    public void addTag(Tag tag) {
+        tags.add(tag);
+    }
+
+    public void addTags(Set<Tag> tagSet) {
+        tags.addAll(tagSet);
+    }
+
     public List<Order> getOrderList() {
         return orderList;
     }
@@ -133,19 +134,10 @@ public class GiftCertificate extends AbstractCustomEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         GiftCertificate that = (GiftCertificate) o;
-        if (id != that.id) {
-            return false;
-        }
-        if (tags != null ? !tags.equals(that.tags) : that.tags != null) {
-            return false;
-        }
         if (giftCertificateName != null ? !giftCertificateName.equals(that.giftCertificateName) : that.giftCertificateName != null) {
             return false;
         }
@@ -155,35 +147,16 @@ public class GiftCertificate extends AbstractCustomEntity {
         if (price != null ? !price.equals(that.price) : that.price != null) {
             return false;
         }
-        if (lastUpdateDate != null ? !lastUpdateDate.equals(that.lastUpdateDate) : that.lastUpdateDate != null) {
-            return false;
-        }
         return duration != null ? duration.equals(that.duration) : that.duration == null;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = super.hashCode();
         result = result + 2 * (giftCertificateName != null ? giftCertificateName.hashCode() : 0);
         result = result + 3 * (description != null ? description.hashCode() : 0);
         result = result + 5 * (price != null ? price.hashCode() : 0);
         result = result + 7 * (duration != null ? duration.hashCode() : 0);
-        result = result + 9 * (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
-        result = result + 11 * (tags != null ? tags.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("GiftCertificate{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(giftCertificateName).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", price=").append(price);
-        sb.append(", duration=").append(duration);
-        sb.append(", lastUpdateDate=").append(lastUpdateDate);
-        sb.append(", tags=").append(tags);
-        sb.append('}');
-        return sb.toString();
     }
 }

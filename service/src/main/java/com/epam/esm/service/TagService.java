@@ -1,6 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
 
@@ -42,5 +41,10 @@ public interface TagService {
      */
     void delete(long id);
 
+    /**
+     * Find most widely user's tag with the highest cost orders
+     *
+     * @return find tagDTO
+     */
     TagDTO findMostWidelyTagUsersHighestCostOrders();
 }

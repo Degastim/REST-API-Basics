@@ -1,6 +1,6 @@
 package com.epam.esm.audit;
 
-import com.epam.esm.entity.AbstractCustomEntity;
+import com.epam.esm.entity.AbstractEntity;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,7 +18,7 @@ public class AuditListener {
      * @param entity which is added to the database
      */
     @PrePersist
-    public void onPrePersist(AbstractCustomEntity entity) {
+    public void onPrePersist(AbstractEntity entity) {
         audit("INSERT", entity);
     }
 
@@ -28,11 +28,11 @@ public class AuditListener {
      * @param entity which is update to the database.
      */
     @PreUpdate
-    public void onPreUpdate(AbstractCustomEntity entity) {
+    public void onPreUpdate(AbstractEntity entity) {
         audit("UPDATE", entity);
     }
 
-    private void audit(String operation, AbstractCustomEntity entity) {
+    private void audit(String operation, AbstractEntity entity) {
         entity.setOperation(operation);
         entity.setLastUpdateDate(LocalDateTime.now());
     }

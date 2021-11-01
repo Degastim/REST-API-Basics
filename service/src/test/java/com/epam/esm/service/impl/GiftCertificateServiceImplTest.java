@@ -4,6 +4,8 @@ import com.epam.esm.Paginator;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.param.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.mapper.GiftCertificateDTOMapper;
@@ -18,6 +20,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,25 +32,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GiftCertificateServiceImplTest {
     @Mock
-    GiftCertificateDao giftCertificateDao;
+    private GiftCertificateDao giftCertificateDao;
     @Mock
-    GiftCertificateDTOMapper giftCertificateDTOMapper;
+    private GiftCertificateDTOMapper giftCertificateDTOMapper;
     @Mock
-    GiftCertificateDTOValidator giftCertificateDTOValidator;
+    private GiftCertificateDTOValidator giftCertificateDTOValidator;
     @Mock
-    TagDao tagDao;
+    private TagDao tagDao;
     @Mock
-    ParamValidator paramValidator;
+    private ParamValidator paramValidator;
     @Mock
-    PaginationContainerValidator paginationContainerValidator;
+    private PaginationContainerValidator paginationContainerValidator;
     @Mock
-    Paginator<GiftCertificate> paginator;
+    private Paginator<GiftCertificate> paginator;
     private GiftCertificateService service;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service = new GiftCertificateServiceImpl(giftCertificateDao, giftCertificateDTOMapper, giftCertificateDTOValidator, tagDao, paramValidator, paginationContainerValidator, paginator);
+        service = new GiftCertificateServiceImpl(giftCertificateDao, giftCertificateDTOMapper,
+                giftCertificateDTOValidator, tagDao, paramValidator, paginationContainerValidator, paginator);
     }
 
     @Test
@@ -61,18 +68,44 @@ class GiftCertificateServiceImplTest {
     void delete() {
         long id = 3;
         Mockito.when(giftCertificateDao.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundedException.class,()->service.delete(id));
+        assertThrows(ResourceNotFoundedException.class, () -> service.delete(id));
     }
 
     @Test
     void update() {
+        GiftCertificateDTO giftCertificateDTO = new GiftCertificateDTO();
+        giftCertificateDTO.setName("name");
+        GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setGiftCertificateName("name");
+        Mockito.when(giftCertificateDTOMapper.toEntity(giftCertificateDTO)).thenReturn(giftCertificate);
+        Mockito.when(giftCertificateDao.update(giftCertificate)).thenReturn(giftCertificate);
+        Mockito.when(giftCertificateDTOMapper.toDTO(giftCertificate)).thenReturn(giftCertificateDTO);
+        GiftCertificateDTO actual = service.update(1, giftCertificateDTO);
+        GiftCertificateDTO expected = new GiftCertificateDTO();
+        expected.setName("name");
+        expected.setId(1);
+        assertEquals(expected, actual);
     }
 
     @Test
     void add() {
+        GiftCertificateDTO giftCertificateDTO = new GiftCertificateDTO("ABC", "ABC",
+                BigDecimal.TEN, 10, new HashSet<>());
+        GiftCertificate giftCertificate = new GiftCertificate("ABC", "ABC",
+                BigDecimal.TEN, 10, new HashSet<>());
+        Mockito.when(giftCertificateDTOMapper.toEntity(giftCertificateDTO)).thenReturn(giftCertificate);
+        Mockito.when(giftCertificateDTOMapper.toDTO(giftCertificate)).thenReturn(giftCertificateDTO);
+        GiftCertificateDTO actual = service.add(giftCertificateDTO);
+        assertEquals(actual, giftCertificateDTO);
     }
 
     @Test
     void findGiftCertificateByIdWithTagsAndParams() {
+        List<GiftCertificate> list = new ArrayList<>();
+        Mockito.when(giftCertificateDao.executeSqlSelect(new ParamContainer())).thenReturn(list);
+        List<GiftCertificateDTO> actual = service.findGiftCertificateByIdWithTagsAndParams(new PaginationContainer(),
+                new ParamContainer());
+        List<GiftCertificateDTO> expected = new ArrayList<>();
+        assertEquals(expected, actual);
     }
 }

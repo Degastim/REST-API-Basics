@@ -34,14 +34,18 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> findAll() {
-        return sessionFactory.openSession().createSQLQuery(TagSql.FIND_ALL).addEntity(Tag.class).list();
+        Session session = sessionFactory.openSession();
+        return session.createSQLQuery(TagSql.FIND_ALL).addEntity(Tag.class).list();
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        List<Tag> tagList = (List<Tag>) sessionFactory.openSession().createSQLQuery(TagSql.FIND_BY_NAME).setParameter(1, name).addEntity(Tag.class).list();
+        Session session = sessionFactory.openSession();
+        List<Tag> tagList = (List<Tag>) session.createSQLQuery(TagSql.FIND_BY_NAME).setParameter(1, name)
+                .addEntity(Tag.class).list();
         if (tagList.size() != 0) {
-            return Optional.of(tagList.get(0));
+            Tag tag = tagList.get(0);
+            return Optional.ofNullable(tag);
         } else {
             return Optional.empty();
         }
@@ -51,23 +55,22 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> findById(long id) {
         Session session = sessionFactory.openSession();
         Tag tag = session.find(Tag.class, id);
+        session.clear();
         return Optional.ofNullable(tag);
     }
 
     @Override
-    public void update(Tag tag) {
-        sessionFactory.openSession().update(tag);
-    }
-
-    @Override
     public void delete(Tag tag) {
-        sessionFactory.openSession().delete(tag);
+        Session session = sessionFactory.getCurrentSession();
+        tag.setGiftCertificateSet(null);
+        session.remove(tag);
     }
 
     @Override
     public Optional<Tag> findMostWidelyTagUsersHighestCostOrders() {
         Session session = sessionFactory.openSession();
-        List<Tag> tagList = session.createSQLQuery(TagSql.FIND_MOST_WIDELY_TAG_USERS_HIGHEST_COST_ORDERS).addEntity(Tag.class).list();
+        List<Tag> tagList = session.createSQLQuery(TagSql.FIND_MOST_WIDELY_TAG_USERS_HIGHEST_COST_ORDERS)
+                .addEntity(Tag.class).list();
         if (tagList.size() != 0) {
             return Optional.of(tagList.get(0));
         } else {

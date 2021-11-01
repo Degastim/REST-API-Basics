@@ -43,13 +43,6 @@ public interface TagDao {
     Optional<Tag> findById(long id);
 
     /**
-     * Update tag from the table.
-     *
-     * @param tag to be changed.
-     */
-    void update(Tag tag);
-
-    /**
      * Deletes tag from the table.
      *
      * @param tag of the object to be deleted.

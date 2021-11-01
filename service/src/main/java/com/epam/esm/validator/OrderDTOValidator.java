@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * Validator for order DTO.
+ *
+ * @author Yauheni Tsitov
+ */
 @Component
 public class OrderDTOValidator {
     private final GiftCertificateDao giftCertificateDao;
@@ -22,6 +27,11 @@ public class OrderDTOValidator {
         this.userDao = userDao;
     }
 
+    /**
+     * Is OrderDTO and user id valid .
+     *
+     * @param orderDTO the object for validation.
+     */
     public void isOrderDTOValid(long userId, OrderDTO orderDTO) {
         long giftCertificateId = orderDTO.getGiftCertificateId();
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.findById(giftCertificateId);

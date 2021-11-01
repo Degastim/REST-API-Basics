@@ -9,9 +9,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Validator for search parameters.
+ *
+ * @author Yauheni Tsitov
+ */
 @Component
 public class ParamValidator {
-
+    /**
+     * Is ParamContainer valid.
+     *
+     * @param paramContainer the object for validation.
+     */
     public void isParamValid(ParamContainer paramContainer) {
         List<String> columnList = paramContainer.getColumn();
         List<String> typeList = paramContainer.getType();

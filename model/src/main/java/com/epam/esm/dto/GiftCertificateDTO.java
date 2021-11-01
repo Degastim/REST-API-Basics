@@ -8,7 +8,7 @@ import java.util.Set;
  *
  * @author Yauheni Tsitou
  */
-public class GiftCertificateDTO extends AbstractCustomDTO<GiftCertificateDTO> {
+public class GiftCertificateDTO extends AbstractDTO<GiftCertificateDTO> {
     private String name;
     private String description;
     private BigDecimal price;
@@ -27,6 +27,13 @@ public class GiftCertificateDTO extends AbstractCustomDTO<GiftCertificateDTO> {
         this.tags = tags;
     }
 
+    public GiftCertificateDTO(String name, String description, BigDecimal price, Integer duration, Set<TagDTO> tags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.tags = tags;
+    }
 
     public String getName() {
         return name;
@@ -74,7 +81,7 @@ public class GiftCertificateDTO extends AbstractCustomDTO<GiftCertificateDTO> {
             return false;
         }
         GiftCertificateDTO that = (GiftCertificateDTO) o;
-        if (tags != null ? !tags.equals(that.tags) : that.tags == null) {
+        if (tags != null ? !tags.equals(that.tags) : that.tags != null) {
             return false;
         }
         if (name != null ? !name.equals(that.name) : that.name != null) {

@@ -5,16 +5,14 @@ import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
-import org.springframework.hateoas.*;
-import org.springframework.hateoas.mediatype.Affordances;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpMethod;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Converter user according to HATEOAS rules
@@ -30,8 +28,10 @@ public class UserDTOHateoas {
      */
     public void build(UserDTO userDTO) {
         Link self = linkTo(methodOn(UserController.class).findUser(userDTO.getId())).withSelfRel();
-        Link ordersListLink = linkTo(methodOn(OrderController.class).findAllByUserId(userDTO.getId(), new PaginationContainer())).withRel("find_user_orders");
-        Link addOrderLink = linkTo(methodOn(OrderController.class).addOrder(userDTO.getId(), new OrderDTO())).withRel("add_order");
+        Link ordersListLink = linkTo(methodOn(OrderController.class)
+                .findAllByUserId(userDTO.getId(), new PaginationContainer())).withRel("find_user_orders");
+        Link addOrderLink = linkTo(methodOn(OrderController.class).addOrder(userDTO.getId(), new OrderDTO()))
+                .withRel("add_order");
         userDTO.add(self, ordersListLink, addOrderLink);
         List<OrderDTO> orderDTOList = userDTO.getOrderList();
         if (orderDTOList != null) {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  *
  * @author Yauheni Tsitou
  */
-public class OrderDTO extends AbstractCustomDTO<OrderDTO> {
+public class OrderDTO extends AbstractDTO<OrderDTO> {
     private BigDecimal price;
     private LocalDateTime creationDate;
     private long giftCertificateId;
@@ -68,15 +68,5 @@ public class OrderDTO extends AbstractCustomDTO<OrderDTO> {
         result += 3 * (price != null ? price.hashCode() : 0);
         result += 5 * (creationDate != null ? creationDate.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("OrderDTO{");
-        sb.append("id=").append(id);
-        sb.append(", price=").append(price);
-        sb.append(", creationDate=").append(creationDate);
-        sb.append('}');
-        return sb.toString();
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "order_id"))
-public class Order extends AbstractCustomEntity {
+public class Order extends AbstractEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -35,14 +35,6 @@ public class Order extends AbstractCustomEntity {
         this.price = price;
         this.createDate = createDate;
         this.giftCertificate = giftCertificate;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public User getUser() {
@@ -79,10 +71,7 @@ public class Order extends AbstractCustomEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         Order that = (Order) o;
@@ -95,8 +84,7 @@ public class Order extends AbstractCustomEntity {
         if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) {
             return false;
         }
-
-        return id == that.id;
+        return giftCertificate != null ? giftCertificate.equals(that.giftCertificate) : that.giftCertificate == null;
     }
 
     @Override
@@ -104,17 +92,7 @@ public class Order extends AbstractCustomEntity {
         int result = Long.hashCode(id);
         result += 2 * (user != null ? user.hashCode() : 0);
         result += 3 * (price != null ? price.hashCode() : 0);
-        result += 5 * (createDate != null ? createDate.hashCode() : 0);
+        result += 5 * (giftCertificate != null ? giftCertificate.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Order{");
-        sb.append("id=").append(id);
-        sb.append(", price=").append(price);
-        sb.append(", createDate=").append(createDate);
-        sb.append('}');
-        return sb.toString();
     }
 }

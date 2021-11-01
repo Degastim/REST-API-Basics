@@ -11,11 +11,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TagDTOMapper implements DTOMapper<Tag, TagDTO> {
-
+    @Override
     public Tag toEntity(TagDTO tagDTO) {
         return new Tag(tagDTO.getId(), tagDTO.getName());
     }
 
+    @Override
     public TagDTO toDTO(Tag tag) {
         return new TagDTO(tag.getId(), tag.getName());
     }

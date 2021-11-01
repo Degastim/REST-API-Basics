@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OrderDTOMapper implements DTOMapper<Order, OrderDTO> {
-
+    @Override
     public Order toEntity(OrderDTO orderDTO) {
-        return new Order(orderDTO.getId(), orderDTO.getPrice(), orderDTO.getCreationDate(), new GiftCertificate(orderDTO.getGiftCertificateId()));
+        return new Order(orderDTO.getId(), orderDTO.getPrice(), orderDTO.getCreationDate(),
+                new GiftCertificate(orderDTO.getGiftCertificateId()));
     }
 
+    @Override
     public OrderDTO toDTO(Order order) {
         return new OrderDTO(order.getId(), order.getPrice(), order.getCreateDate(), order.getGiftCertificate().getId());
     }

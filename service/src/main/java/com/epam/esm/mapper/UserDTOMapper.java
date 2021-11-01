@@ -22,11 +22,13 @@ public class UserDTOMapper implements DTOMapper<User, UserDTO> {
         this.orderDTOMapper = orderDTOMapper;
     }
 
+    @Override
     public UserDTO toDTO(User user) {
         List<OrderDTO> orderDTOList = user.getOrderList().stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
         return new UserDTO(user.getId(), user.getName(), orderDTOList);
     }
 
+    @Override
     public User toEntity(UserDTO userDTO) {
         List<Order> orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
         return new User(userDTO.getId(), userDTO.getName(), orderList);

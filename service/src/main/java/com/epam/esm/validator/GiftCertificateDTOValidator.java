@@ -1,11 +1,9 @@
 package com.epam.esm.validator;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.InvalidFieldValueException;
 import com.epam.esm.exception.ResourceNotFoundedException;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -28,12 +25,10 @@ public class GiftCertificateDTOValidator {
     private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
     private static final Pattern TAG_NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
     private final GiftCertificateDao giftCertificateDao;
-    private final TagDao tagDao;
 
     @Autowired
-    private GiftCertificateDTOValidator(GiftCertificateDao giftCertificateDao, TagDao tagDao) {
+    public GiftCertificateDTOValidator(GiftCertificateDao giftCertificateDao) {
         this.giftCertificateDao = giftCertificateDao;
-        this.tagDao = tagDao;
     }
 
     /**
@@ -49,20 +44,28 @@ public class GiftCertificateDTOValidator {
         BigDecimal price = giftCertificateDTO.getPrice();
         Integer duration = giftCertificateDTO.getDuration();
         Set<TagDTO> tagDTOSet = giftCertificateDTO.getTags();
-        if (name != null && !isNameValid(name)) {
+        GiftCertificate giftCertificate = giftCertificateDao.findById(id).orElseThrow(() ->
+                new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.GIFT_CERTIFICATE));
+        if (name == null) {
+            name = giftCertificate.getGiftCertificateName();
+        } else if (!isNameValid(name)) {
             errorMessage.append("Gift certificate name is not valid");
         }
-        if (description != null && !isDescriptionValid(description)) {
+        if (description == null) {
+            description = giftCertificate.getDescription();
+        } else if (!isDescriptionValid(description)) {
             errorMessage.append("Gift certificate name is not valid");
         }
-        if (price != null && !isPriceValid(price)) {
+        if (price == null) {
+            price = giftCertificate.getPrice();
+        } else if (!isPriceValid(price)) {
             errorMessage.append("Gift certificate price is not valid");
         }
-        if (duration != null && !isDurationValid(duration)) {
+        if (duration == null) {
+            duration = giftCertificate.getDuration();
+        } else if (!isDurationValid(duration)) {
             errorMessage.append("Gift certificate duration is not valid");
         }
-        giftCertificateDao.findById(id).orElseThrow(() ->
-                new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.GIFT_CERTIFICATE));
         Optional<GiftCertificate> daoGiftCertificate = giftCertificateDao.
                 findByNameAndDescriptionAndPriceAndDuration(name, description, price, duration);
         if (daoGiftCertificate.isPresent() && daoGiftCertificate.get().getId() != id) {
@@ -81,20 +84,24 @@ public class GiftCertificateDTOValidator {
         BigDecimal price = giftCertificateDTO.getPrice();
         Integer duration = giftCertificateDTO.getDuration();
         Set<TagDTO> tagDTOSet = giftCertificateDTO.getTags();
+        long giftCertificateId = giftCertificateDTO.getId();
+        if (giftCertificateId != 0) {
+            errorMessage.append("Can't transfer id gift certificate.");
+        }
         if (name == null || !isNameValid(name)) {
-            errorMessage.append("Gift certificate name is not valid");
+            errorMessage.append("Gift certificate name is not valid.");
         }
         if (description == null || !isDescriptionValid(description)) {
-            errorMessage.append("Gift certificate name is not valid");
+            errorMessage.append("Gift certificate name is not valid.");
         }
         if (price == null || !isPriceValid(price)) {
-            errorMessage.append("Gift certificate price is not valid");
+            errorMessage.append("Gift certificate price is not valid.");
         }
         if (duration == null || !isDurationValid(duration)) {
-            errorMessage.append("Gift certificate duration is not valid");
+            errorMessage.append("Gift certificate duration is not valid.");
         }
         if (giftCertificateDao.findByNameAndDescriptionAndPriceAndDuration(name, description, price, duration).isPresent()) {
-            errorMessage.append("A gift certificate with same name,description,price,duration exist");
+            errorMessage.append("A gift certificate with same name,description,price,duration exist.");
         }
         checkTagList(tagDTOSet, errorMessage);
         if (errorMessage.length() != 0) {
@@ -122,8 +129,12 @@ public class GiftCertificateDTOValidator {
         if (tagDTOSet != null) {
             for (TagDTO tag : tagDTOSet) {
                 String tagName = tag.getName();
+                long tadId = tag.getId();
                 if (tagName == null || !isTagNameValid(tagName)) {
                     errorMessage.append("Tag name ").append(tagName).append(" is not valid");
+                }
+                if (tadId != 0) {
+                    errorMessage.append("Can't transfer id tag");
                 }
             }
         }

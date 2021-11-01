@@ -16,17 +16,17 @@ import java.util.regex.Pattern;
  * @author Yauheni Tsitov
  */
 @Component
-public class TagCreationDTOValidator {
+public class TagDTOValidator {
     private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
     private final TagDao tagDao;
 
     @Autowired
-    private TagCreationDTOValidator(TagDao tagDao) {
+    public TagDTOValidator(TagDao tagDao) {
         this.tagDao = tagDao;
     }
 
     /**
-     * Is name TagCreationDTO valid.
+     * Is TagCreationDTO valid.
      *
      * @param tagDTO the object for validation.
      */

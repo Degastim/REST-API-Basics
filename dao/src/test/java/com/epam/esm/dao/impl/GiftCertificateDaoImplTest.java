@@ -7,21 +7,27 @@ import org.junit.jupiter.api.*;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GiftCertificateDaoImplTest {
 
-    private GiftCertificateDao giftCertificateDao = new GiftCertificateDaoImpl(new LocalSessionFactoryBean().getObject());
+    private GiftCertificateDao giftCertificateDao;
+
     @BeforeEach
-    void init(){
-        DatabaseConfiguration databaseConfiguration=new DatabaseConfiguration();
-        LocalSessionFactoryBean localSessionFactoryBean=databaseConfiguration.sessionFactory(new DatabaseConfiguration().embeddedDataSource());
-        giftCertificateDao=new GiftCertificateDaoImpl(localSessionFactoryBean.getObject());
+    void init() {
+        DatabaseConfiguration databaseConfiguration = new DatabaseConfiguration();
+        LocalSessionFactoryBean localSessionFactoryBean =
+        databaseConfiguration.sessionFactory(new DatabaseConfiguration().embeddedDataSource());
+        giftCertificateDao = new GiftCertificateDaoImpl(localSessionFactoryBean.getObject());
     }
+
     @Test
     void add() {
-        GiftCertificate expected = new GiftCertificate("abc", "abc", BigDecimal.TEN, 100);
-        GiftCertificate actual = new GiftCertificate("abc", "abc", BigDecimal.TEN, 100);
+        GiftCertificate expected = new GiftCertificate("abc", "abc", BigDecimal.TEN, 100
+                , new HashSet<>());
+        GiftCertificate actual = new GiftCertificate("abc", "abc", BigDecimal.TEN, 100
+                , new HashSet<>());
         giftCertificateDao.add(actual);
         actual.setCreateDate(null);
         actual.setOperation(null);

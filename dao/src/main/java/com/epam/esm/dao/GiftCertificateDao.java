@@ -40,7 +40,7 @@ public interface GiftCertificateDao {
      *
      * @param giftCertificate contain parameters for update gift certificate.
      */
-    void update(GiftCertificate giftCertificate);
+    GiftCertificate update(GiftCertificate giftCertificate);
 
     /**
      * Execute custom sql select command.

@@ -3,11 +3,15 @@ package com.epam.esm.entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Super class for entity
+ */
 @MappedSuperclass
-public abstract class AbstractCustomEntity {
+public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
+
     @Column
     protected String operation;
 
@@ -36,5 +40,22 @@ public abstract class AbstractCustomEntity {
 
     public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AbstractEntity that = (AbstractEntity) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }
