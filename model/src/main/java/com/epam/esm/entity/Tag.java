@@ -17,7 +17,7 @@ import java.util.Set;
 public class Tag extends AbstractEntity {
     @Column(name = "tag_name")
     private String name;
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<GiftCertificate> giftCertificateSet;
 
     public Tag() {

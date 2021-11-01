@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.constant.sql.OrderSql;
 import com.epam.esm.entity.Order;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void add(Order order) {
-        Long id = (Long) sessionFactory.openSession().save(order);
-        order.setId(id);
+        Session session = sessionFactory.openSession();
+        session.persist(order);
     }
 }

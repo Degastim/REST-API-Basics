@@ -26,10 +26,9 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag add(Tag tag) {
-        String tagName = tag.getName();
-        Long tagId = (Long) sessionFactory.openSession().save(tag);
-        return new Tag(tagId, tagName);
+    public void add(Tag tag) {
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(tag);
     }
 
     @Override
@@ -62,7 +61,6 @@ public class TagDaoImpl implements TagDao {
     @Override
     public void delete(Tag tag) {
         Session session = sessionFactory.getCurrentSession();
-        tag.setGiftCertificateSet(null);
         session.remove(tag);
     }
 

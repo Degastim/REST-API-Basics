@@ -8,7 +8,7 @@ INSERT INTO gift_certificates (gift_certificate_id, gift_certificate_name, descr
 VALUES(1, 'Dig', 'Big price', 151, 67, '2013-09-13T12:12:12', '2013-9-12T12:12:12','INSERT');
 
 INSERT INTO gift_certificates (gift_certificate_id, gift_certificate_name, description, price, duration, create_date,last_update_date,operation)
-VALUES(2, 'Red', 'Red price', 43, 13, '2020-03-14T23:42:11.164','2020-05-05T23:42:12.112','INSERT');
+VALUES(2, 'Red', 'Red price', 10, 13, '2020-03-14T23:42:11.164','2020-05-05T23:42:12.112','INSERT');
 
 INSERT INTO gift_certificates (gift_certificate_id, gift_certificate_name, description, price, duration, create_date,last_update_date,operation)
 VALUES(3, 'City', 'Large city', 464, 13, '2021-02-15T08:42:11.167', '2021-05-10T08:42:10.145','INSERT');

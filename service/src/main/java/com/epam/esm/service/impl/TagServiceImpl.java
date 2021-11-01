@@ -56,8 +56,7 @@ public class TagServiceImpl implements TagService {
     public TagDTO add(TagDTO tagDTO) {
         tagDTOValidator.isTagCreationDTOValid(tagDTO);
         Tag tag = tagDTOMapper.toEntity(tagDTO);
-        Tag newTag = tagDao.add(tag);
-        tag.setId(newTag.getId());
+        tagDao.add(tag);
         return tagDTOMapper.toDTO(tag);
     }
 

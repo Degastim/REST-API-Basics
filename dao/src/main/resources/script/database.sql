@@ -23,8 +23,10 @@ CREATE TABLE tags
 CREATE TABLE gift_certificates_tags
 (
     gift_certificate_tag_id bigint NOT NULL AUTO_INCREMENT,
-    gift_certificate_id     bigint NOT NULL REFERENCES gift_certificates (gift_certificate_id),
-    tag_id                  bigint NOT NULL REFERENCES tags (tag_id),
+    gift_certificate_id     bigint NOT NULL,
+    tag_id                  bigint NOT NULL,
+    FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificates (gift_certificate_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE,
     PRIMARY KEY (gift_certificate_tag_id)
 );
 
@@ -44,7 +46,9 @@ CREATE TABLE orders
     create_date               datetime       NOT NULL,
     user_id                   BIGINT         NOT NULL REFERENCES users (user_id),
     order_gift_certificate_id BIGINT         NOT NULL REFERENCES gift_certificates (gift_certificate_id),
-    last_update_date datetime    NOT NULL,
-    operation        VARCHAR(10) NOT NULL,
+    last_update_date          datetime       NOT NULL,
+    operation                 VARCHAR(10)    NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (order_gift_certificate_id) REFERENCES gift_certificates (gift_certificate_id) ON DELETE SET NULL,
     PRIMARY KEY (order_id)
 );

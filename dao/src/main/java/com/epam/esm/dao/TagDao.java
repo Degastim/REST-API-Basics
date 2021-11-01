@@ -15,9 +15,8 @@ public interface TagDao {
      * Adds tag to the table.
      *
      * @param tag object to be added.
-     * @return Tag which was created
      */
-    Tag add(Tag tag);
+    void add(Tag tag);
 
     /**
      * Finds all the tags.

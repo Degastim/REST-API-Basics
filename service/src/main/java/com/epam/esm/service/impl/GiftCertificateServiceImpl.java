@@ -81,17 +81,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDTOValidator.isGiftCertificateDTOUpdateValid(giftCertificateDTO);
         GiftCertificate newGiftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateDTO);
         newGiftCertificate.setId(id);
-        Set<Tag> newTags = newGiftCertificate.getTags();
-        if (newTags != null) {
-            for (Tag newTag : newTags) {
-                String tagName = newTag.getName();
-                Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
-                if (daoTagOptional.isPresent()) {
-                    Tag daoTag = daoTagOptional.get();
-                    newTag.setId(daoTag.getId());
-                }
-            }
-        }
+        processGiftCertificateTags(newGiftCertificate);
         newGiftCertificate = giftCertificateDao.update(newGiftCertificate);
         return giftCertificateDTOMapper.toDTO(newGiftCertificate);
     }
@@ -102,20 +92,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDTOValidator.isGiftCertificateDTOAddValid(giftCertificateCreationDTO);
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
         giftCertificate.setCreateDate(LocalDateTime.now());
-        Set<Tag> newTags = giftCertificate.getTags();
-        if (newTags != null) {
-            for (Tag newTag : newTags) {
-                String tagName = newTag.getName();
-                Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
-                if (daoTagOptional.isPresent()) {
-                    Tag daoTag = daoTagOptional.get();
-                    newTag.setId(daoTag.getId());
-                }
-            }
-        } else {
-            newTags = new HashSet<>();
+        processGiftCertificateTags(giftCertificate);
+        if(giftCertificate.getTags()==null){
+            giftCertificate.setTags(new HashSet<>());
         }
-        giftCertificate.setTags(new HashSet<>(newTags));
         giftCertificateDao.add(giftCertificate);
         return giftCertificateDTOMapper.toDTO(giftCertificate);
     }
@@ -129,5 +109,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificate> giftCertificateList = giftCertificateDao.executeSqlSelect(paramContainer);
         List<GiftCertificate> paginateList = paginator.paginate(giftCertificateList, paginationContainer);
         return paginateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
+    }
+
+    private void processGiftCertificateTags(GiftCertificate giftCertificate) {
+        Set<Tag> newTags = giftCertificate.getTags();
+        if (newTags != null) {
+            for (Tag newTag : newTags) {
+                String tagName = newTag.getName();
+                Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
+                if (daoTagOptional.isPresent()) {
+                    Tag daoTag = daoTagOptional.get();
+                    newTag.setId(daoTag.getId());
+                } else {
+                    tagDao.add(newTag);
+                }
+            }
+        }
     }
 }

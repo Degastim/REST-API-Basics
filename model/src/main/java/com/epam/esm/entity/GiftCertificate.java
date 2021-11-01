@@ -28,9 +28,9 @@ public class GiftCertificate extends AbstractEntity {
     private Integer duration;
     @Column(name = "create_date")
     private LocalDateTime createDate;
-    @OneToMany(mappedBy = "giftCertificate", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "giftCertificate", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private List<Order> orderList;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
     @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "gift_certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
@@ -158,5 +158,21 @@ public class GiftCertificate extends AbstractEntity {
         result = result + 5 * (price != null ? price.hashCode() : 0);
         result = result + 7 * (duration != null ? duration.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + id +
+                ", operation='" + operation + '\'' +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", giftCertificateName='" + giftCertificateName + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", orderList=" + orderList +
+                ", tags=" + tags +
+                '}';
     }
 }

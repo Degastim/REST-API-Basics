@@ -58,7 +58,6 @@ class TagServiceImplTest {
     void add() {
         Tag tag = new Tag();
         Mockito.when(tagDTOMapper.toEntity(Mockito.any())).thenReturn(tag);
-        Mockito.when(tagDao.add(tag)).thenReturn(tag);
         TagDTO tagDTO = new TagDTO();
         Mockito.when(tagDTOMapper.toDTO(tag)).thenReturn(tagDTO);
         TagDTO actual = service.add(tagDTO);

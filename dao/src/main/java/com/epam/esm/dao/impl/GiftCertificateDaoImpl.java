@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,18 +35,14 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public void add(GiftCertificate giftCertificate) {
-        Set<Tag> tags = new HashSet<>(giftCertificate.getTags());
-        giftCertificate.setTags(null);
         Session session = sessionFactory.getCurrentSession();
         session.persist(giftCertificate);
-        giftCertificate.setTags(tags);
         session.flush();
     }
 
     @Override
     public void delete(GiftCertificate giftCertificate) {
         Session session = sessionFactory.getCurrentSession();
-        giftCertificate.setTags(null);
         session.delete(giftCertificate);
     }
 
@@ -62,7 +57,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate update(GiftCertificate giftCertificate) {
         Session session = sessionFactory.getCurrentSession();
-        session.clear();
         long id = giftCertificate.getId();
         String giftCertificateName = giftCertificate.getGiftCertificateName();
         String giftCertificateDescription = giftCertificate.getDescription();
@@ -83,13 +77,8 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             daoGiftCertificate.setDuration(duration);
         }
         if (tags != null) {
-            for (Tag tag : daoGiftCertificate.getTags()) {
-                session.evict(tag);
-            }
             daoGiftCertificate.setTags(tags);
         }
-        session.flush();
-        session.clear();
         return daoGiftCertificate;
     }
 
