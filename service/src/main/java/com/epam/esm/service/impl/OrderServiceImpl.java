@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         if (optionalOrder.isPresent()) {
             return orderDTOMapper.toDTO(optionalOrder.get());
         } else {
-            throw new ResourceNotFoundedException("Order with this ID and user ID not found", ExceptionCauseCode.ORDER);
+            throw new ResourceNotFoundedException("Order with this ID not found", ExceptionCauseCode.ORDER);
         }
     }
 

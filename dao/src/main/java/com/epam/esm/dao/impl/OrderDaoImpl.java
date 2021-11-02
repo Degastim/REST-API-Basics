@@ -27,13 +27,15 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Optional<Order> findById(long orderId) {
-        Order order = sessionFactory.openSession().find(Order.class, orderId);
+        Session session = sessionFactory.openSession();
+        Order order = session.find(Order.class, orderId);
         return Optional.ofNullable(order);
     }
 
     @Override
     public void add(Order order) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.persist(order);
+        session.flush();
     }
 }

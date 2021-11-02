@@ -20,6 +20,13 @@ public class OrderDTOMapper implements DTOMapper<Order, OrderDTO> {
 
     @Override
     public OrderDTO toDTO(Order order) {
-        return new OrderDTO(order.getId(), order.getPrice(), order.getCreateDate(), order.getGiftCertificate().getId());
+        OrderDTO orderDTO = new OrderDTO(order.getId(), order.getPrice(), order.getCreateDate());
+        GiftCertificate giftCertificate = order.getGiftCertificate();
+        if (giftCertificate != null) {
+            orderDTO.setGiftCertificateId(giftCertificate.getId());
+        } else {
+            orderDTO.setGiftCertificateId(0);
+        }
+        return orderDTO;
     }
 }

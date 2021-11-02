@@ -93,7 +93,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
         giftCertificate.setCreateDate(LocalDateTime.now());
         processGiftCertificateTags(giftCertificate);
-        if(giftCertificate.getTags()==null){
+        if (giftCertificate.getTags() == null) {
             giftCertificate.setTags(new HashSet<>());
         }
         giftCertificateDao.add(giftCertificate);
