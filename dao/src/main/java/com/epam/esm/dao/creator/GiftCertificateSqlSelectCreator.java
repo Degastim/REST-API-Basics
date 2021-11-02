@@ -1,14 +1,12 @@
 package com.epam.esm.dao.creator;
 
-import com.epam.esm.dao.constant.column.TagColumnName;
-
 /**
  * The Sql select query creator.
  *
  * @author Yauheni Tstiov
  */
 public class GiftCertificateSqlSelectCreator {
-    private final StringBuilder sql = new StringBuilder("SELECT DISTINCT gift_certificates.* FROM gift_certificates ")
+    private final StringBuilder sql = new StringBuilder("SELECT gift_certificates.*,tags.* FROM gift_certificates ")
             .append("LEFT JOIN gift_certificates_tags ")
             .append("ON gift_certificates.gift_certificate_id=gift_certificates_tags.gift_certificate_id ")
             .append("LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id");
@@ -23,7 +21,6 @@ public class GiftCertificateSqlSelectCreator {
     private static final String ORDER_BY_SQL = "ORDER BY";
     private static final String AND_SQL = "AND";
     private static final String WHERE_SQL = "WHERE";
-    private static final String FIND_BY_TAG_NAME = "gift_certificates.gift_certificate_id IN (SELECT gift_certificate_id FROM gift_certificates_tags LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id";
 
     /**
      * Add WHERE clause  with LIKE operator
@@ -46,18 +43,6 @@ public class GiftCertificateSqlSelectCreator {
     public void addWhereEquality(String param, String value) {
         addWhere();
         sql.append(param).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL).append(value).append(APOSTROPHE_SYMBOL);
-    }
-
-    /**
-     * Add WHERE clause  with =
-     *
-     * @param value contain value which is searched for in WHERE
-     */
-    public void addWhereEqualityTagName(String value) {
-        addWhere();
-        sql.append(FIND_BY_TAG_NAME).append(SPACE_SYMBOL).append(WHERE_SQL).append(SPACE_SYMBOL)
-                .append(TagColumnName.TAG_NAME).append(EQUAL_SIGN).append(APOSTROPHE_SYMBOL)
-                .append(value).append(APOSTROPHE_SYMBOL).append(")");
     }
 
     /**
