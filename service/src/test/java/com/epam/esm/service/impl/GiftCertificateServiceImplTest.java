@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
@@ -43,15 +42,13 @@ class GiftCertificateServiceImplTest {
     private ParamValidator paramValidator;
     @Mock
     private PaginationContainerValidator paginationContainerValidator;
-    @Mock
-    private Paginator<GiftCertificate> paginator;
     private GiftCertificateService service;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
         service = new GiftCertificateServiceImpl(giftCertificateDao, giftCertificateDTOMapper,
-                giftCertificateDTOValidator, tagDao, paramValidator, paginationContainerValidator, paginator);
+                giftCertificateDTOValidator, tagDao, paramValidator, paginationContainerValidator);
     }
 
     @Test
@@ -101,8 +98,6 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void findGiftCertificateByIdWithTagsAndParams() {
-        List<GiftCertificate> list = new ArrayList<>();
-        Mockito.when(giftCertificateDao.executeSqlSelect(new ParamContainer())).thenReturn(list);
         List<GiftCertificateDTO> actual = service.findGiftCertificateByIdWithTagsAndParams(new PaginationContainer(),
                 new ParamContainer());
         List<GiftCertificateDTO> expected = new ArrayList<>();

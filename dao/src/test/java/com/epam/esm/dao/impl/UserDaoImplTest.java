@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.Application;
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,7 @@ class UserDaoImplTest {
 
     @Test
     void findAll() {
-        List<User> userList = userDao.findAll();
+        List<User> userList = userDao.findAll(new PaginationContainer(0,0));
         assertEquals(userList.size(), 3);
     }
 

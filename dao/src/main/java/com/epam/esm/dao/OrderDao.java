@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Order;
 
 import java.util.List;
@@ -14,10 +15,11 @@ public interface OrderDao {
     /**
      * Finds the order by user id.
      *
-     * @param userId id of the user who made the order.
+     * @param userId              id of the user who made the order.
+     * @param paginationContainer contain information for pagination.
      * @return list which contains the found orders.
      */
-    List<Order> findAllByUserId(long userId);
+    List<Order> findAllByUserId(long userId, PaginationContainer paginationContainer);
 
     /**
      * Finds the order by id.

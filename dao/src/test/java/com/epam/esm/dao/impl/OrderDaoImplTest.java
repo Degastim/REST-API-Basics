@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.Application;
 import com.epam.esm.dao.OrderDao;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
@@ -28,8 +29,9 @@ class OrderDaoImplTest {
     @Test
     void findAllByUserId() {
         long userId = 1;
-        List<Order> orders = orderDao.findAllByUserId(userId);
-        assertSame(orders.size(), 2);
+        int expected = 2;
+        List<Order> orders = orderDao.findAllByUserId(userId, new PaginationContainer(0, 0));
+        assertSame(expected, orders.size());
     }
 
     @Test

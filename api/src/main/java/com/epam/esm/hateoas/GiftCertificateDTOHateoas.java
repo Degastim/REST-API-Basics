@@ -6,6 +6,8 @@ import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.param.ParamContainer;
+import com.epam.esm.service.GiftCertificateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
@@ -31,23 +33,15 @@ public class GiftCertificateDTOHateoas {
      */
     public void build(GiftCertificateDTO giftCertificateDTO) {
         Link self = linkTo(GiftCertificateController.class).slash(giftCertificateDTO.getId()).withSelfRel();
-        Link delete = linkTo(methodOn(GiftCertificateController.class)
-                .findGiftCertificateById(giftCertificateDTO.getId())).withRel("delete");
-        Link update = linkTo(methodOn(GiftCertificateController.class)
-                .updateGiftCertificate(giftCertificateDTO.getId(), giftCertificateDTO)).withRel("update");
-        Link addTagLink = linkTo(methodOn(TagController.class).addTag(new TagDTO())).withRel("add_tag");
-        Link findAllTagsLink = linkTo(methodOn(TagController.class)
-                .findAllTags(null)).withRel("find_all_tags");
         Set<TagDTO> tagDTOs = giftCertificateDTO.getTags();
         if (tagDTOs != null) {
             for (TagDTO tagDTO : tagDTOs) {
                 long tagDTOId = tagDTO.getId();
                 Link selfTagDTOLink = linkTo(methodOn(TagController.class).findById(tagDTOId)).withSelfRel();
-                Link deleteTagLink = linkTo(methodOn(TagController.class).findById(tagDTOId)).withRel("delete_tag");
-                tagDTO.add(selfTagDTOLink, deleteTagLink);
+                tagDTO.add(selfTagDTOLink);
             }
         }
-        giftCertificateDTO.add(self, delete, update, addTagLink, findAllTagsLink);
+        giftCertificateDTO.add(self);
     }
 
     /**
@@ -61,12 +55,10 @@ public class GiftCertificateDTOHateoas {
         for (GiftCertificateDTO giftCertificateDTO : giftCertificateDTOList) {
             build(giftCertificateDTO);
         }
-        Link add = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer,
-                paramContainer)).withRel("add");
         Link self = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(paginationContainer,
                 paramContainer)).withSelfRel();
-        Link findAllTagsLink = linkTo(methodOn(TagController.class).findAllTags(null)).withRel("find_all_tags");
-        Link addTagLink = linkTo(methodOn(TagController.class).addTag(new TagDTO())).withRel("add_tag");
-        return CollectionModel.of(giftCertificateDTOList, self, add, findAllTagsLink, addTagLink);
+        Link findAllTagsLink = linkTo(methodOn(TagController.class).findAllTags(null)).withRel("tags");
+        return CollectionModel.of(giftCertificateDTOList, self, findAllTagsLink);
     }
+
 }

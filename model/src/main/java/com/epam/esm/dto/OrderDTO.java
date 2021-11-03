@@ -16,11 +16,10 @@ public class OrderDTO extends AbstractDTO<OrderDTO> {
     public OrderDTO() {
     }
 
-    public OrderDTO(long id, BigDecimal price, LocalDateTime creationDate, long giftCertificateId) {
+    public OrderDTO(long id, BigDecimal price, LocalDateTime creationDate) {
         this.id = id;
         this.price = price;
         this.creationDate = creationDate;
-        this.giftCertificateId = giftCertificateId;
     }
 
     public BigDecimal getPrice() {

@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.User;
 
 import java.util.List;
@@ -9,9 +10,10 @@ public interface UserDao {
     /**
      * Finds all the users.
      *
+     * @param paginationContainer contaion pagination information.
      * @return list with found users.
      */
-    List<User> findAll();
+    List<User> findAll(PaginationContainer paginationContainer);
 
     /**
      * Finds user by id.

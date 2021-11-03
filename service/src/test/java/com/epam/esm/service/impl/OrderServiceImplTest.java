@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dto.OrderDTO;
@@ -36,8 +35,6 @@ class OrderServiceImplTest {
     @Mock
     private OrderDTOMapper orderDTOMapper;
     @Mock
-    private Paginator<Order> paginator;
-    @Mock
     private GiftCertificateDao giftCertificateDao;
     @Mock
     private OrderDTOValidator orderDTOValidator;
@@ -47,15 +44,14 @@ class OrderServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         service = new OrderServiceImpl(orderDao, giftCertificateDao, orderDTOValidator, paginationContainerValidator,
-                orderDTOMapper, paginator);
+                orderDTOMapper);
     }
 
     @Test
     void findAllByUserId() {
         long id = 3;
         List<Order> list = new ArrayList<>();
-        Mockito.when(orderDao.findAllByUserId(id)).thenReturn(list);
-        Mockito.when(paginator.paginate(Mockito.any(), Mockito.any())).thenReturn(list);
+        Mockito.when(orderDao.findAllByUserId(id,new PaginationContainer(1,1))).thenReturn(list);
         List<OrderDTO> actual = service.findAllByUserId(id, new PaginationContainer());
         List<OrderDTO> expected = new ArrayList<>();
         assertEquals(expected, actual);

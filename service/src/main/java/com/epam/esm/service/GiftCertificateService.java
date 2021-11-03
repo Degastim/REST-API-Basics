@@ -50,4 +50,11 @@ public interface GiftCertificateService {
      */
     List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer,
                                                                       ParamContainer paramContainer);
+
+    /**
+     * Finds all gift certificates
+     *
+     * @return list with found items.
+     */
+    List<GiftCertificateDTO> findAll();
 }

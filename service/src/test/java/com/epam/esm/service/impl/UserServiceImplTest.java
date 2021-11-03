@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
@@ -31,22 +30,18 @@ class UserServiceImplTest {
     private UserDTOMapper userDTOMapper;
     @Mock
     private PaginationContainerValidator paginationContainerValidator;
-    @Mock
-    private Paginator<User> paginator;
     private UserService userService;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userDao, userDTOMapper, paginationContainerValidator, paginator);
+        userService = new UserServiceImpl(userDao, userDTOMapper, paginationContainerValidator);
     }
 
     @Test
     void finaAll() {
         List<User> userList = new ArrayList<>();
         PaginationContainer paginationContainer = new PaginationContainer();
-        Mockito.when(userDao.findAll()).thenReturn(userList);
-        Mockito.when(paginator.paginate(userList, paginationContainer)).thenReturn(userList);
         List<UserDTO> actual = userService.finaAll(paginationContainer);
         List<UserDTO> expected = new ArrayList<>();
         assertEquals(expected, actual);

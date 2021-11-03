@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;
@@ -21,9 +22,10 @@ public interface TagDao {
     /**
      * Finds all the tags.
      *
+     * @param paginationContainer contaion information for pagionation.
      * @return list with found tags
      */
-    List<Tag> findAll();
+    List<Tag> findAll(PaginationContainer paginationContainer);
 
     /**
      * Finds the tag by name.

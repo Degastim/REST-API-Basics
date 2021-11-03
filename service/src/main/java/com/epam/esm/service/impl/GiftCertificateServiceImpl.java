@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
@@ -39,7 +38,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagDao tagDao;
     private final ParamValidator paramValidator;
     private final PaginationContainerValidator paginationContainerValidator;
-    private final Paginator<GiftCertificate> paginator;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao,
@@ -47,18 +45,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                       GiftCertificateDTOValidator giftCertificateDTOValidator,
                                       TagDao tagDao,
                                       ParamValidator paramValidator,
-                                      PaginationContainerValidator paginationContainerValidator,
-                                      Paginator<GiftCertificate> paginator) {
+                                      PaginationContainerValidator paginationContainerValidator) {
         this.giftCertificateDao = giftCertificateDao;
         this.giftCertificateDTOMapper = giftCertificateDTOMapper;
         this.giftCertificateDTOValidator = giftCertificateDTOValidator;
         this.tagDao = tagDao;
         this.paramValidator = paramValidator;
         this.paginationContainerValidator = paginationContainerValidator;
-        this.paginator = paginator;
     }
 
     @Override
+    @Transactional
     public GiftCertificateDTO findById(long id) {
         GiftCertificate giftCertificate = giftCertificateDao.findById(id).orElseThrow(() ->
                 new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.GIFT_CERTIFICATE));
@@ -93,7 +90,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
         giftCertificate.setCreateDate(LocalDateTime.now());
         processGiftCertificateTags(giftCertificate);
-        if(giftCertificate.getTags()==null){
+        if (giftCertificate.getTags() == null) {
             giftCertificate.setTags(new HashSet<>());
         }
         giftCertificateDao.add(giftCertificate);
@@ -106,9 +103,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                                                                              ParamContainer paramContainer) {
         paginationContainerValidator.isPaginationContainerValid(paginationContainer);
         paramValidator.isParamValid(paramContainer);
-        List<GiftCertificate> giftCertificateList = giftCertificateDao.executeSqlSelect(paramContainer);
-        List<GiftCertificate> paginateList = paginator.paginate(giftCertificateList, paginationContainer);
-        return paginateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
+        List<GiftCertificate> giftCertificateList = giftCertificateDao.executeSqlSelect(paramContainer, paginationContainer);
+        return giftCertificateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GiftCertificateDTO> findAll() {
+        List<GiftCertificate> giftCertificateList = giftCertificateDao.findAll();
+        return giftCertificateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
     }
 
     private void processGiftCertificateTags(GiftCertificate giftCertificate) {

@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.Application;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ class TagDaoImplTest {
 
     @Test
     void findAll() {
-        List<Tag> tagList = tagDao.findAll();
+        List<Tag> tagList = tagDao.findAll(new PaginationContainer(0, 0));
         assertEquals(tagList.size(), 5);
     }
 

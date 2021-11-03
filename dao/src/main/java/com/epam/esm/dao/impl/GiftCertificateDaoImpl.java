@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.sql.GiftCertificateSql;
 import com.epam.esm.dao.creator.GiftCertificateSqlSelectCreator;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.param.ParamColumnName;
 import com.epam.esm.dto.param.ParamContainer;
 import com.epam.esm.dto.param.ParamType;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,9 +37,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public void add(GiftCertificate giftCertificate) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
+        Set<Tag> tags = new HashSet<>(giftCertificate.getTags());
+        giftCertificate.setTags(null);
         session.persist(giftCertificate);
-        session.flush();
+        giftCertificate.setTags(tags);
     }
 
     @Override
@@ -48,10 +52,17 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public Optional<GiftCertificate> findById(long id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         GiftCertificate giftCertificate = session.find(GiftCertificate.class, id);
         session.clear();
         return Optional.ofNullable(giftCertificate);
+    }
+
+    @Override
+    public List<GiftCertificate> findAll() {
+        Session session = sessionFactory.openSession();
+        List<GiftCertificate> list = session.createSQLQuery(GiftCertificateSql.FIND_ALL).addEntity(GiftCertificate.class).list();
+        return list;
     }
 
     @Override
@@ -83,12 +94,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer) {
+    public List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer, PaginationContainer paginationContainer) {
+        Session session = sessionFactory.openSession();
         GiftCertificateSqlSelectCreator creator = new GiftCertificateSqlSelectCreator();
-        GiftCertificateSqlSelectCreator tagCreator = new GiftCertificateSqlSelectCreator();
         List<String> columnList = paramContainer.getColumn();
         List<String> typeList = paramContainer.getType();
         List<String> paramList = paramContainer.getParam();
+        List<GiftCertificate> giftCertificateListWithTag = null;
         if (columnList != null) {
             for (int i = 0; i < columnList.size(); i++) {
                 String column = columnList.get(i);
@@ -97,7 +109,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 String dbColumn = ParamColumnName.valueOf(column.toUpperCase()).getColumn();
                 if (ParamType.EQUALITY == ParamType.valueOf(type.toUpperCase())) {
                     if (ParamColumnName.valueOf(column.toUpperCase()) == ParamColumnName.TAG_NAME) {
-                        tagCreator.addWhereEquality(dbColumn, param);
+                        creator.addWhereEqualityTagName(param);
                     } else {
                         creator.addWhereEquality(dbColumn, param);
                     }
@@ -116,10 +128,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 }
             }
         }
-        Session session = sessionFactory.openSession();
-        String tagSql=tagCreator.getSql().toString();
-        List<GiftCertificate> giftCertificateListWithTag = session.createSQLQuery(tagSql)
-                .addEntity(GiftCertificate.class).list();
+        int size = paginationContainer.getSize();
+        if (size != 0) {
+            creator.limit(paginationContainer);
+        }
         String sql = creator.getSql().toString();
         List<GiftCertificate> giftCertificateList = session.createSQLQuery(sql).addEntity(GiftCertificate.class).list();
         if (giftCertificateListWithTag != null) {

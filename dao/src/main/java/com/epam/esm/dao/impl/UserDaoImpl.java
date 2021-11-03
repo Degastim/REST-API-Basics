@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dao.constant.sql.UserSql;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,9 +22,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll(PaginationContainer paginationContainer) {
         Session session = sessionFactory.openSession();
-        return (List<User>) session.createSQLQuery(UserSql.FIND_ALL).addEntity(User.class).list();
+        int page = paginationContainer.getPage();
+        int size = paginationContainer.getSize();
+        int previousPageEnd = (page - 1) * size;
+        List<User> list;
+        if (size == 0 && page == 0) {
+            list = session.createSQLQuery(UserSql.FIND_ALL).addEntity(User.class).list();
+        } else {
+            list = session.createSQLQuery(UserSql.FIND_ALL_WITH_LIMIT).addEntity(User.class)
+                    .setParameter(1, previousPageEnd).setParameter(2, size).list();
+        }
+        return list;
     }
 
     @Override

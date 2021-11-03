@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
@@ -34,21 +33,16 @@ class TagServiceImplTest {
     private TagDTOValidator tagDTOValidator;
     @Mock
     private PaginationContainerValidator paginationContainerValidator;
-    @Mock
-    private Paginator<Tag> paginator;
     private TagService service;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        service = new TagServiceImpl(tagDao, tagDTOMapper, tagDTOValidator, paginationContainerValidator, paginator);
+        service = new TagServiceImpl(tagDao, tagDTOMapper, tagDTOValidator, paginationContainerValidator);
     }
 
     @Test
     void findAll() {
-        List<Tag> tagList = new ArrayList<>();
-        Mockito.when(tagDao.findAll()).thenReturn(tagList);
-        Mockito.when(paginator.paginate(tagList, new PaginationContainer())).thenReturn(tagList);
         List<TagDTO> actual = service.findAll(new PaginationContainer());
         List<TagDTO> expected = new ArrayList<>();
         assertEquals(expected, actual);

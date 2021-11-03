@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.param.ParamContainer;
 import com.epam.esm.entity.GiftCertificate;
 
@@ -47,7 +48,7 @@ public interface GiftCertificateDao {
      *
      * @param paramContainer contain parameters for found gift certificate.
      */
-    List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer);
+    List<GiftCertificate> executeSqlSelect(ParamContainer paramContainer, PaginationContainer paginationContainer);
 
     /**
      * Finds the certificate by its name,description,price,duration.
@@ -60,4 +61,11 @@ public interface GiftCertificateDao {
      */
     Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description,
                                                                           BigDecimal price, Integer duration);
+
+    /**
+     * Finds all gift certificates.
+     *
+     * @return list of gift certificates.
+     */
+    List<GiftCertificate> findAll();
 }

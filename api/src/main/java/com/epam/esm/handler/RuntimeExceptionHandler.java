@@ -1,6 +1,7 @@
 package com.epam.esm.handler;
 
 import com.epam.esm.entity.ResponseExceptionEntity;
+import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.*;
 import com.epam.esm.util.ErrorCodeCounter;
 import org.springframework.http.HttpStatus;
@@ -90,5 +91,18 @@ public class RuntimeExceptionHandler {
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
 
-
+    /**
+     * Handle exception that handles exceptions not caught by other handlers.
+     *
+     * @param e the exception that handler handle.
+     * @return the response entity
+     */
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleResourceAlreadyExistException(Exception e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = e.getLocalizedMessage();
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
 }

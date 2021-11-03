@@ -29,16 +29,14 @@ public class UserDTOHateoas {
     public void build(UserDTO userDTO) {
         Link self = linkTo(methodOn(UserController.class).findUser(userDTO.getId())).withSelfRel();
         Link ordersListLink = linkTo(methodOn(OrderController.class)
-                .findAllByUserId(userDTO.getId(), new PaginationContainer())).withRel("find_user_orders");
-        Link addOrderLink = linkTo(methodOn(OrderController.class).addOrder(userDTO.getId(), new OrderDTO()))
-                .withRel("add_order");
-        userDTO.add(self, ordersListLink, addOrderLink);
+                .findAllByUserId(userDTO.getId(), new PaginationContainer())).withRel("user_orders");
         List<OrderDTO> orderDTOList = userDTO.getOrderList();
-        if (orderDTOList != null) {
+        if (orderDTOList.size() != 0) {
             for (OrderDTO orderDTO : userDTO.getOrderList()) {
                 Link orderLink = linkTo(methodOn(OrderController.class).findByOrderId(orderDTO.getId())).withSelfRel();
                 orderDTO.add(orderLink);
             }
+            userDTO.add(self, ordersListLink);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
@@ -22,23 +21,20 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserDTOMapper userDTOMapper;
     private final PaginationContainerValidator paginationContainerValidator;
-    private final Paginator<User> paginator;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserDTOMapper userDTOMapper, PaginationContainerValidator paginationContainerValidator,
-                           Paginator<User> paginator) {
+    public UserServiceImpl(UserDao userDao, UserDTOMapper userDTOMapper, PaginationContainerValidator paginationContainerValidator) {
         this.userDao = userDao;
         this.userDTOMapper = userDTOMapper;
         this.paginationContainerValidator = paginationContainerValidator;
-        this.paginator = paginator;
+        ;
     }
 
     @Override
     public List<UserDTO> finaAll(PaginationContainer paginationContainer) {
         paginationContainerValidator.isPaginationContainerValid(paginationContainer);
-        List<User> userList = userDao.findAll();
-        List<User> paginateList = paginator.paginate(userList, paginationContainer);
-        return paginateList.stream().map(userDTOMapper::toDTO).collect(Collectors.toList());
+        List<User> userList = userDao.findAll(paginationContainer);
+        return userList.stream().map(userDTOMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override

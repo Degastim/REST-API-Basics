@@ -31,12 +31,21 @@ public class TagDTOValidator {
      * @param tagDTO the object for validation.
      */
     public void isTagCreationDTOValid(TagDTO tagDTO) {
-        String tagName = tagDTO.getName();
-        if (tagDao.findByName(tagName).isPresent()) {
-            throw new ResourceAlreadyExistException("There is already a tag with the same name.", ExceptionCauseCode.TAG);
+        long tagDTOId = tagDTO.getId();
+        if (tagDTOId != 0) {
+            throw new InvalidFieldValueException("Can't transfer id tag.", ExceptionCauseCode.TAG);
         }
-        if (!NAME_REGEX.matcher(tagDTO.getName()).matches()) {
-            throw new InvalidFieldValueException("Tag name is not valid", ExceptionCauseCode.TAG);
+        String tagName = tagDTO.getName();
+        if (tagName != null) {
+            if (tagDao.findByName(tagName).isPresent()) {
+                throw new ResourceAlreadyExistException("There is already a tag with the same name.", ExceptionCauseCode.TAG);
+            }
+
+            if (!NAME_REGEX.matcher(tagName).matches()) {
+                throw new InvalidFieldValueException("Tag name "+tagName+" is not valid", ExceptionCauseCode.TAG);
+            }
+        }else{
+            throw new InvalidFieldValueException("Tag name null is not valid", ExceptionCauseCode.TAG);
         }
     }
 }

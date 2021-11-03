@@ -1,5 +1,6 @@
 package com.epam.esm.hateoas;
 
+import com.epam.esm.controller.GiftCertificateController;
 import com.epam.esm.controller.OrderController;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
@@ -26,8 +27,11 @@ public class OrderDTOHateoas {
      */
     public void build(OrderDTO orderDTO) {
         long orderDTOId = orderDTO.getId();
+        long giftCertificateId = orderDTO.getGiftCertificateId();
         Link self = linkTo(methodOn(OrderController.class).findByOrderId(orderDTOId)).withSelfRel();
-        orderDTO.add(self);
+        Link giftCertificateLink = linkTo(methodOn(GiftCertificateController.class).findGiftCertificateById(giftCertificateId))
+                .withRel("gift_certificate");
+        orderDTO.add(self, giftCertificateLink);
     }
 
     /**
@@ -40,7 +44,8 @@ public class OrderDTOHateoas {
             build(orderDTO);
         }
         Link self = linkTo(methodOn(OrderController.class).findAllByUserId(userId, paginationContainer)).withSelfRel();
-        Link addOrderLink = linkTo(methodOn(OrderController.class).addOrder(userId, new OrderDTO())).withRel("add_order");
-        return CollectionModel.of(orderDTOList, self, addOrderLink);
+        Link giftCertificateLink = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(null, null))
+                .withRel("gift_certificate_list");
+        return CollectionModel.of(orderDTOList, self, giftCertificateLink);
     }
 }

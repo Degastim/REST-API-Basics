@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.Paginator;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
@@ -30,25 +29,22 @@ public class TagServiceImpl implements TagService {
     private final TagDTOMapper tagDTOMapper;
     private final TagDTOValidator tagDTOValidator;
     private final PaginationContainerValidator paginationContainerValidator;
-    private final Paginator<Tag> paginator;
 
     @Autowired
     public TagServiceImpl(TagDao tagDao, TagDTOMapper tagDTOMapper,
                           TagDTOValidator tagDTOValidator,
-                          PaginationContainerValidator paginationContainerValidator, Paginator<Tag> paginator) {
+                          PaginationContainerValidator paginationContainerValidator) {
         this.tagDao = tagDao;
         this.tagDTOMapper = tagDTOMapper;
         this.tagDTOValidator = tagDTOValidator;
         this.paginationContainerValidator = paginationContainerValidator;
-        this.paginator = paginator;
     }
 
     @Override
     public List<TagDTO> findAll(PaginationContainer paginationContainer) {
         paginationContainerValidator.isPaginationContainerValid(paginationContainer);
-        List<Tag> tagList = tagDao.findAll();
-        List<Tag> paginateList = paginator.paginate(tagList, paginationContainer);
-        return paginateList.stream().map(tagDTOMapper::toDTO).collect(Collectors.toList());
+        List<Tag> tagList = tagDao.findAll(paginationContainer);
+        return tagList.stream().map(tagDTOMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override

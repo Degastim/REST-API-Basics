@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.sql.TagSql;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Tag;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -32,9 +33,19 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> findAll() {
+    public List<Tag> findAll(PaginationContainer paginationContainer) {
         Session session = sessionFactory.openSession();
-        return session.createSQLQuery(TagSql.FIND_ALL).addEntity(Tag.class).list();
+        int page = paginationContainer.getPage();
+        int size = paginationContainer.getSize();
+        int previousPageEnd = (page - 1) * size;
+        List<Tag> list;
+        if (size == 0 && page == 0) {
+            list = session.createSQLQuery(TagSql.FIND_ALL).addEntity(Tag.class).list();
+        } else {
+            list = session.createSQLQuery(TagSql.FIND_ALL_WITH_LIMIT).addEntity(Tag.class)
+                    .setParameter(1, previousPageEnd).setParameter(2, size).list();
+        }
+        return list;
     }
 
     @Override
