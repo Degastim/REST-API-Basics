@@ -11,12 +11,12 @@ public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
-
     @Column
     protected String operation;
-
     @Column(name = "last_update_date")
     protected LocalDateTime lastUpdateDate;
+    @Column(name = "create_date")
+    protected LocalDateTime createDate;
 
     public long getId() {
         return id;
@@ -40,6 +40,14 @@ public abstract class AbstractEntity {
 
     public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
     @Override

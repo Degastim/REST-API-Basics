@@ -19,6 +19,7 @@ public class AuditListener {
      */
     @PrePersist
     public void onPrePersist(AbstractEntity entity) {
+        entity.setCreateDate(LocalDateTime.now());
         audit("INSERT", entity);
     }
 

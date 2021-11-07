@@ -16,15 +16,13 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditListener.class)
 @AttributeOverride(name = "id", column = @Column(name = "order_id"))
 public class Order extends AbstractEntity {
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column
     private BigDecimal price;
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_gift_certificate_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "order_gift_certificate_id")
     private GiftCertificate giftCertificate;
 
     public Order() {
@@ -51,14 +49,6 @@ public class Order extends AbstractEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
     }
 
     public GiftCertificate getGiftCertificate() {

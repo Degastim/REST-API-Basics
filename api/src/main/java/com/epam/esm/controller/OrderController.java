@@ -22,7 +22,6 @@ public class OrderController {
     public OrderController(OrderService orderService, OrderDTOHateoas orderDTOHateoas) {
         this.orderService = orderService;
         this.orderDTOHateoas = orderDTOHateoas;
-
     }
 
     /**

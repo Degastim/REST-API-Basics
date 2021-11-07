@@ -1,5 +1,10 @@
 package com.epam.esm.dao.constant.sql;
 
+/**
+ * Class with the user sql.
+ *
+ * @author Yauheni Tstiov
+ */
 public class UserSql {
     private UserSql() {
     }

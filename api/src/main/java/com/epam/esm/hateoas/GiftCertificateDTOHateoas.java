@@ -6,8 +6,6 @@ import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.param.ParamContainer;
-import com.epam.esm.service.GiftCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;

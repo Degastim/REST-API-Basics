@@ -4,7 +4,6 @@ import com.epam.esm.audit.AuditListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +25,6 @@ public class GiftCertificate extends AbstractEntity {
     private BigDecimal price;
     @Column
     private Integer duration;
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
     @OneToMany(mappedBy = "giftCertificate", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private List<Order> orderList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
@@ -108,28 +105,12 @@ public class GiftCertificate extends AbstractEntity {
         this.tags = tags;
     }
 
-    public void addTag(Tag tag) {
-        tags.add(tag);
-    }
-
-    public void addTags(Set<Tag> tagSet) {
-        tags.addAll(tagSet);
-    }
-
     public List<Order> getOrderList() {
         return orderList;
     }
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
     }
 
     @Override

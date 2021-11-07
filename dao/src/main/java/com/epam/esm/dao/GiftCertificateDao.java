@@ -61,11 +61,4 @@ public interface GiftCertificateDao {
      */
     Optional<GiftCertificate> findByNameAndDescriptionAndPriceAndDuration(String name, String description,
                                                                           BigDecimal price, Integer duration);
-
-    /**
-     * Finds all gift certificates.
-     *
-     * @return list of gift certificates.
-     */
-    List<GiftCertificate> findAll();
 }

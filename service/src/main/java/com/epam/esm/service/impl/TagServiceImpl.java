@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -66,22 +65,15 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void delete(long id) {
-        Optional<Tag> tagOptional = tagDao.findById(id);
-        if (tagOptional.isPresent()) {
-            Tag tag = tagOptional.get();
-            tagDao.delete(tag);
-        } else {
-            throw new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG);
-        }
+        Tag tag = tagDao.findById(id).orElseThrow(() ->
+                new ResourceNotFoundedException("Requested resource not found (id)=" + id, ExceptionCauseCode.TAG));
+        tagDao.delete(tag);
     }
 
     @Override
     public TagDTO findMostWidelyTagUsersHighestCostOrders() {
-        Optional<Tag> optionalTag = tagDao.findMostWidelyTagUsersHighestCostOrders();
-        if (optionalTag.isPresent()) {
-            return tagDTOMapper.toDTO(optionalTag.get());
-        } else {
-            throw new ResourceNotFoundedException("Tag not founded", ExceptionCauseCode.TAG);
-        }
+        Tag tag = tagDao.findMostWidelyTagUsersHighestCostOrders()
+                .orElseThrow(() -> new ResourceNotFoundedException("Tag not founded", ExceptionCauseCode.TAG));
+        return tagDTOMapper.toDTO(tag);
     }
 }

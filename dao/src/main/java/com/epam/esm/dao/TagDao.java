@@ -22,7 +22,7 @@ public interface TagDao {
     /**
      * Finds all the tags.
      *
-     * @param paginationContainer contaion information for pagionation.
+     * @param paginationContainer contain information for pagination.
      * @return list with found tags
      */
     List<Tag> findAll(PaginationContainer paginationContainer);

@@ -25,7 +25,9 @@ public class GiftCertificateSqlSelectCreator {
     private static final String LIMIT = "LIMIT";
     private static final String AND_SQL = "AND";
     private static final String WHERE_SQL = "WHERE";
-    private static final String FIND_BY_TAG_NAME = "gift_certificates.gift_certificate_id IN (SELECT gift_certificate_id FROM gift_certificates_tags LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id";
+    private static final String FIND_BY_TAG_NAME = "gift_certificates.gift_certificate_id " +
+            "IN (SELECT gift_certificate_id FROM gift_certificates_tags " +
+            "LEFT JOIN tags ON gift_certificates_tags.tag_id=tags.tag_id";
 
     /**
      * Add WHERE clause  with LIKE operator
@@ -94,8 +96,8 @@ public class GiftCertificateSqlSelectCreator {
      * Add LIMIT
      */
     public void limit(PaginationContainer paginationContainer) {
-        int page=paginationContainer.getPage();
-        int size=paginationContainer.getSize();
+        int page = paginationContainer.getPage();
+        int size = paginationContainer.getSize();
         int previousPageEnd = (page - 1) * size;
         sql.append(SPACE_SYMBOL).append(LIMIT).append(SPACE_SYMBOL).append(previousPageEnd).append(COMMA_SYMBOL).append(size);
     }

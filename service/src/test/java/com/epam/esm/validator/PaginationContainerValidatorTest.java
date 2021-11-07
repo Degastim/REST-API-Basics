@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PaginationContainerValidatorTest {
-
     private final PaginationContainerValidator paginationContainerValidator = new PaginationContainerValidator();
 
     @Test

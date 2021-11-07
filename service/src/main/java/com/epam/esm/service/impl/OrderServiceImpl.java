@@ -48,12 +48,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO findById(long orderId) {
-        Optional<Order> optionalOrder = orderDao.findById(orderId);
-        if (optionalOrder.isPresent()) {
-            return orderDTOMapper.toDTO(optionalOrder.get());
-        } else {
-            throw new ResourceNotFoundedException("Order with this ID not found", ExceptionCauseCode.ORDER);
-        }
+        Order order = orderDao.findById(orderId).orElseThrow(
+                () -> new ResourceNotFoundedException("Order with this ID not found", ExceptionCauseCode.ORDER));
+        return orderDTOMapper.toDTO(order);
     }
 
     @Override

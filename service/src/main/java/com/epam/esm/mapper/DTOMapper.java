@@ -3,7 +3,12 @@ package com.epam.esm.mapper;
 import com.epam.esm.dto.AbstractDTO;
 import com.epam.esm.entity.AbstractEntity;
 
-public interface DTOMapper<T extends AbstractEntity, R extends AbstractDTO> {
+/**
+ * Interface
+ *
+ * @author Yauheni Tstiov
+ */
+public interface DTOMapper<T extends AbstractEntity, R extends AbstractDTO<? extends R>> {
     /**
      * Maps a DTO as Entity.
      *

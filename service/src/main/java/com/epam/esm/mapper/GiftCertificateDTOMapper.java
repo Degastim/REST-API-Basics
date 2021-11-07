@@ -4,6 +4,7 @@ import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -16,9 +17,10 @@ import java.util.stream.Collectors;
  */
 @Component
 public class GiftCertificateDTOMapper implements DTOMapper<GiftCertificate, GiftCertificateDTO> {
-    private final TagDTOMapper tagDTOMapper;
+    private final DTOMapper<Tag, TagDTO> tagDTOMapper;
 
-    public GiftCertificateDTOMapper(TagDTOMapper tagDTOMapper) {
+    @Autowired
+    public GiftCertificateDTOMapper(DTOMapper<Tag, TagDTO> tagDTOMapper) {
         this.tagDTOMapper = tagDTOMapper;
     }
 

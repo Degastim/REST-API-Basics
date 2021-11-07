@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -88,11 +87,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDTO add(GiftCertificateDTO giftCertificateCreationDTO) {
         giftCertificateDTOValidator.isGiftCertificateDTOAddValid(giftCertificateCreationDTO);
         GiftCertificate giftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateCreationDTO);
-        giftCertificate.setCreateDate(LocalDateTime.now());
         processGiftCertificateTags(giftCertificate);
-        if (giftCertificate.getTags() == null) {
-            giftCertificate.setTags(new HashSet<>());
-        }
         giftCertificateDao.add(giftCertificate);
         return giftCertificateDTOMapper.toDTO(giftCertificate);
     }
@@ -107,25 +102,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return giftCertificateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
     }
 
-    @Override
-    public List<GiftCertificateDTO> findAll() {
-        List<GiftCertificate> giftCertificateList = giftCertificateDao.findAll();
-        return giftCertificateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());
-    }
-
     private void processGiftCertificateTags(GiftCertificate giftCertificate) {
         Set<Tag> newTags = giftCertificate.getTags();
+        Set<Tag> tags = new HashSet<>();
         if (newTags != null) {
             for (Tag newTag : newTags) {
                 String tagName = newTag.getName();
                 Optional<Tag> daoTagOptional = tagDao.findByName(tagName);
                 if (daoTagOptional.isPresent()) {
                     Tag daoTag = daoTagOptional.get();
-                    newTag.setId(daoTag.getId());
+                    tags.add(daoTag);
                 } else {
-                    tagDao.add(newTag);
+                    tags.add(newTag);
                 }
             }
         }
+        giftCertificate.setTags(tags);
     }
 }

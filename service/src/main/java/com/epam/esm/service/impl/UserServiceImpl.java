@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +26,6 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
         this.userDTOMapper = userDTOMapper;
         this.paginationContainerValidator = paginationContainerValidator;
-        ;
     }
 
     @Override
@@ -39,11 +37,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findById(long id) {
-        Optional<User> optionalUser = userDao.findById(id);
-        if (optionalUser.isPresent()) {
-            return userDTOMapper.toDTO(optionalUser.get());
-        } else {
-            throw new ResourceNotFoundedException("User with this ID not found", ExceptionCauseCode.USER);
-        }
+        User user = userDao.findById(id).orElseThrow(
+                () -> new ResourceNotFoundedException("User with this ID not found", ExceptionCauseCode.USER));
+        return userDTOMapper.toDTO(user);
     }
 }

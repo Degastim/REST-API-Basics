@@ -9,7 +9,6 @@ public class GiftCertificateSql {
     private GiftCertificateSql() {
     }
 
-    public static final String FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION = "SELECT * FROM gift_certificates WHERE gift_certificate_name=? AND description=? AND price=? AND duration=?";
-    public static final String FIND_ALL = "SELECT * FROM gift_certificates";
-
+    public static final String FIND_BY_NAME_AND_DESCRIPTION_AND_PRICE_AND_DURATION =
+            "SELECT * FROM gift_certificates WHERE gift_certificate_name=? AND description=? AND price=? AND duration=?";
 }

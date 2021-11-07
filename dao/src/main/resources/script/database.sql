@@ -15,6 +15,7 @@ CREATE TABLE tags
 (
     tag_id           bigint       NOT NULL AUTO_INCREMENT,
     tag_name         varchar(256) NOT NULL,
+    create_date      datetime     NOT NULL,
     last_update_date datetime     NOT NULL,
     operation        VARCHAR(10)  NOT NULL,
     PRIMARY KEY (tag_id)
@@ -34,6 +35,7 @@ CREATE TABLE users
 (
     user_id          bigint      NOT NULL AUTO_INCREMENT,
     user_name        VARCHAR(40) NOT NULL,
+    create_date      datetime    NOT NULL,
     last_update_date datetime    NOT NULL,
     operation        VARCHAR(10) NOT NULL,
     PRIMARY KEY (user_id)
@@ -44,8 +46,9 @@ CREATE TABLE orders
     order_id                  BIGINT         NOT NULL AUTO_INCREMENT,
     price                     DECIMAL(10, 2) NOT NULL,
     create_date               datetime       NOT NULL,
-    user_id                   BIGINT         NOT NULL REFERENCES users (user_id),
-    order_gift_certificate_id BIGINT         NOT NULL REFERENCES gift_certificates (gift_certificate_id),
+    user_id                   BIGINT         NOT NULL,
+    order_gift_certificate_id BIGINT         NOT NULL,
+    create_date               datetime       NOT NULL,
     last_update_date          datetime       NOT NULL,
     operation                 VARCHAR(10)    NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id),

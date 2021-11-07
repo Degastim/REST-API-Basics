@@ -42,9 +42,9 @@ public class TagDTOValidator {
             }
 
             if (!NAME_REGEX.matcher(tagName).matches()) {
-                throw new InvalidFieldValueException("Tag name "+tagName+" is not valid", ExceptionCauseCode.TAG);
+                throw new InvalidFieldValueException("Tag name " + tagName + " is not valid", ExceptionCauseCode.TAG);
             }
-        }else{
+        } else {
             throw new InvalidFieldValueException("Tag name null is not valid", ExceptionCauseCode.TAG);
         }
     }

@@ -10,7 +10,7 @@ public interface UserDao {
     /**
      * Finds all the users.
      *
-     * @param paginationContainer contaion pagination information.
+     * @param paginationContainer contain pagination information.
      * @return list with found users.
      */
     List<User> findAll(PaginationContainer paginationContainer);
