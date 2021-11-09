@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  */
 @Component
 public class GiftCertificateDTOValidator {
-    private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
+    private static final Pattern NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,40}");
     private static final Pattern TAG_NAME_REGEX = Pattern.compile("[a-zA-Zа-яА-Я]{1,256}");
     private final GiftCertificateDao giftCertificateDao;
 
@@ -54,7 +54,7 @@ public class GiftCertificateDTOValidator {
         if (description == null) {
             description = giftCertificate.getDescription();
         } else if (!isDescriptionValid(description)) {
-            errorMessage.append("Gift certificate name is not valid");
+            errorMessage.append("Gift certificate description is not valid");
         }
         if (price == null) {
             price = giftCertificate.getPrice();
@@ -92,7 +92,7 @@ public class GiftCertificateDTOValidator {
             errorMessage.append("Gift certificate name is not valid.");
         }
         if (description == null || !isDescriptionValid(description)) {
-            errorMessage.append("Gift certificate name is not valid.");
+            errorMessage.append("Gift certificate description is not valid.");
         }
         if (price == null || !isPriceValid(price)) {
             errorMessage.append("Gift certificate price is not valid.");

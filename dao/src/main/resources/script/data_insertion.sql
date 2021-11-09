@@ -1,12 +1,12 @@
-INSERT INTO tags (tag_id, tag_name, last_update_date, operation, create_date)
+INSERT INTO tags (tag_id, tag_name,operation, last_update_date, create_date)
 VALUES ('1', 'a', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12');
-INSERT INTO tags (tag_id, tag_name, last_update_date, operation, create_date)
+INSERT INTO tags (tag_id, tag_name,operation, last_update_date, create_date)
 VALUES ('2', 'b', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12');
-INSERT INTO tags (tag_id, tag_name, last_update_date, operation, create_date)
+INSERT INTO tags (tag_id, tag_name,operation, last_update_date, create_date)
 VALUES ('3', 'c', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12');
-INSERT INTO tags (tag_id, tag_name, last_update_date, operation, create_date)
+INSERT INTO tags (tag_id, tag_name,operation, last_update_date, create_date)
 VALUES ('4', 'd', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12');
-INSERT INTO tags (tag_id, tag_name, last_update_date, operation, create_date)
+INSERT INTO tags (tag_id, tag_name,operation, last_update_date, create_date)
 VALUES ('5', 'e', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12');
 
 INSERT INTO gift_certificates (gift_certificate_id, gift_certificate_name, description, price, duration, create_date,
