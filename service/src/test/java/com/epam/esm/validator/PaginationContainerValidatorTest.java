@@ -12,6 +12,6 @@ class PaginationContainerValidatorTest {
     @Test
     void isPaginationContainerValid() {
         assertThrows(InvalidURLParameterException.class,
-                () -> paginationContainerValidator.isPaginationContainerValid(new PaginationContainer(3, 0)));
+                () -> paginationContainerValidator.paginationPaginationContainer(new PaginationContainer(3, 0)));
     }
 }

@@ -4,6 +4,7 @@ import com.epam.esm.audit.AuditListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,17 @@ public class GiftCertificate extends AbstractEntity {
     }
 
     public GiftCertificate(long id, String giftCertificateName, String description, BigDecimal price, Integer duration,
-                           Set<Tag> tags) {
+                           LocalDateTime createDate, Set<Tag> tags) {
+        this.id = id;
+        this.giftCertificateName = giftCertificateName;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.tags = tags;
+    }
+    public GiftCertificate(long id, String giftCertificateName, String description, BigDecimal price, Integer duration,
+                            Set<Tag> tags) {
         this.id = id;
         this.giftCertificateName = giftCertificateName;
         this.description = description;
@@ -48,7 +59,6 @@ public class GiftCertificate extends AbstractEntity {
         this.duration = duration;
         this.tags = tags;
     }
-
     public GiftCertificate(String giftCertificateName, String description, BigDecimal price,
                            Integer duration, Set<Tag> tags) {
         this.giftCertificateName = giftCertificateName;

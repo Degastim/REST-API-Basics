@@ -17,7 +17,7 @@ public class PaginationContainerValidator {
      *
      * @param paginationContainer the object for validation.
      */
-    public void isPaginationContainerValid(PaginationContainer paginationContainer) {
+    public void paginationPaginationContainer(PaginationContainer paginationContainer) {
         int page = paginationContainer.getPage();
         int size = paginationContainer.getSize();
         if ((page == 0 && size != 0)) {
@@ -25,6 +25,10 @@ public class PaginationContainerValidator {
         }
         if (size == 0 && page != 0) {
             throw new InvalidURLParameterException("size=0 and page!=0 is invalid.", ExceptionCauseCode.UNKNOWN);
+        }
+        if (page == 0 && size == 0) {
+            paginationContainer.setPage(1);
+            paginationContainer.setSize(10);
         }
     }
 }

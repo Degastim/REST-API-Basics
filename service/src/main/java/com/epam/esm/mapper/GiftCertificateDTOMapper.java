@@ -36,6 +36,7 @@ public class GiftCertificateDTOMapper implements DTOMapper<GiftCertificate, Gift
                 giftCertificateDTO.getDescription(),
                 giftCertificateDTO.getPrice(),
                 giftCertificateDTO.getDuration(),
+                giftCertificateDTO.getCreateDate(),
                 tagSet);
     }
 
@@ -51,6 +52,7 @@ public class GiftCertificateDTOMapper implements DTOMapper<GiftCertificate, Gift
                 giftCertificate.getDescription(),
                 giftCertificate.getPrice(),
                 giftCertificate.getDuration(),
+                giftCertificate.getCreateDate(),
                 tagDTOSet);
     }
 }

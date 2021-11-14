@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> finaAll(PaginationContainer paginationContainer) {
-        paginationContainerValidator.isPaginationContainerValid(paginationContainer);
+        paginationContainerValidator.paginationPaginationContainer(paginationContainer);
         List<User> userList = userDao.findAll(paginationContainer);
         return userList.stream().map(userDTOMapper::toDTO).collect(Collectors.toList());
     }

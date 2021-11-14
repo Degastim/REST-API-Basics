@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> findAllByUserId(long userId, PaginationContainer paginationContainer) {
-        paginationContainerValidator.isPaginationContainerValid(paginationContainer);
+        paginationContainerValidator.paginationPaginationContainer(paginationContainer);
         List<Order> orderList = orderDao.findAllByUserId(userId, paginationContainer);
         return orderList.stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
     }

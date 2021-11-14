@@ -76,7 +76,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificateDTO.setId(id);
         giftCertificateDTOValidator.isGiftCertificateDTOUpdateValid(giftCertificateDTO);
         GiftCertificate newGiftCertificate = giftCertificateDTOMapper.toEntity(giftCertificateDTO);
-        newGiftCertificate.setId(id);
         processGiftCertificateTags(newGiftCertificate);
         newGiftCertificate = giftCertificateDao.update(newGiftCertificate);
         return giftCertificateDTOMapper.toDTO(newGiftCertificate);
@@ -96,7 +95,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public List<GiftCertificateDTO> findGiftCertificateByIdWithTagsAndParams(PaginationContainer paginationContainer,
                                                                              ParamContainer paramContainer) {
-        paginationContainerValidator.isPaginationContainerValid(paginationContainer);
+        paginationContainerValidator.paginationPaginationContainer(paginationContainer);
         paramValidator.isParamValid(paramContainer);
         List<GiftCertificate> giftCertificateList = giftCertificateDao.executeSqlSelect(paramContainer, paginationContainer);
         return giftCertificateList.stream().map(giftCertificateDTOMapper::toDTO).collect(Collectors.toList());

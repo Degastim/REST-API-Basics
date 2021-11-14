@@ -41,7 +41,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findAll(PaginationContainer paginationContainer) {
-        paginationContainerValidator.isPaginationContainerValid(paginationContainer);
+        paginationContainerValidator.paginationPaginationContainer(paginationContainer);
         List<Tag> tagList = tagDao.findAll(paginationContainer);
         return tagList.stream().map(tagDTOMapper::toDTO).collect(Collectors.toList());
     }

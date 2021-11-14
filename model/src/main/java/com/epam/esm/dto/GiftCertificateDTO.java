@@ -1,6 +1,7 @@
 package com.epam.esm.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -13,18 +14,21 @@ public class GiftCertificateDTO extends AbstractDTO<GiftCertificateDTO> {
     private String description;
     private BigDecimal price;
     private Integer duration;
+    private LocalDateTime createDate;
     private Set<TagDTO> tags;
 
     public GiftCertificateDTO() {
     }
 
-    public GiftCertificateDTO(long id, String name, String description, BigDecimal price, Integer duration, Set<TagDTO> tags) {
+    public GiftCertificateDTO(long id, String name, String description, BigDecimal price, Integer duration,
+                              LocalDateTime createDate, Set<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
         this.tags = tags;
+        this.createDate=createDate;
     }
 
     public GiftCertificateDTO(String name, String description, BigDecimal price, Integer duration, Set<TagDTO> tags) {
@@ -73,6 +77,14 @@ public class GiftCertificateDTO extends AbstractDTO<GiftCertificateDTO> {
 
     public void setTags(Set<TagDTO> tags) {
         this.tags = tags;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
     @Override
