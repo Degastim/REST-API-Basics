@@ -1,79 +1,86 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.audit.AuditListener;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Entity of a gift certificate.
  *
  * @author Yauheni Tsitou
  */
-public class GiftCertificate {
-    private long id;
-    private String name;
+@Entity
+@Table(name = "gift_certificates")
+@EntityListeners(AuditListener.class)
+@AttributeOverride(name = "id", column = @Column(name = "gift_certificate_id"))
+public class GiftCertificate extends AbstractEntity {
+    @Column(name = "gift_certificate_name")
+    private String giftCertificateName;
+    @Column
     private String description;
+    @Column
     private BigDecimal price;
+    @Column
     private Integer duration;
-    private LocalDateTime createDate;
-    private LocalDateTime lastUpdateDate;
-    private List<Tag> tags;
+    @OneToMany(mappedBy = "giftCertificate", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    private List<Order> orderList;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "gift_certificates_tags", joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
     public GiftCertificate() {
     }
 
-    public GiftCertificate(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, List<Tag> tags) {
+    public GiftCertificate(long id) {
         this.id = id;
-        this.name = name;
+    }
+
+    public GiftCertificate(long id, String giftCertificateName, String description, BigDecimal price, Integer duration,
+                           LocalDateTime createDate, Set<Tag> tags) {
+        this.id = id;
+        this.giftCertificateName = giftCertificateName;
         this.description = description;
         this.price = price;
         this.duration = duration;
         this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
         this.tags = tags;
     }
-
-    public GiftCertificate(long id, String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    public GiftCertificate(long id, String giftCertificateName, String description, BigDecimal price, Integer duration,
+                            Set<Tag> tags) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public GiftCertificate(String name, String description, BigDecimal price, Integer duration, List<Tag> tags) {
-        this.name = name;
+        this.giftCertificateName = giftCertificateName;
         this.description = description;
         this.price = price;
         this.duration = duration;
         this.tags = tags;
     }
-
-    public GiftCertificate(String name, String description, BigDecimal price, Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
-        this.name = name;
+    public GiftCertificate(String giftCertificateName, String description, BigDecimal price,
+                           Integer duration, Set<Tag> tags) {
+        this.giftCertificateName = giftCertificateName;
         this.description = description;
         this.price = price;
         this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
     }
 
-    public long getId() {
-        return id;
+    public GiftCertificate(String giftCertificateName, String description, BigDecimal price, Integer duration) {
+        this.giftCertificateName = giftCertificateName;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getGiftCertificateName() {
+        return giftCertificateName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setGiftCertificateName(String giftCertificateName) {
+        this.giftCertificateName = giftCertificateName;
     }
 
     public String getDescription() {
@@ -100,46 +107,29 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         GiftCertificate that = (GiftCertificate) o;
-        if (id != that.id) {
-            return false;
-        }
-        if (tags != null ? !tags.equals(that.tags) : that.tags != null) {
-            return false;
-        }
-        if (name != null ? !name.equals(that.name) : that.name != null) {
+        if (giftCertificateName != null ? !giftCertificateName.equals(that.giftCertificateName) : that.giftCertificateName != null) {
             return false;
         }
         if (description != null ? !description.equals(that.description) : that.description != null) {
@@ -148,40 +138,16 @@ public class GiftCertificate {
         if (price != null ? !price.equals(that.price) : that.price != null) {
             return false;
         }
-        if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) {
-            return false;
-        }
-        if (lastUpdateDate != null ? !lastUpdateDate.equals(that.lastUpdateDate) : that.lastUpdateDate != null) {
-            return false;
-        }
         return duration != null ? duration.equals(that.duration) : that.duration == null;
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
-        result = result + 2 * (name != null ? name.hashCode() : 0);
+        int result = super.hashCode();
+        result = result + 2 * (giftCertificateName != null ? giftCertificateName.hashCode() : 0);
         result = result + 3 * (description != null ? description.hashCode() : 0);
         result = result + 5 * (price != null ? price.hashCode() : 0);
         result = result + 7 * (duration != null ? duration.hashCode() : 0);
-        result = result + 9 * (createDate != null ? createDate.hashCode() : 0);
-        result = result + 11 * (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
-        result = result + 13 * (tags != null ? tags.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("GiftCertificate{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", price=").append(price);
-        sb.append(", duration=").append(duration);
-        sb.append(", createDate=").append(createDate);
-        sb.append(", lastUpdateDate=").append(lastUpdateDate);
-        sb.append(", tags=").append(tags);
-        sb.append('}');
-        return sb.toString();
     }
 }

@@ -1,9 +1,11 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.tag.TagCreationDTO;
-import com.epam.esm.dto.tag.TagResponseDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.TagDTO;
+import com.epam.esm.hateoas.TagDTOHateoas;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,44 +20,50 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagController {
     private final TagService tagService;
+    private final TagDTOHateoas tagDTOHateoas;
 
-    /**
-     * Init the tags controller class.
-     */
     @Autowired
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService, TagDTOHateoas tagDTOHateoas) {
         this.tagService = tagService;
+        this.tagDTOHateoas = tagDTOHateoas;
     }
 
     /**
      * Find all tags
      *
-     * @return list with TagDTO which contain information about the found tags.
+     * @param paginationContainer contains the desired page and the number of elements per page.
+     * @return list with TagDTO which contain information about the found tags by HATEOAS.
      */
     @GetMapping
-    public List<TagResponseDTO> findAllTags() {
-        return tagService.findAll();
+    public CollectionModel<TagDTO> findAllTags(@ModelAttribute PaginationContainer paginationContainer) {
+        List<TagDTO> tagDTOList = tagService.findAll(paginationContainer);
+        return tagDTOHateoas.build(tagDTOList, paginationContainer);
     }
 
     /**
-     * Add tag to database
+     * Add tag to database.
      *
-     * @param tagCreationDTO an object that contain object request
+     * @param tagDTO an object that contain object request.
+     * @return tag added to the database by HATEOAS.
      */
     @PostMapping
-    public TagResponseDTO addTag(@RequestBody TagCreationDTO tagCreationDTO) {
-        return tagService.add(tagCreationDTO);
+    public TagDTO addTag(@RequestBody TagDTO tagDTO) {
+        TagDTO result = tagService.add(tagDTO);
+        tagDTOHateoas.build(result);
+        return result;
     }
 
     /**
-     * Add tag to database
+     * Find tag by id.
      *
      * @param id long value of tag id.
-     * @return TagDTO which contain information about the found tag.
+     * @return TagDTO which contain information about the found tag by HATEOAS.
      */
     @GetMapping("/{id}")
-    public TagResponseDTO findById(@PathVariable long id) {
-        return tagService.findById(id);
+    public TagDTO findById(@PathVariable long id) {
+        TagDTO result = tagService.findById(id);
+        tagDTOHateoas.build(result);
+        return result;
     }
 
     /**
@@ -67,6 +75,18 @@ public class TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable long id) {
         tagService.delete(id);
+    }
+
+    /**
+     * Find the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return TagDTO which contain information about the found tag by HATEOAS.
+     */
+    @GetMapping("/mostWidelyTagUsersHighestCostOrders")
+    public TagDTO findMostWidelyTagUsersHighestCostOrders() {
+        TagDTO result = tagService.findMostWidelyTagUsersHighestCostOrders();
+        tagDTOHateoas.build(result);
+        return result;
     }
 }
 

@@ -1,79 +1,82 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.config.DatabaseConfiguration;
-import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dto.ParamContainer;
-import com.epam.esm.entity.GiftCertificate;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.epam.esm.Application;
+import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.entity.GiftCertificate;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(
+        classes = Application.class)
 class GiftCertificateDaoImplTest {
-    private static final GiftCertificateDao giftCertificateDao = new GiftCertificateDaoImpl(new JdbcTemplate(new DatabaseConfiguration().embeddedDataSource()), new GiftCertificateMapper());
+    @Autowired
+    private GiftCertificateDao giftCertificateDao;
 
     @Test
-    @Order(1)
+    @Transactional
     void add() {
-        GiftCertificate giftCertificate = new GiftCertificate("ABC", "Dig", BigDecimal.TEN, 12,
-                LocalDateTime.of(2020, 3, 14, 23, 42, 11),
-                LocalDateTime.of(2020, 3, 14, 23, 42, 11));
-        GiftCertificate actual = giftCertificateDao.add(giftCertificate);
-        giftCertificate.setId(7);
-        assertEquals(giftCertificate, actual);
-    }
-
-    @Test
-    @Order(2)
-    void findById() {
-        long id = 6;
-        GiftCertificate actual = giftCertificateDao.findById(id).get();
-        GiftCertificate expected = new GiftCertificate(id, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
-                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
-                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
+        GiftCertificate actual = new GiftCertificate("23", "sfs", BigDecimal.TEN, 10, new HashSet<>());
+        LocalDateTime now = LocalDateTime.now();
+        actual.setCreateDate(now);
+        giftCertificateDao.add(actual);
+        GiftCertificate expected = new GiftCertificate(7, "23", "sfs", BigDecimal.TEN, 10, new HashSet<>());
+        expected.setCreateDate(now);
+        expected.setOperation("INSERT");
         assertEquals(expected, actual);
     }
 
     @Test
-    @Order(3)
-    void executeSqlSelect() {
-        ParamContainer paramContainer = new ParamContainer();
-        paramContainer.setPartGiftCertificateName("B");
-        System.out.println(giftCertificateDao.executeSqlSelect(new ParamContainer()));
-        GiftCertificate actual = giftCertificateDao.executeSqlSelect(paramContainer).get(0);
-        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
-                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
-                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(4)
-    void findByNameAndDescriptionAndPriceAndDuration() {
-        GiftCertificate actual = giftCertificateDao.findByNameAndDescriptionAndPriceAndDuration("BMV", "Fast and comfortable car", BigDecimal.valueOf(1246), 300).get();
-        GiftCertificate expected = new GiftCertificate(6, "BMV", "Fast and comfortable car", BigDecimal.valueOf(1246),
-                300, LocalDateTime.of(2022, 10, 25, 11, 11, 11),
-                LocalDateTime.of(2019, 11, 19, 11, 10, 11), new ArrayList<>());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(5)
-    void update() {
-        long id = 6;
+    @Transactional
+    void delete() {
         GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(id);
-        giftCertificate.setName("ABS");
-        assertDoesNotThrow(() -> giftCertificateDao.update(giftCertificate));
+        giftCertificate.setId(7);
+        assertDoesNotThrow(() -> giftCertificateDao.delete(giftCertificate));
+    }
+
+    @Test
+    void findById() {
+        long id = 10;
+        Optional<GiftCertificate> actual = giftCertificateDao.findById(id);
+        assertTrue(!actual.isPresent());
+    }
+
+    @Test
+    @Transactional
+    void update() {
+        GiftCertificate update = new GiftCertificate();
+        update.setId(2);
+        update.setGiftCertificateName("name");
+        GiftCertificate actual = giftCertificateDao.update(update);
+        GiftCertificate expected = new GiftCertificate();
+        expected.setId(2);
+        expected.setOperation("INSERT");
+        expected.setLastUpdateDate(LocalDateTime.of(2020, 5, 5, 23, 42, 12, 112000000));
+        expected.setGiftCertificateName("name");
+        expected.setDescription("Red price");
+        expected.setPrice(new BigDecimal("10.00"));
+        expected.setDuration(13);
+        expected.setCreateDate(LocalDateTime.of(2020, 3, 14, 23, 42, 11, 164000000));
+        actual.setOrderList(null);
+        expected.setTags(new HashSet<>());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findByNameAndDescriptionAndPriceAndDuration() {
+        Optional<GiftCertificate> giftCertificate = giftCertificateDao.findByNameAndDescriptionAndPriceAndDuration("Dig", "Big price", new BigDecimal("151.00"), 67);
+        assertTrue(giftCertificate.isPresent());
     }
 }

@@ -5,14 +5,16 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+
 
 /**
  * Database configuration class.
@@ -25,6 +27,8 @@ public class DatabaseConfiguration {
     private static final String DATABASE_PROPERTY_FILE_PATH = "/databaseConfig.properties";
     private static final String CREATE_DATABASE_SCRIPT = "script/database.sql";
     private static final String INSERT_DATA_SQL = "script/data_insertion.sql";
+    private static final String PACKAGE_WITH_ENTITY = "com.epam.esm.entity";
+
 
     /**
      * Creates the data source for dev profile.
@@ -54,13 +58,18 @@ public class DatabaseConfiguration {
     }
 
     /**
-     * Creates the jdbcTemplate.
+     * Creates SessionFactory.
      *
-     * @return JdbcTemplate object
+     * @return LocalSessionFactoryBean
      */
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(PACKAGE_WITH_ENTITY);
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(jpaVendorAdapter);
+        return em;
     }
 
     /**
@@ -70,6 +79,8 @@ public class DatabaseConfiguration {
      */
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
     }
 }

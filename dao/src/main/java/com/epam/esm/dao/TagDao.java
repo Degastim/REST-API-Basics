@@ -1,5 +1,6 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;
@@ -15,16 +16,16 @@ public interface TagDao {
      * Adds tag to the table.
      *
      * @param tag object to be added.
-     * @return Tag which was created
      */
-    Tag addWithoutId(Tag tag);
+    void add(Tag tag);
 
     /**
      * Finds all the tags.
      *
+     * @param paginationContainer contain information for pagination.
      * @return list with found tags
      */
-    List<Tag> findAll();
+    List<Tag> findAll(PaginationContainer paginationContainer);
 
     /**
      * Finds the tag by name.
@@ -43,20 +44,16 @@ public interface TagDao {
     Optional<Tag> findById(long id);
 
     /**
-     * Update tag from the table.
-     *
-     * @param tag to be changed.
-     */
-    void update(Tag tag);
-
-    /**
      * Deletes tag from the table.
      *
-     * @param id of the object to be deleted.
+     * @param tag of the object to be deleted.
      */
-    void delete(long id);
+    void delete(Tag tag);
 
-    Optional<Tag> findByIdAndName(long id, String name);
-
-    Tag addWithId(Tag tag);
+    /**
+     * Find the most widely used tag of a user with the highest cost of all orders.
+     *
+     * @return optional which contains tag.
+     */
+    Optional<Tag> findMostWidelyTagUsersHighestCostOrders();
 }

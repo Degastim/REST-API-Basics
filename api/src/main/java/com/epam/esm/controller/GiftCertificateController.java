@@ -1,15 +1,13 @@
 package com.epam.esm.controller;
 
 
-import com.epam.esm.dto.ParamContainer;
-import com.epam.esm.dto.certificate.GiftCertificateCreationDTO;
-import com.epam.esm.dto.certificate.GiftCertificateDTO;
-import com.epam.esm.dto.certificate.GiftCertificateResponseDTO;
-import com.epam.esm.service.GiftCertificateCreationDTOService;
-import com.epam.esm.service.GiftCertificateDTOService;
+import com.epam.esm.dto.GiftCertificateDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.param.ParamContainer;
+import com.epam.esm.hateoas.GiftCertificateDTOHateoas;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.ParamContainerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,57 +22,61 @@ import java.util.List;
 @RequestMapping("/certificates")
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
-    private final ParamContainerService paramContainerService;
-    private final GiftCertificateCreationDTOService giftCertificateCreationDTOService;
-    private final GiftCertificateDTOService giftCertificateDTOService;
+    private final GiftCertificateDTOHateoas giftCertificateDTOHateoas;
 
     /**
      * Init the gift certificates controller class.
      */
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService, ParamContainerService paramContainerService,
-                                     GiftCertificateCreationDTOService giftCertificateCreationDTOService,
-                                     GiftCertificateDTOService giftCertificateDTOService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService,
+                                     GiftCertificateDTOHateoas giftCertificateDTOHateoas) {
         this.giftCertificateService = giftCertificateService;
-        this.paramContainerService = paramContainerService;
-        this.giftCertificateCreationDTOService = giftCertificateCreationDTOService;
-        this.giftCertificateDTOService = giftCertificateDTOService;
+        this.giftCertificateDTOHateoas = giftCertificateDTOHateoas;
     }
 
     /**
-     * * Finds all gift certificates by param
+     * Searches for certificates by the required parameters and with pagination.
      *
-     * @param paramContainer contain param for find gift certificate
-     * @return list with found items.
+     * @param paramContainer      contain param for find gift certificate.
+     * @param paginationContainer contains the desired page and the number of elements per page.
+     * @return list with found items by HATEOAS.
      */
     @GetMapping
-    public List<GiftCertificateResponseDTO> findGiftCertificates(@ModelAttribute ParamContainer paramContainer) {
-        return paramContainerService.findGiftCertificateByIdWithTagsAndParams(paramContainer);
+    public CollectionModel<GiftCertificateDTO> findGiftCertificates(@ModelAttribute PaginationContainer paginationContainer,
+                                                                    @ModelAttribute ParamContainer paramContainer) {
+        List<GiftCertificateDTO> list = giftCertificateService.findGiftCertificateByIdWithTagsAndParams(paginationContainer,
+                paramContainer);
+        return giftCertificateDTOHateoas.build(list, paginationContainer, paramContainer);
     }
 
     /**
-     * Create a new gift certificate;
+     * Create a new gift certificate.
      *
-     * @param giftCertificateCreationDTO an object that contain object request
+     * @param giftCertificateCreationDTO an object that contain object request.
+     * @return gift certificate added to the database by HATEOAS.
      */
     @PostMapping
-    public GiftCertificateResponseDTO addGiftCertificate(@RequestBody GiftCertificateCreationDTO giftCertificateCreationDTO) {
-        return giftCertificateCreationDTOService.add(giftCertificateCreationDTO);
+    public GiftCertificateDTO addGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateCreationDTO) {
+        GiftCertificateDTO giftCertificateDTO = giftCertificateService.add(giftCertificateCreationDTO);
+        giftCertificateDTOHateoas.build(giftCertificateDTO);
+        return giftCertificateDTO;
     }
 
     /**
      * Finds gift certificate by id
      *
      * @param id the id of gift certificate to be found.
-     * @return found gift certificate object.
+     * @return the found gift certificate object by HATEOAS.
      */
     @GetMapping("/{id}")
-    public GiftCertificateResponseDTO findGiftCertificateById(@PathVariable long id) {
-        return giftCertificateService.findById(id);
+    public GiftCertificateDTO findGiftCertificateById(@PathVariable long id) {
+        GiftCertificateDTO giftCertificateDTO = giftCertificateService.findById(id);
+        giftCertificateDTOHateoas.build(giftCertificateDTO);
+        return giftCertificateDTO;
     }
 
     /**
-     * Deletes gift certificate.
+     * Deletes gift certificate by gift certificate id.
      *
      * @param id the id of gift certificate to be deleted.
      */
@@ -88,10 +90,13 @@ public class GiftCertificateController {
      * Updates gift certificate.
      *
      * @param id the id of gift certificate to be updated.
+     * @return an updated gift certificate by HATEOAS.
      */
     @PatchMapping("/{id}")
-    public GiftCertificateResponseDTO updateGiftCertificate(@PathVariable long id,
-                                                            @RequestBody GiftCertificateDTO giftCertificateDTO) {
-        return giftCertificateDTOService.update(id, giftCertificateDTO);
+    public GiftCertificateDTO updateGiftCertificate(@PathVariable long id,
+                                                    @RequestBody GiftCertificateDTO giftCertificateDTO) {
+        GiftCertificateDTO result = giftCertificateService.update(id, giftCertificateDTO);
+        giftCertificateDTOHateoas.build(result);
+        return result;
     }
 }

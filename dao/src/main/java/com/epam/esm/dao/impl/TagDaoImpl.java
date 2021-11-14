@@ -2,18 +2,12 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.sql.TagSql;
-import com.epam.esm.dao.mapper.TagMapper;
+import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.error.ExceptionCauseCode;
-import com.epam.esm.exception.ResourceNotAddedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,67 +18,51 @@ import java.util.Optional;
  */
 @Repository
 public class TagDaoImpl implements TagDao {
-    private final JdbcTemplate jdbcTemplate;
-    private final TagMapper tagMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    @Autowired
-    public TagDaoImpl(JdbcTemplate jdbcTemplate, TagMapper tagMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.tagMapper = tagMapper;
+    @Override
+    public void add(Tag tag) {
+        entityManager.persist(tag);
     }
 
     @Override
-    public Tag addWithoutId(Tag tag) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String tagName = tag.getName();
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(TagSql.ADD_TAG, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, tagName);
-            return preparedStatement;
-        }, keyHolder);
-        if (keyHolder.getKey() == null) {
-            throw new ResourceNotAddedException("Tag not add.No KeyHolder", ExceptionCauseCode.TAG);
+    public List<Tag> findAll(PaginationContainer paginationContainer) {
+        int page = paginationContainer.getPage();
+        int size = paginationContainer.getSize();
+        int previousPageEnd = (page - 1) * size;
+        List<Tag> list;
+        if (size == 0 && page == 0) {
+            list = entityManager.createNativeQuery(TagSql.FIND_ALL, Tag.class).getResultList();
+        } else {
+            list = entityManager.createNativeQuery(TagSql.FIND_ALL_WITH_LIMIT, Tag.class)
+                    .setParameter(1, previousPageEnd).setParameter(2, size).getResultList();
         }
-        long tagId = keyHolder.getKey().longValue();
-        return new Tag(tagId, tagName);
-    }
-
-    @Override
-    public Tag addWithId(Tag tag) {
-        jdbcTemplate.update(TagSql.ADD_TAG_WITH_ID, tag.getId(), tag.getName());
-        return tag;
-    }
-
-    @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(TagSql.FIND_ALL, tagMapper);
+        return list;
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_NAME, tagMapper, name);
+        List<Tag> tagList = (List<Tag>) entityManager.createNativeQuery(TagSql.FIND_BY_NAME, Tag.class)
+                .setParameter(1, name).getResultList();
         return returnTag(tagList);
     }
 
     @Override
     public Optional<Tag> findById(long id) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID, tagMapper, id);
-        return returnTag(tagList);
+        Tag tag = entityManager.find(Tag.class, id);
+        return Optional.ofNullable(tag);
     }
 
     @Override
-    public void update(Tag tag) {
-        jdbcTemplate.update(TagSql.UPDATE_BY_ID, tag.getName(), tag.getId());
+    public void delete(Tag tag) {
+        entityManager.remove(tag);
     }
 
     @Override
-    public void delete(long id) {
-        jdbcTemplate.update(TagSql.DELETE_TAG, id);
-    }
-
-    @Override
-    public Optional<Tag> findByIdAndName(long id, String name) {
-        List<Tag> tagList = jdbcTemplate.query(TagSql.FIND_BY_ID_AND_NAME, tagMapper, id, name);
+    public Optional<Tag> findMostWidelyTagUsersHighestCostOrders() {
+        List<Tag> tagList = entityManager.createNativeQuery(TagSql.FIND_MOST_WIDELY_TAG_USERS_HIGHEST_COST_ORDERS, Tag.class)
+                .getResultList();
         return returnTag(tagList);
     }
 

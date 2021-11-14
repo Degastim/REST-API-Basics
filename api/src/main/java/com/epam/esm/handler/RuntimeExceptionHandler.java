@@ -1,15 +1,16 @@
 package com.epam.esm.handler;
 
 import com.epam.esm.entity.ResponseExceptionEntity;
-import com.epam.esm.exception.InvalidFieldValueException;
-import com.epam.esm.exception.ResourceAlreadyExistException;
-import com.epam.esm.exception.ResourceNotAddedException;
-import com.epam.esm.exception.ResourceNotFoundedException;
+import com.epam.esm.error.ExceptionCauseCode;
+import com.epam.esm.exception.*;
 import com.epam.esm.util.ErrorCodeCounter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * The runtime exception handler.
@@ -26,6 +27,21 @@ public class RuntimeExceptionHandler {
      */
     @ExceptionHandler(InvalidFieldValueException.class)
     public final ResponseEntity<ResponseExceptionEntity> handleInvalidFieldValueException(InvalidFieldValueException e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = e.getLocalizedMessage();
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, e.getCodeExceptionCause());
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+
+    /**
+     * Handle InvalidFieldValueException.
+     *
+     * @param e the exception that handler handle.
+     * @return the response entity
+     */
+    @ExceptionHandler(InvalidURLParameterException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleInvalidURLParameterException(InvalidURLParameterException e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         String message = e.getLocalizedMessage();
         int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, e.getCodeExceptionCause());
@@ -78,5 +94,58 @@ public class RuntimeExceptionHandler {
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
 
+    /**
+     * Handle MethodArgumentTypeMismatchException.
+     *
+     * @return the response entity
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleMethodArgumentTypeMismatchException() {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Invalid number data in URL";
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
 
+    /**
+     * Handle HttpMessageNotReadableException.
+     *
+     * @return the response entity
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleHttpMessageNotReadableException() {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Invalid data entered in the request body";
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+    /**
+     * Handle BindException.
+     *
+     * @return the response entity
+     */
+    @ExceptionHandler(BindException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleBindException() {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Invalid data entered in the URL";
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+    /**
+     * Handle exception that handles exceptions not caught by other handlers.
+     *
+     * @param e the exception that handler handle.
+     * @return the response entity
+     */
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleException(Exception e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = e.getLocalizedMessage();
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
 }

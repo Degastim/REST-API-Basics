@@ -1,14 +1,14 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.GiftCertificatesTagDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.tag.TagCreationDTO;
-import com.epam.esm.dto.tag.TagResponseDTO;
+import com.epam.esm.dto.PaginationContainer;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.mapper.tag.TagCreationDTOMapper;
-import com.epam.esm.mapper.tag.TagResponseDTOMapper;
+import com.epam.esm.exception.ResourceNotFoundedException;
+import com.epam.esm.mapper.TagDTOMapper;
 import com.epam.esm.service.TagService;
-import com.epam.esm.validator.TagCreationDTOValidator;
+import com.epam.esm.validator.PaginationContainerValidator;
+import com.epam.esm.validator.TagDTOValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,70 +20,63 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TagServiceImplTest {
-    private final Tag tag = new Tag(1, "Tag");
-    private TagService service;
     @Mock
     private TagDao tagDao;
     @Mock
-    private GiftCertificatesTagDao giftCertificatesTagDao;
+    private TagDTOMapper tagDTOMapper;
     @Mock
-    private TagResponseDTOMapper tagResponseDTOMapper;
+    private TagDTOValidator tagDTOValidator;
     @Mock
-    private TagCreationDTOMapper tagCreationDTOMapper;
-    @Mock
-    private TagCreationDTOValidator tagCreationDTOValidator;
+    private PaginationContainerValidator paginationContainerValidator;
+    private TagService service;
 
     @BeforeAll
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-        service = new TagServiceImpl(tagDao, giftCertificatesTagDao, tagResponseDTOMapper, tagCreationDTOMapper,
-                tagCreationDTOValidator);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        service = new TagServiceImpl(tagDao, tagDTOMapper, tagDTOValidator, paginationContainerValidator);
     }
 
     @Test
     void findAll() {
-        List<Tag> list = new ArrayList<>();
-        list.add(tag);
-        TagResponseDTO tagResponseDTO = new TagResponseDTO(1, "Tag");
-        Mockito.when(tagDao.findAll()).thenReturn(list);
-        Mockito.when(tagResponseDTOMapper.toTagResponseDTO(Mockito.any())).thenReturn(tagResponseDTO);
-        List<TagResponseDTO> actual = service.findAll();
-        List<TagResponseDTO> expected = new ArrayList<>();
-        expected.add(tagResponseDTO);
+        List<TagDTO> actual = service.findAll(new PaginationContainer());
+        List<TagDTO> expected = new ArrayList<>();
         assertEquals(expected, actual);
     }
 
     @Test
     void add() {
-        TagCreationDTO tagCreationDTO = new TagCreationDTO(1, "Tag");
-        TagResponseDTO expected = new TagResponseDTO(1, "Tag");
-        Mockito.when(tagDao.findByName(tag.getName())).thenReturn(Optional.empty());
-        Mockito.when(tagCreationDTOMapper.toTag(Mockito.any())).thenReturn(tag);
-        Mockito.when(tagDao.addWithoutId(Mockito.any())).thenReturn(tag);
-        Mockito.when(tagResponseDTOMapper.toTagResponseDTO(Mockito.any())).thenReturn(expected);
-        TagResponseDTO actual = service.add(tagCreationDTO);
-        assertEquals(actual, expected);
-    }
-
-    @Test
-    void findById() {
-        long tagId = tag.getId();
-        TagResponseDTO expected = new TagResponseDTO(1, "Tag");
-        Mockito.when(tagDao.findById(tagId)).thenReturn(Optional.of(tag));
-        Mockito.when(tagResponseDTOMapper.toTagResponseDTO(Mockito.any())).thenReturn(expected);
-        TagResponseDTO actual = service.findById(tagId);
+        Tag tag = new Tag();
+        Mockito.when(tagDTOMapper.toEntity(Mockito.any())).thenReturn(tag);
+        TagDTO tagDTO = new TagDTO();
+        Mockito.when(tagDTOMapper.toDTO(tag)).thenReturn(tagDTO);
+        TagDTO actual = service.add(tagDTO);
+        TagDTO expected = new TagDTO();
         assertEquals(expected, actual);
     }
 
     @Test
+    void findById() {
+        long id = 3;
+        Mockito.when(tagDao.findById(id)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundedException.class, () -> service.findById(id));
+    }
+
+    @Test
     void delete() {
-        long tagId = tag.getId();
-        Mockito.when(tagDao.findById(tagId)).thenReturn(Optional.of(tag));
-        assertDoesNotThrow(() -> service.delete(tagId));
+        long id = 3;
+        Mockito.when(tagDao.findById(id)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundedException.class, () -> service.delete(id));
+    }
+
+    @Test
+    void findMostWidelyTagUsersHighestCostOrders() {
+        long id = 3;
+        Mockito.when(tagDao.findMostWidelyTagUsersHighestCostOrders()).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundedException.class, () -> service.findMostWidelyTagUsersHighestCostOrders());
     }
 }

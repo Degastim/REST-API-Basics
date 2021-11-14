@@ -10,10 +10,11 @@ import org.springframework.http.HttpStatus;
 public class ErrorCodeCounter {
     private ErrorCodeCounter() {
     }
+
     /**
      * Count error code for response exception entity
      *
-     * @param httpStatus object which contain a http status
+     * @param httpStatus         object which contain a http status
      * @param exceptionCauseCode object which contain an object code
      */
     public static int countErrorCode(HttpStatus httpStatus, int exceptionCauseCode) {

@@ -1,13 +1,27 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.audit.AuditListener;
+
+import javax.persistence.*;
+import java.util.Set;
+
 /**
  * Entity of a tag.
  *
  * @author Yauheni Tsitou
  */
-public class Tag {
-    private long id;
+@Entity
+@Table(name = "tags")
+@EntityListeners(AuditListener.class)
+@AttributeOverride(name = "id", column = @Column(name = "tag_id"))
+public class Tag extends AbstractEntity {
+    @Column(name = "tag_name")
     private String name;
+    @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<GiftCertificate> giftCertificateSet;
+
+    public Tag() {
+    }
 
     public Tag(long id, String name) {
         this.id = id;
@@ -18,15 +32,16 @@ public class Tag {
         this.name = name;
     }
 
-    public Tag() {
+    public Set<GiftCertificate> getGiftCertificateSet() {
+        return giftCertificateSet;
     }
 
-    public long getId() {
-        return id;
+    public void setGiftCertificateSet(Set<GiftCertificate> giftCertificateSet) {
+        this.giftCertificateSet = giftCertificateSet;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void addGiftCertificate(GiftCertificate giftCertificate) {
+        giftCertificateSet.add(giftCertificate);
     }
 
     public String getName() {
@@ -39,21 +54,15 @@ public class Tag {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
         Tag tag = (Tag) o;
-        if (id != tag.id) {
-            return false;
-        }
         return name != null ? name.equals(tag.name) : tag.name == null;
     }
 
     @Override
     public int hashCode() {
-        return 31 * (name != null ? name.hashCode() : 0) + Long.hashCode(id);
+        return 3 * (name != null ? name.hashCode() : 0) + super.hashCode();
     }
 }
