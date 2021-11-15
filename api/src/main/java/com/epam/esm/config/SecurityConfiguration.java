@@ -13,6 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration for security.
+ *
+ * @author Yauheni Tstiov
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -31,19 +36,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/register").permitAll()
-                .antMatchers("/auth/logout").authenticated()
                 .antMatchers("/auth/login").not().authenticated()
                 .antMatchers(HttpMethod.GET, "/certificates/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/certificates/*").hasAuthority(Permission.CERTIFICATES_CREATE.getPermission())
-                .antMatchers(HttpMethod.PATCH, "/certificates/*").hasAuthority(Permission.CERTIFICATES_UPDATE.getPermission())
-                .antMatchers(HttpMethod.DELETE, "/certificates/*").hasAuthority(Permission.CERTIFICATES_DELETE.getPermission())
+                .antMatchers(HttpMethod.POST, "/certificates/*")
+                .hasAuthority(Permission.CERTIFICATES_CREATE.getPermission())
+                .antMatchers(HttpMethod.PATCH, "/certificates/*")
+                .hasAuthority(Permission.CERTIFICATES_UPDATE.getPermission())
+                .antMatchers(HttpMethod.DELETE, "/certificates/*")
+                .hasAuthority(Permission.CERTIFICATES_DELETE.getPermission())
                 .antMatchers(HttpMethod.GET, "/tags/*").hasAuthority(Permission.TAGS_READ.getPermission())
                 .antMatchers(HttpMethod.POST, "/tags/*").hasAuthority(Permission.TAGS_CREATE.getPermission())
                 .antMatchers(HttpMethod.DELETE, "/tags/*").hasAuthority(Permission.TAGS_DELETE.getPermission())
-               .antMatchers(HttpMethod.GET, "/users").hasAuthority(Permission.USERS_READ.getPermission())
+                .antMatchers(HttpMethod.GET, "/users").hasAuthority(Permission.USERS_READ.getPermission())
                 .antMatchers(HttpMethod.GET, "/users/{id}").hasAuthority(Permission.USERS_READ.getPermission())
-                .antMatchers(HttpMethod.GET, "/users/{id}/orders").hasAuthority(Permission.ORDERS_READ.getPermission())
-                .antMatchers(HttpMethod.POST, "/users/{id}/orders").hasAuthority(Permission.ORDERS_CREATE.getPermission())
+                .antMatchers(HttpMethod.GET, "/users/{id}/orders")
+                .hasAuthority(Permission.ORDERS_READ.getPermission())
+                .antMatchers(HttpMethod.POST, "/users/{id}/orders")
+                .hasAuthority(Permission.ORDERS_CREATE.getPermission())
                 .antMatchers(HttpMethod.GET, "/orders/*").hasAuthority(Permission.ORDERS_READ.getPermission())
                 .anyRequest()
                 .authenticated()

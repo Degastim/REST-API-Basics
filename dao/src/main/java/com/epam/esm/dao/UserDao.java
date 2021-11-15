@@ -30,7 +30,7 @@ public interface UserDao {
     Optional<User> findByName(String name);
 
     /**
-     * Save user
+     * Save user.
      *
      * @param user for save.
      */

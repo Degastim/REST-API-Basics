@@ -11,6 +11,11 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * OrderDao implementation.
+ *
+ * @author Yauheni Tsitov
+ */
 @Repository
 public class OrderDaoImpl implements OrderDao {
     @PersistenceContext

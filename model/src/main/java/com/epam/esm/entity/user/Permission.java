@@ -2,6 +2,7 @@ package com.epam.esm.entity.user;
 
 /**
  * Permissions of users
+ *
  * @author Yauheni Tsitou
  */
 public enum Permission {

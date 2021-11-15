@@ -4,6 +4,11 @@ import com.epam.esm.dto.UserCredential;
 import com.epam.esm.entity.user.User;
 import org.springframework.stereotype.Component;
 
+/**
+ * User and UserCredential mapper class.
+ *
+ * @author Yauheni Tstiov
+ */
 @Component
 public class UserCredentialMapper implements DTOMapper<User, UserCredential> {
 

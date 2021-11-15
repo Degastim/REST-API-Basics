@@ -8,15 +8,16 @@ import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+/**
+ * Authentication controller class.
+ *
+ * @author Yauheni Tstiov
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -34,20 +35,25 @@ public class AuthenticationController {
         this.userDTOHateoas = userDTOHateoas;
     }
 
+    /**
+     * Login in application.
+     *
+     * @param credential contain param for login.
+     * @return list with found items by HATEOAS.
+     */
     @PostMapping("/login")
     public String login(@RequestBody UserCredential credential) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credential.getName(), credential.getPassword()));
         UserDTO userDTO = userService.findByName(credential.getName());
-        String token = jwtTokenProvider.createToken(userDTO.getName(), userDTO.getRole().toString());
-        return token;
+        return jwtTokenProvider.createToken(userDTO.getName(), userDTO.getRole().toString());
     }
 
-    @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, null);
-    }
-
+    /**
+     * Register new user.
+     *
+     * @param userCredential contain param for create.
+     * @return list with found items by HATEOAS.
+     */
     @PostMapping("/register")
     public UserDTO register(@RequestBody UserCredential userCredential) {
         UserDTO userDTO = userService.save(userCredential);

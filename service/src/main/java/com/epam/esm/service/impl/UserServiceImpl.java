@@ -19,7 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,9 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO save(UserCredential userCredential) {
         userCredentialValidator.isUserValid(userCredential);
         User user = userCredentialMapper.toEntity(userCredential);
+        user.setOrderList(new ArrayList<>());
         user.setRole(UserRole.USER);
         user.setActive(true);
         user.setPassword(encoder.encode(user.getPassword()));

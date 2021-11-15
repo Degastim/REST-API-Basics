@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
+/**
+ * Validates UserCredential.
+ *
+ * @author Yauheni Tsitov
+ */
 @Component
 public class UserCredentialValidator {
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Zа-яА-Я]{1,40}");
@@ -21,6 +26,11 @@ public class UserCredentialValidator {
         this.userDao = userDao;
     }
 
+    /**
+     * Is isUserValid valid.
+     *
+     * @param user the object for validation.
+     */
     public void isUserValid(UserCredential user) {
         StringBuilder errorMessage = new StringBuilder();
         String name = user.getName();

@@ -2,9 +2,9 @@ package com.epam.esm.filter;
 
 import com.epam.esm.entity.ResponseExceptionEntity;
 import com.epam.esm.exception.JwtAuthenticationException;
+import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.security.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -41,16 +41,20 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+            filterChain.doFilter(servletRequest, servletResponse);
         } catch (JwtAuthenticationException e) {
-            SecurityContextHolder.clearContext( );
-            HttpServletResponse httpServletResponse=(HttpServletResponse) servletResponse;
-            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            httpServletResponse.setContentType("application/json");
-            ResponseExceptionEntity entity=new ResponseExceptionEntity(e.getMessage(),e.getCodeExceptionCause());
-            ObjectMapper objectMapper=new ObjectMapper();
-            httpServletResponse.getOutputStream().print(objectMapper.writeValueAsString(entity));
-            throw e;
+            exceptionHandling((HttpServletResponse) servletResponse, e.getMessage(), e.getCodeExceptionCause());
+        } catch (ResourceNotFoundedException e) {
+            exceptionHandling((HttpServletResponse) servletResponse, e.getMessage(), e.getCodeExceptionCause());
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private void exceptionHandling(HttpServletResponse servletResponse, String message, int codeExceptionCause) throws IOException {
+        SecurityContextHolder.clearContext();
+        servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        servletResponse.setContentType("application/json");
+        ResponseExceptionEntity entity = new ResponseExceptionEntity(message, codeExceptionCause);
+        ObjectMapper objectMapper = new ObjectMapper();
+        servletResponse.getOutputStream().print(objectMapper.writeValueAsString(entity));
     }
 }

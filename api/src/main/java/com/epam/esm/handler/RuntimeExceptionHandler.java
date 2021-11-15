@@ -7,6 +7,8 @@ import com.epam.esm.util.ErrorCodeCounter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -137,6 +139,34 @@ public class RuntimeExceptionHandler {
     }
 
     /**
+     * Handle BadCredentialsException.
+     *
+     * @return the response entity
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleBadCredentialsException() {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "Invalid user credentials";
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.USER);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+
+    /**
+     * Handle LockedException.
+     *
+     * @return the response entity
+     */
+    @ExceptionHandler(LockedException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleLockedException() {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = "User account locked";
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.USER);
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+
+    /**
      * Handle exception that handles exceptions not caught by other handlers.
      *
      * @param e the exception that handler handle.
@@ -144,8 +174,9 @@ public class RuntimeExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ResponseExceptionEntity> handleException(Exception e) {
+        System.out.println(e.getClass());
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        String message = e.getLocalizedMessage();
+        String message = e.getMessage();
         int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);

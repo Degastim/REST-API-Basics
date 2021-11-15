@@ -11,12 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Base64;
 import java.util.Date;
 
+/**
+ * Provider of javascript web token.
+ *
+ * @author Yauheni Tstiov
+ */
 @Component
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
@@ -27,12 +29,17 @@ public class JwtTokenProvider {
     }
 
     @Value("${jwt.secret:secret}")
-    private  String secretKey;
+    private String secretKey;
     @Value("${jwt.expiration:604800}")
-    private  long validityMilliSeconds;
+    private long validityMilliSeconds;
     @Value("${jwt.header:Authorization}")
-    private  String authorizationHeader;
+    private String authorizationHeader;
 
+    /**
+     * Create JWT by username and role.
+     *
+     * @author Yauheni Tstiov
+     */
     public String createToken(String username, String role) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
@@ -45,7 +52,11 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-
+    /**
+     * Validate JWT by expiration.
+     *
+     * @author Yauheni Tstiov
+     */
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
@@ -54,16 +65,25 @@ public class JwtTokenProvider {
             throw new JwtAuthenticationException("Jwt is not valid", ExceptionCauseCode.UNKNOWN);
         }
     }
-
+    /**
+     * Create JWT by username and role.
+     *
+     * @author Yauheni Tstiov
+     */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, " ", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-    public String resolveToken(HttpServletRequest request){
+    /**
+     * Create JWT by username and role.
+     *
+     * @author Yauheni Tstiov
+     */
+    public String resolveToken(HttpServletRequest request) {
         return request.getHeader(authorizationHeader);
+    }
+    private String getUsername(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 }

@@ -28,7 +28,7 @@ public class GiftCertificateDTO extends AbstractDTO<GiftCertificateDTO> {
         this.price = price;
         this.duration = duration;
         this.tags = tags;
-        this.createDate=createDate;
+        this.createDate = createDate;
     }
 
     public GiftCertificateDTO(String name, String description, BigDecimal price, Integer duration, Set<TagDTO> tags) {

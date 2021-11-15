@@ -14,13 +14,12 @@ import java.util.stream.Collectors;
  * @author Yauheni Tsitou
  */
 public enum UserRole {
-    USER(Arrays.asList(Permission.TAGS_READ, Permission.CERTIFICATES_READ, Permission.USERS_READ,Permission.ORDERS_READ,
-           Permission.ORDERS_CREATE)),
+    USER(Arrays.asList(Permission.TAGS_READ, Permission.CERTIFICATES_READ, Permission.USERS_READ, Permission.ORDERS_READ,
+            Permission.ORDERS_CREATE)),
     ADMIN(Arrays.asList(Permission.values()));
     private final Set<Permission> permissions;
 
     UserRole(Collection<Permission> collection) {
-
         this.permissions = new HashSet<>(collection);
     }
 

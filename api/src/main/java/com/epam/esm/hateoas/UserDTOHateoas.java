@@ -32,12 +32,13 @@ public class UserDTOHateoas {
                 .findAllByUserId(userDTO.getId(), new PaginationContainer())).withRel("user_orders");
         List<OrderDTO> orderDTOList = userDTO.getOrderList();
         if (orderDTOList.size() != 0) {
+            userDTO.add(ordersListLink);
             for (OrderDTO orderDTO : userDTO.getOrderList()) {
                 Link orderLink = linkTo(methodOn(OrderController.class).findByOrderId(orderDTO.getId())).withSelfRel();
                 orderDTO.add(orderLink);
             }
-            userDTO.add(self, ordersListLink);
         }
+        userDTO.add(self);
     }
 
     /**

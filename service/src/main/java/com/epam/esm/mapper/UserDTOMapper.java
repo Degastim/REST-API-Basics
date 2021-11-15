@@ -26,13 +26,21 @@ public class UserDTOMapper implements DTOMapper<User, UserDTO> {
 
     @Override
     public UserDTO toDTO(User user) {
-        List<OrderDTO> orderDTOList = user.getOrderList().stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
-        return new UserDTO(user.getId(), user.getName(),user.getRole(), orderDTOList);
+        List<Order> orderList = user.getOrderList();
+        List<OrderDTO> orderDTOList = null;
+        if (orderList != null) {
+            orderDTOList = orderList.stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
+        }
+        return new UserDTO(user.getId(), user.getName(), user.getRole(), orderDTOList);
     }
 
     @Override
     public User toEntity(UserDTO userDTO) {
-        List<Order> orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
-        return new User(userDTO.getId(), userDTO.getName(),userDTO.getRole(), orderList);
+        List<OrderDTO> orderDTOList = userDTO.getOrderList();
+        List<Order> orderList = null;
+        if (orderDTOList != null) {
+            orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
+        }
+        return new User(userDTO.getId(), userDTO.getName(), userDTO.getRole(), orderList);
     }
 }

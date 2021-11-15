@@ -50,8 +50,9 @@ public class GiftCertificate extends AbstractEntity {
         this.createDate = createDate;
         this.tags = tags;
     }
+
     public GiftCertificate(long id, String giftCertificateName, String description, BigDecimal price, Integer duration,
-                            Set<Tag> tags) {
+                           Set<Tag> tags) {
         this.id = id;
         this.giftCertificateName = giftCertificateName;
         this.description = description;
@@ -59,6 +60,7 @@ public class GiftCertificate extends AbstractEntity {
         this.duration = duration;
         this.tags = tags;
     }
+
     public GiftCertificate(String giftCertificateName, String description, BigDecimal price,
                            Integer duration, Set<Tag> tags) {
         this.giftCertificateName = giftCertificateName;
