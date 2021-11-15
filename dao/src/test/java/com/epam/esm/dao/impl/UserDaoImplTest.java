@@ -3,7 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.Application;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.PaginationContainer;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

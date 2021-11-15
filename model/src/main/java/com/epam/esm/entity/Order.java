@@ -1,6 +1,7 @@
 package com.epam.esm.entity;
 
 import com.epam.esm.audit.AuditListener;
+import com.epam.esm.entity.user.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

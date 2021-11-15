@@ -121,6 +121,7 @@ public class RuntimeExceptionHandler {
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
+
     /**
      * Handle BindException.
      *
@@ -134,6 +135,7 @@ public class RuntimeExceptionHandler {
         ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
+
     /**
      * Handle exception that handles exceptions not caught by other handlers.
      *

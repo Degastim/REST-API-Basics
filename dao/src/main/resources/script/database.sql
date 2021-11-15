@@ -33,11 +33,14 @@ CREATE TABLE gift_certificates_tags
 
 CREATE TABLE users
 (
-    user_id          bigint      NOT NULL AUTO_INCREMENT,
-    user_name        VARCHAR(40) NOT NULL,
-    create_date      datetime    NOT NULL,
-    last_update_date datetime    NOT NULL,
-    operation        VARCHAR(10) NOT NULL,
+    user_id          bigint       NOT NULL AUTO_INCREMENT,
+    user_name        VARCHAR(40)  NOT NULL,
+    create_date      datetime     NOT NULL,
+    last_update_date datetime     NOT NULL,
+    operation        VARCHAR(10)  NOT NULL,
+    password         VARCHAR(60)  NOT NULL,
+    is_active         bit          NOT NULL,
+    role             varchar(20) NOT NULL,
     PRIMARY KEY (user_id)
 );
 

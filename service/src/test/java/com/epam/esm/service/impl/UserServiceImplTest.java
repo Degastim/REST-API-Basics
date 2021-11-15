@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.mapper.UserDTOMapper;
 import com.epam.esm.service.UserService;
@@ -35,7 +35,7 @@ class UserServiceImplTest {
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userDao, userDTOMapper, paginationContainerValidator);
+
     }
 
     @Test

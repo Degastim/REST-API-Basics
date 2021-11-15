@@ -1,6 +1,8 @@
-package com.epam.esm.entity;
+package com.epam.esm.entity.user;
 
 import com.epam.esm.audit.AuditListener;
+import com.epam.esm.entity.AbstractEntity;
+import com.epam.esm.entity.Order;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +19,13 @@ import java.util.List;
 public class User extends AbstractEntity {
     @Column(name = "user_name")
     private String name;
+    @Column
+    private String password;
+    @Enumerated(EnumType.STRING)
+    @Column
+    private UserRole role;
+    @Column(name = "is_active")
+    private boolean isActive;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orderList;
 
@@ -27,10 +36,17 @@ public class User extends AbstractEntity {
         this.id = id;
     }
 
-    public User(long id, String name, List<Order> orderList) {
+    public User(long id, String name, UserRole role, List<Order> orderList) {
         this.id = id;
         this.name = name;
+        this.role = role;
         this.orderList = orderList;
+    }
+
+    public User(long id, String name, String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
     }
 
     public String getName() {
@@ -47,6 +63,30 @@ public class User extends AbstractEntity {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override

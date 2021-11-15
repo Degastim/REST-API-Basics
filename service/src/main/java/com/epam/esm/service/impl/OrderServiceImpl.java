@@ -6,7 +6,7 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.mapper.OrderDTOMapper;
