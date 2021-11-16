@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * @author Yauheni Tsitou
  */
 public enum UserRole {
-    USER(Arrays.asList(Permission.USERS_READ, Permission.ORDERS_CREATE)),
+    USER(Arrays.asList(Permission.USERS_READ, Permission.ORDERS_CREATE,Permission.ORDERS_READ)),
     ADMIN(Arrays.asList(Permission.values()));
     private final Set<Permission> permissions;
 

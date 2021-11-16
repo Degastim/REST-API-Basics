@@ -22,18 +22,18 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
-
-    @Autowired
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
+    private final int BEARER_INDENT = 7;
     @Value("${jwt.secret:secret}")
     private String secretKey;
     @Value("${jwt.expiration:604800}")
     private long validityMilliSeconds;
     @Value("${jwt.header:Authorization}")
     private String authorizationHeader;
+
+    @Autowired
+    public JwtTokenProvider(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
      * Create JWT by username and role.
@@ -96,7 +96,12 @@ public class JwtTokenProvider {
      * @author Yauheni Tstiov
      */
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(authorizationHeader);
+        String bearerToken = request.getHeader(authorizationHeader);
+        if (bearerToken != null) {
+            return bearerToken.substring(BEARER_INDENT);
+        } else {
+            return null;
+        }
     }
 
     private String getUsername(String token) {

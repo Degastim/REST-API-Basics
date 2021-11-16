@@ -8,6 +8,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,9 +34,9 @@ public class OrderController {
      * @param paginationContainer contains the desired page and the number of elements per page.
      * @return list of found users by HATEOAS
      */
-    @PreAuthorize("hasAuthority('orders:read') or {@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @PreAuthorize("hasAuthority('orders:read:all') or (hasAuthority('orders:read') and {@userAccessValidator.isUserValid(#userId,#request)})")
     @GetMapping
-    public CollectionModel<OrderDTO> findAllByUserId(@PathVariable long userId, @ModelAttribute PaginationContainer paginationContainer) {
+    public CollectionModel<OrderDTO> findAllByUserId(HttpServletRequest request, @PathVariable long userId, @ModelAttribute PaginationContainer paginationContainer) {
         List<OrderDTO> orderDTOList = orderService.findAllByUserId(userId, paginationContainer);
         return orderDTOHateoas.build(orderDTOList, paginationContainer, userId);
     }
@@ -46,9 +47,9 @@ public class OrderController {
      * @param orderId order id by which we are looking in the database.
      * @return order found in the database by HATEOAS.
      */
-    @PreAuthorize("hasAuthority('orders:read') or {@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @PreAuthorize("hasAuthority('orders:read:all') or (hasAuthority('orders:read') and {@userAccessValidator.isUserValid(#userId,#request)})")
     @GetMapping("/{orderId}")
-    public OrderDTO findByOrderId(@PathVariable long userId, @PathVariable long orderId) {
+    public OrderDTO findByOrderId(HttpServletRequest request, @PathVariable long userId, @PathVariable long orderId) {
         OrderDTO result = orderService.findById(userId, orderId);
         orderDTOHateoas.build(userId, result);
         return result;
@@ -61,9 +62,9 @@ public class OrderController {
      * @param orderDTO contains an order to add to the database.
      * @return order added to the database by HATEOAS.
      */
-    @PreAuthorize("{@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @PreAuthorize("hasAuthority('orders:create') and {@userAccessValidator.isUserValid(#userId,#request)}")
     @PostMapping
-    public OrderDTO addOrder(@PathVariable long userId, @RequestBody OrderDTO orderDTO) {
+    public OrderDTO addOrder(HttpServletRequest request, @PathVariable long userId, @RequestBody OrderDTO orderDTO) {
         OrderDTO result = orderService.addOrder(userId, orderDTO);
         orderDTOHateoas.build(userId, result);
         return result;
