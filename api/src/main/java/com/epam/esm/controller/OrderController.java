@@ -4,11 +4,10 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.hateoas.OrderDTOHateoas;
 import com.epam.esm.service.OrderService;
-import com.epam.esm.validator.OrderAccessValidator;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -17,15 +16,14 @@ import java.util.List;
  * @author Yauheni Tstiov
  */
 @RestController
+@RequestMapping("/users/{userId}/orders")
 public class OrderController {
     private final OrderService orderService;
     private final OrderDTOHateoas orderDTOHateoas;
-    private final OrderAccessValidator orderAccessValidator;
 
-    public OrderController(OrderService orderService, OrderDTOHateoas orderDTOHateoas, OrderAccessValidator orderAccessValidator) {
+    public OrderController(OrderService orderService, OrderDTOHateoas orderDTOHateoas) {
         this.orderService = orderService;
         this.orderDTOHateoas = orderDTOHateoas;
-        this.orderAccessValidator = orderAccessValidator;
     }
 
     /**
@@ -35,10 +33,9 @@ public class OrderController {
      * @param paginationContainer contains the desired page and the number of elements per page.
      * @return list of found users by HATEOAS
      */
-    @GetMapping("/users/{userId}/orders")
-    public CollectionModel<OrderDTO> findAllByUserId(HttpServletRequest httpServletRequest, @PathVariable long userId,
-                                                     @ModelAttribute PaginationContainer paginationContainer) {
-        orderAccessValidator.isUserValid(userId, httpServletRequest);
+    @PreAuthorize("hasAuthority('orders:read') or {@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @GetMapping
+    public CollectionModel<OrderDTO> findAllByUserId(@PathVariable long userId, @ModelAttribute PaginationContainer paginationContainer) {
         List<OrderDTO> orderDTOList = orderService.findAllByUserId(userId, paginationContainer);
         return orderDTOHateoas.build(orderDTOList, paginationContainer, userId);
     }
@@ -49,9 +46,9 @@ public class OrderController {
      * @param orderId order id by which we are looking in the database.
      * @return order found in the database by HATEOAS.
      */
-    @GetMapping("/users/{userId}/orders/{orderId}")
-    public OrderDTO findByOrderId(HttpServletRequest httpServletRequest, @PathVariable long userId, @PathVariable long orderId) {
-        orderAccessValidator.isUserValid(userId, httpServletRequest);
+    @PreAuthorize("hasAuthority('orders:read') or {@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @GetMapping("/{orderId}")
+    public OrderDTO findByOrderId(@PathVariable long userId, @PathVariable long orderId) {
         OrderDTO result = orderService.findById(userId, orderId);
         orderDTOHateoas.build(userId, result);
         return result;
@@ -64,9 +61,9 @@ public class OrderController {
      * @param orderDTO contains an order to add to the database.
      * @return order added to the database by HATEOAS.
      */
-    @PostMapping("/users/{userId}/orders")
-    public OrderDTO addOrder(HttpServletRequest httpServletRequest, @PathVariable long userId, @RequestBody OrderDTO orderDTO) {
-        orderAccessValidator.isUserValid(userId, httpServletRequest);
+    @PreAuthorize("{@userAccessValidator.isUserValid(#userId,#httpServletRequest)}")
+    @PostMapping
+    public OrderDTO addOrder(@PathVariable long userId, @RequestBody OrderDTO orderDTO) {
         OrderDTO result = orderService.addOrder(userId, orderDTO);
         orderDTOHateoas.build(userId, result);
         return result;

@@ -181,18 +181,4 @@ public class RuntimeExceptionHandler {
         return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
     }
 
-    /**
-     * Handle exception that handles exceptions not caught by other handlers.
-     *
-     * @param e the exception that handler handle.
-     * @return the response entity
-     */
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ResponseExceptionEntity> handleException(Exception e) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        String message = e.getMessage();
-        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);
-        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
-        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
-    }
 }

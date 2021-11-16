@@ -8,6 +8,7 @@ import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class GiftCertificateController {
      * @param giftCertificateCreationDTO an object that contain object request.
      * @return gift certificate added to the database by HATEOAS.
      */
+    @PreAuthorize("hasAuthority('certificates:create')")
     @PostMapping
     public GiftCertificateDTO addGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateCreationDTO) {
         GiftCertificateDTO giftCertificateDTO = giftCertificateService.add(giftCertificateCreationDTO);
@@ -79,6 +81,7 @@ public class GiftCertificateController {
      *
      * @param id the id of gift certificate to be deleted.
      */
+    @PreAuthorize("hasAuthority('certificates:delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGiftCertificateByID(@PathVariable long id) {
@@ -91,6 +94,7 @@ public class GiftCertificateController {
      * @param id the id of gift certificate to be updated.
      * @return an updated gift certificate by HATEOAS.
      */
+    @PreAuthorize("hasAuthority('certificates:update')")
     @PatchMapping("/{id}")
     public GiftCertificateDTO updateGiftCertificate(@PathVariable long id,
                                                     @RequestBody GiftCertificateDTO giftCertificateDTO) {

@@ -1,6 +1,5 @@
 package com.epam.esm.config;
 
-import com.epam.esm.entity.user.Permission;
 import com.epam.esm.filter.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,33 +30,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/register").permitAll()
-                .antMatchers("/auth/login").not().authenticated()
-                .antMatchers(HttpMethod.GET, "/certificates/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/certificates/*")
-                .hasAuthority(Permission.CERTIFICATES_CREATE.getPermission())
-                .antMatchers(HttpMethod.PATCH, "/certificates/*")
-                .hasAuthority(Permission.CERTIFICATES_UPDATE.getPermission())
-                .antMatchers(HttpMethod.DELETE, "/certificates/*")
-                .hasAuthority(Permission.CERTIFICATES_DELETE.getPermission())
-                .antMatchers(HttpMethod.GET, "/tags/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/tags/*").hasAuthority(Permission.TAGS_CREATE.getPermission())
-                .antMatchers(HttpMethod.DELETE, "/tags/*").hasAuthority(Permission.TAGS_DELETE.getPermission())
-                .antMatchers(HttpMethod.GET, "/users").hasAuthority(Permission.USERS_READ.getPermission())
-                .antMatchers(HttpMethod.GET, "/users/{id}").hasAuthority(Permission.USERS_READ.getPermission())
-                .antMatchers(HttpMethod.GET, "/users/{id}/orders")
-                .hasAuthority(Permission.ORDERS_READ.getPermission())
-                .antMatchers(HttpMethod.POST, "/users/{id}/orders")
-                .hasAuthority(Permission.ORDERS_CREATE.getPermission())
-                .antMatchers(HttpMethod.GET, "/orders/*").hasAuthority(Permission.ORDERS_READ.getPermission())
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/auth/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean

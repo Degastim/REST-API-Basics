@@ -1,19 +1,23 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.creator.UserDetailsConverter;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.user.User;
 import com.epam.esm.exception.ResourceNotFoundedException;
+import com.epam.esm.mapper.UserCredentialMapper;
 import com.epam.esm.mapper.UserDTOMapper;
 import com.epam.esm.service.UserService;
 import com.epam.esm.validator.PaginationContainerValidator;
+import com.epam.esm.validator.UserCredentialValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +34,21 @@ class UserServiceImplTest {
     private UserDTOMapper userDTOMapper;
     @Mock
     private PaginationContainerValidator paginationContainerValidator;
+    @Mock
+    private UserDetailsConverter userDetailsConverter;
+    @Mock
+    private UserCredentialMapper userCredentialMapper;
+    @Mock
+    private UserCredentialValidator userCredentialValidator;
+    @Mock
+    private PasswordEncoder encoder;
     private UserService userService;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
+        userService = new UserServiceImpl(userDao, userDTOMapper, userCredentialMapper, paginationContainerValidator,
+                userCredentialValidator, userDetailsConverter, encoder);
     }
 
     @Test
