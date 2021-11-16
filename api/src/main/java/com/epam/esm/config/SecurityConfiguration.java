@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .hasAuthority(Permission.CERTIFICATES_UPDATE.getPermission())
                 .antMatchers(HttpMethod.DELETE, "/certificates/*")
                 .hasAuthority(Permission.CERTIFICATES_DELETE.getPermission())
-                .antMatchers(HttpMethod.GET, "/tags/*").hasAuthority(Permission.TAGS_READ.getPermission())
+                .antMatchers(HttpMethod.GET, "/tags/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/tags/*").hasAuthority(Permission.TAGS_CREATE.getPermission())
                 .antMatchers(HttpMethod.DELETE, "/tags/*").hasAuthority(Permission.TAGS_DELETE.getPermission())
                 .antMatchers(HttpMethod.GET, "/users").hasAuthority(Permission.USERS_READ.getPermission())

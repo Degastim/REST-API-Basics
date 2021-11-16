@@ -40,8 +40,9 @@ public class JwtTokenProvider {
      *
      * @author Yauheni Tstiov
      */
-    public String createToken(String username, String role) {
+    public String createToken(String username, String role, long id) {
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("id", id);
         claims.put("role", role);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityMilliSeconds);
@@ -52,6 +53,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
     /**
      * Validate JWT by expiration.
      *
@@ -65,10 +67,23 @@ public class JwtTokenProvider {
             throw new JwtAuthenticationException("Jwt is not valid", ExceptionCauseCode.UNKNOWN);
         }
     }
+
+    /**
+     * Return user id from jwt in request
+     *
+     * @param token
+     * @ user id from token
+     */
+    public long getUserId(String token) {
+        Number number = (Number) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("id");
+        return number.longValue();
+    }
+
     /**
      * Create JWT by username and role.
      *
-     * @author Yauheni Tstiov
+     * @param token contains token for get authentication
+     * @return Authentication
      */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
@@ -83,6 +98,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader(authorizationHeader);
     }
+
     private String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }

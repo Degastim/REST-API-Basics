@@ -45,7 +45,7 @@ public class AuthenticationController {
     public String login(@RequestBody UserCredential credential) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credential.getName(), credential.getPassword()));
         UserDTO userDTO = userService.findByName(credential.getName());
-        return jwtTokenProvider.createToken(userDTO.getName(), userDTO.getRole().toString());
+        return jwtTokenProvider.createToken(userDTO.getName(), userDTO.getRole().toString(), userDTO.getId());
     }
 
     /**

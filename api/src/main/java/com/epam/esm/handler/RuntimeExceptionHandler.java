@@ -97,6 +97,21 @@ public class RuntimeExceptionHandler {
     }
 
     /**
+     * Handle ResourceNotFoundedException.
+     *
+     * @param e the exception that handler handle.
+     * @return the response entity
+     */
+    @ExceptionHandler(AccessException.class)
+    public final ResponseEntity<ResponseExceptionEntity> handleAccessException(AccessException e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = e.getLocalizedMessage();
+        int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, e.getCodeExceptionCause());
+        ResponseExceptionEntity exceptionResponseBody = new ResponseExceptionEntity(message, errorCode);
+        return ResponseEntity.status(httpStatus).body(exceptionResponseBody);
+    }
+
+    /**
      * Handle MethodArgumentTypeMismatchException.
      *
      * @return the response entity
@@ -174,7 +189,6 @@ public class RuntimeExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ResponseExceptionEntity> handleException(Exception e) {
-        System.out.println(e.getClass());
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         String message = e.getMessage();
         int errorCode = ErrorCodeCounter.countErrorCode(httpStatus, ExceptionCauseCode.UNKNOWN);

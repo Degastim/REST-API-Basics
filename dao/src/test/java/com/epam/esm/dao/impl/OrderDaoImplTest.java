@@ -35,13 +35,6 @@ class OrderDaoImplTest {
     }
 
     @Test
-    void findById() {
-        long id = 1;
-        Optional<Order> orderOptional = orderDao.findById(id);
-        assertDoesNotThrow(orderOptional::get);
-    }
-
-    @Test
     void add() {
         Order order = new Order();
         order.setGiftCertificate(new GiftCertificate(1));

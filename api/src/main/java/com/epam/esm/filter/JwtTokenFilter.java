@@ -4,7 +4,9 @@ import com.epam.esm.entity.ResponseExceptionEntity;
 import com.epam.esm.exception.JwtAuthenticationException;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.security.JwtTokenProvider;
+import com.epam.esm.util.ErrorCodeCounter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -51,8 +53,9 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     private void exceptionHandling(HttpServletResponse servletResponse, String message, int codeExceptionCause) throws IOException {
         SecurityContextHolder.clearContext();
-        servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        servletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         servletResponse.setContentType("application/json");
+        codeExceptionCause = ErrorCodeCounter.countErrorCode(HttpStatus.BAD_REQUEST, codeExceptionCause);
         ResponseExceptionEntity entity = new ResponseExceptionEntity(message, codeExceptionCause);
         ObjectMapper objectMapper = new ObjectMapper();
         servletResponse.getOutputStream().print(objectMapper.writeValueAsString(entity));

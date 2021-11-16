@@ -59,13 +59,6 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void findById() {
-        long orderId = 3;
-        Mockito.when(orderDao.findById(orderId)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundedException.class, () -> service.findById(orderId));
-    }
-
-    @Test
     void addOrder() {
         long id = 3;
         OrderDTO orderDTO = new OrderDTO();

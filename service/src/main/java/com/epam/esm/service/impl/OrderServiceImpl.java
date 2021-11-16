@@ -47,8 +47,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO findById(long orderId) {
-        Order order = orderDao.findById(orderId).orElseThrow(
+    public OrderDTO findById(long userId, long orderId) {
+        Order order = orderDao.findByUserIdAndOrderId(userId, orderId).orElseThrow(
                 () -> new ResourceNotFoundedException("Order with this ID not found", ExceptionCauseCode.ORDER));
         return orderDTOMapper.toDTO(order);
     }
