@@ -2,7 +2,11 @@ package com.epam.esm.handler;
 
 import com.epam.esm.entity.ResponseExceptionEntity;
 import com.epam.esm.error.ExceptionCauseCode;
-import com.epam.esm.exception.*;
+import com.epam.esm.exception.InvalidFieldValueException;
+import com.epam.esm.exception.InvalidURLParameterException;
+import com.epam.esm.exception.ResourceAlreadyExistException;
+import com.epam.esm.exception.ResourceNotAddedException;
+import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.util.ErrorCodeCounter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

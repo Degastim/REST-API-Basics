@@ -1,7 +1,8 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.creator.UserDetailsConverter;
+import com.epam.esm.converter.UserDetailsConverter;
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.dao.UserRoleDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.user.User;
@@ -42,13 +43,15 @@ class UserServiceImplTest {
     private UserCredentialValidator userCredentialValidator;
     @Mock
     private PasswordEncoder encoder;
+    @Mock
+    private UserRoleDao userRoleDao;
     private UserService userService;
 
     @BeforeAll
     void setUp() {
         MockitoAnnotations.openMocks(this);
         userService = new UserServiceImpl(userDao, userDTOMapper, userCredentialMapper, paginationContainerValidator,
-                userCredentialValidator, userDetailsConverter, encoder);
+                userCredentialValidator, userDetailsConverter, encoder, userRoleDao);
     }
 
     @Test

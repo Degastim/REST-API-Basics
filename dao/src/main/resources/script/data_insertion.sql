@@ -44,12 +44,46 @@ VALUES (4, 3, 4);
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id, tag_id)
 VALUES (5, 4, 4);
 
-INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,role)
-VALUES (1, 'Zhenya', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',1,'ADMIN');
-INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,role)
-VALUES (2, 'Dima', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',1,'USER');
-INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,role)
-VALUES (3, 'Brendom', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',0,'ADMIN');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('tags:read','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('tags:create','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('tags:delete','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('certificates:read','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('certificates:create','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('certificates:update','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('certificates:delete','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('users:read','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('users:create','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('users:read:all','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('orders:read','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('orders:create','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO permissions(permission_name,create_date,last_update_date, operation) VALUES ('orders:read:all','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+
+INSERT INTO user_roles(user_role_name,create_date,last_update_date, operation) VALUES ('USER','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+INSERT INTO user_roles(user_role_name,create_date,last_update_date, operation) VALUES ('ADMIN','2013-09-13T12:12:12','2013-09-13T12:12:12','INSERT');
+
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (1,8);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (1,11);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (1,12);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,1);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,2);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,3);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,4);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,5);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,6);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,7);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,8);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,9);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,10);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,11);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,12);
+INSERT INTO user_roles_permissions(user_role_id,permission_id) VALUES (2,13);
+
+INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,user_role)
+VALUES (1, 'Zhenya', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',1,2);
+INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,user_role)
+VALUES (2, 'Dima', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',1,1);
+INSERT INTO users (user_id, user_name, operation, last_update_date, create_date,password,is_active,user_role)
+VALUES (3, 'Brendom', 'INSERT', '2013-09-13T12:12:12', '2013-09-13T12:12:12','$2a$12$oeaNyfec/kLW44D.HNW.i.7JNcXBWyB5lKVP8ycT5NXcQB6CpCOWO',0,2);
 
 INSERT INTO orders (price, create_date, user_id, order_gift_certificate_id, operation, last_update_date)
 VALUES (123, '2022-10-25T11:11:11', 1, 1, 'INSERT', '2013-09-13T12:12:12');

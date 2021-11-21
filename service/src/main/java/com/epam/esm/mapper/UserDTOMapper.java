@@ -4,6 +4,7 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.user.User;
+import com.epam.esm.entity.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ public class UserDTOMapper implements DTOMapper<User, UserDTO> {
         if (orderList != null) {
             orderDTOList = orderList.stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
         }
-        return new UserDTO(user.getId(), user.getName(), user.getRole(), orderDTOList);
+        return new UserDTO(user.getId(), user.getName(), user.getUserRole().getUserRoleName(), orderDTOList);
     }
 
     @Override
@@ -41,6 +42,6 @@ public class UserDTOMapper implements DTOMapper<User, UserDTO> {
         if (orderDTOList != null) {
             orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
         }
-        return new User(userDTO.getId(), userDTO.getName(), userDTO.getRole(), orderList);
+        return new User(userDTO.getId(), userDTO.getName(), new UserRole(userDTO.getName()), orderList);
     }
 }

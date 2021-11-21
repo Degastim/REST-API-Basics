@@ -2,7 +2,11 @@ package com.epam.esm.security;
 
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.JwtAuthenticationException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,10 +44,10 @@ public class JwtTokenProvider {
      *
      * @author Yauheni Tstiov
      */
-    public String createToken(String username, String role, long id) {
+    public String createToken(String username, String userRoleName, long id) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("id", id);
-        claims.put("role", role);
+        claims.put("role", userRoleName);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityMilliSeconds);
         return Jwts.builder()
@@ -87,7 +91,7 @@ public class JwtTokenProvider {
      */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     /**

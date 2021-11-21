@@ -1,7 +1,8 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.creator.UserDetailsConverter;
+import com.epam.esm.converter.UserDetailsConverter;
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.dao.UserRoleDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.dto.UserCredential;
 import com.epam.esm.dto.UserDTO;
@@ -34,11 +35,13 @@ public class UserServiceImpl implements UserService {
     private final UserCredentialMapper userCredentialMapper;
     private final UserCredentialValidator userCredentialValidator;
     private final PasswordEncoder encoder;
+    private final UserRoleDao userRoleDao;
+    private final String DEFAULT_USER_ROLE = "USER";
 
     @Autowired
     public UserServiceImpl(UserDao userDao, UserDTOMapper userDTOMapper, UserCredentialMapper userCredentialMapper,
                            PaginationContainerValidator paginationContainerValidator, UserCredentialValidator userCredentialValidator,
-                           UserDetailsConverter userDetailsConverter, PasswordEncoder encoder) {
+                           UserDetailsConverter userDetailsConverter, PasswordEncoder encoder, UserRoleDao userRoleDao) {
         this.userDao = userDao;
         this.userDTOMapper = userDTOMapper;
         this.paginationContainerValidator = paginationContainerValidator;
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService {
         this.userCredentialMapper = userCredentialMapper;
         this.userCredentialValidator = userCredentialValidator;
         this.encoder = encoder;
+        this.userRoleDao = userRoleDao;
     }
 
     @Override
@@ -75,7 +79,9 @@ public class UserServiceImpl implements UserService {
         userCredentialValidator.isUserValid(userCredential);
         User user = userCredentialMapper.toEntity(userCredential);
         user.setOrderList(new ArrayList<>());
-        user.setRole(UserRole.USER);
+        UserRole userRole = userRoleDao.findByUserRoleName(DEFAULT_USER_ROLE)
+                .orElseThrow(() -> new ResourceNotFoundedException("No user role", ExceptionCauseCode.USER_ROLE));
+        user.setUserRole(userRole);
         user.setActive(true);
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);

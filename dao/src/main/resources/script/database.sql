@@ -30,19 +30,48 @@ CREATE TABLE gift_certificates_tags
     FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE,
     PRIMARY KEY (gift_certificate_tag_id)
 );
-
+CREATE TABLE user_roles
+(
+    user_role_id   BIGINT      NOT NULL AUTO_INCREMENT,
+    user_role_name VARCHAR(50) NOT NULL,
+    create_date           datetime       NOT NULL,
+    last_update_date      datetime       NOT NULL,
+    operation             VARCHAR(10)    NOT NULL,
+    PRIMARY KEY (user_role_id)
+);
 CREATE TABLE users
 (
-    user_id          bigint       NOT NULL AUTO_INCREMENT,
-    user_name        VARCHAR(40)  NOT NULL,
-    create_date      datetime     NOT NULL,
-    last_update_date datetime     NOT NULL,
-    operation        VARCHAR(10)  NOT NULL,
-    password         VARCHAR(60)  NOT NULL,
-    is_active         bit          NOT NULL,
-    role             varchar(20) NOT NULL,
+    user_id          bigint      NOT NULL AUTO_INCREMENT,
+    user_name        VARCHAR(40) NOT NULL,
+    create_date      datetime    NOT NULL,
+    last_update_date datetime    NOT NULL,
+    operation        VARCHAR(10) NOT NULL,
+    password         VARCHAR(60) NOT NULL,
+    is_active        bit         NOT NULL,
+    user_role        BIGINT      NOT NULL,
+    FOREIGN KEY (user_role) REFERENCES user_roles(user_role_id),
     PRIMARY KEY (user_id)
 );
+CREATE TABLE permissions
+(
+    permission_id   bigint      NOT NULL AUTO_INCREMENT,
+    permission_name VARCHAR(50) NOT NULL,
+    create_date           datetime       NOT NULL,
+    last_update_date      datetime       NOT NULL,
+    operation             VARCHAR(10)    NOT NULL,
+    PRIMARY KEY (permission_id)
+);
+
+CREATE TABLE user_roles_permissions
+(
+    user_role_permission_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_role_id            BIGINT NOT NULL,
+    permission_id           BIGINT NOT NULL,
+    FOREIGN KEY (user_role_id) REFERENCES user_roles (user_role_id),
+    FOREIGN KEY (permission_id) REFERENCES permissions (permission_id),
+    PRIMARY KEY (user_role_permission_id)
+);
+
 
 CREATE TABLE orders
 (

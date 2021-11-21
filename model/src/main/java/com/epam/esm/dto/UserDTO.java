@@ -1,7 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.user.UserRole;
-
 import java.util.List;
 
 /**
@@ -11,22 +9,22 @@ import java.util.List;
  */
 public class UserDTO extends AbstractDTO<UserDTO> {
     private String name;
-    private UserRole role;
+    private String userRoleName;
     private List<OrderDTO> orderList;
 
-    public UserDTO(long id, String name, UserRole role, List<OrderDTO> orderList) {
+    public UserDTO(long id, String name, String userRoleName, List<OrderDTO> orderList) {
         this.id = id;
         this.name = name;
-        this.role = role;
+        this.userRoleName = userRoleName;
         this.orderList = orderList;
     }
 
-    public UserRole getRole() {
-        return role;
+    public String getUserRoleName() {
+        return userRoleName;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 
     public String getName() {

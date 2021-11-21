@@ -1,32 +1,58 @@
 package com.epam.esm.entity.user;
 
+import com.epam.esm.entity.AbstractEntity;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.Set;
+
 /**
- * Permissions of users
+ * Permission of user role
  *
  * @author Yauheni Tsitou
  */
-public enum Permission {
-    TAGS_READ("tags:read"),
-    TAGS_CREATE("tags:create"),
-    TAGS_DELETE("tags:delete"),
-    CERTIFICATES_READ("certificates:read"),
-    CERTIFICATES_CREATE("certificates:create"),
-    CERTIFICATES_UPDATE("certificates:update"),
-    CERTIFICATES_DELETE("certificates:delete"),
-    USERS_READ("users:read"),
-    USERS_CREATE("users:create"),
-    USERS_READ_ALL("users:read:all"),
-    ORDERS_READ("orders:read"),
-    ORDERS_CREATE("orders:create"),
-    ORDERS_READ_ALL("orders:read:all");
+@Entity
+@Table(name = "permissions")
+@AttributeOverride(name = "id", column = @Column(name = "permission_id"))
+public class Permission extends AbstractEntity {
+    @Column(name = "permission_name")
+    private String permissionName;
+    @ManyToMany(mappedBy = "permissions", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<UserRole> userRoles;
 
-    private final String permission;
-
-    Permission(String permission) {
-        this.permission = permission;
+    public String getPermissionName() {
+        return permissionName;
     }
 
-    public String getPermission() {
-        return permission;
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
+    }
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o)) {
+            return false;
+        }
+        Permission that = (Permission) o;
+        return permissionName != null ? permissionName.equals(that.permissionName) : that.permissionName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result += 2 * (permissionName != null ? permissionName.hashCode() : 0);
+        return result;
     }
 }

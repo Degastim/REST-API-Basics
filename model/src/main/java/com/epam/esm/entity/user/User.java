@@ -4,7 +4,15 @@ import com.epam.esm.audit.AuditListener;
 import com.epam.esm.entity.AbstractEntity;
 import com.epam.esm.entity.Order;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -21,13 +29,13 @@ public class User extends AbstractEntity {
     private String name;
     @Column
     private String password;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private UserRole role;
     @Column(name = "is_active")
     private boolean isActive;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orderList;
+    @ManyToOne
+    @JoinColumn(name = "user_role")
+    private UserRole userRole;
 
     public User() {
     }
@@ -36,10 +44,10 @@ public class User extends AbstractEntity {
         this.id = id;
     }
 
-    public User(long id, String name, UserRole role, List<Order> orderList) {
+    public User(long id, String name, UserRole userRole, List<Order> orderList) {
         this.id = id;
         this.name = name;
-        this.role = role;
+        this.userRole = userRole;
         this.orderList = orderList;
     }
 
@@ -73,20 +81,20 @@ public class User extends AbstractEntity {
         this.password = password;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     @Override
