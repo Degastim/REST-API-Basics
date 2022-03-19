@@ -3,7 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dao.constant.sql.UserSql;
 import com.epam.esm.dto.PaginationContainer;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -35,5 +35,25 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findById(long id) {
         User user = entityManager.find(User.class, id);
         return Optional.ofNullable(user);
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        List<User> userList = entityManager.createNativeQuery(UserSql.FIND_NAME, User.class)
+                .setParameter(1, name).getResultList();
+        return returnUser(userList);
+    }
+
+    @Override
+    public void save(User user) {
+        entityManager.persist(user);
+    }
+
+    private Optional<User> returnUser(List<User> userList) {
+        if (userList.size() != 0) {
+            return Optional.of(userList.get(0));
+        } else {
+            return Optional.empty();
+        }
     }
 }

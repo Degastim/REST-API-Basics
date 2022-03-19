@@ -24,10 +24,11 @@ public interface OrderDao {
     /**
      * Finds the order by id.
      *
+     * @param userId
      * @param orderId of the object to be found.
      * @return optional which contains the found order.
      */
-    Optional<Order> findById(long orderId);
+    Optional<Order> findByUserIdAndOrderId(long userId, long orderId);
 
     /**
      * Adds gift certificate to the database and add id to the certificate.

@@ -4,7 +4,7 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

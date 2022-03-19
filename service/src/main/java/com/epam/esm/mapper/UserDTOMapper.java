@@ -3,7 +3,8 @@ package com.epam.esm.mapper;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
+import com.epam.esm.entity.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +27,21 @@ public class UserDTOMapper implements DTOMapper<User, UserDTO> {
 
     @Override
     public UserDTO toDTO(User user) {
-        List<OrderDTO> orderDTOList = user.getOrderList().stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
-        return new UserDTO(user.getId(), user.getName(), orderDTOList);
+        List<Order> orderList = user.getOrderList();
+        List<OrderDTO> orderDTOList = null;
+        if (orderList != null) {
+            orderDTOList = orderList.stream().map(orderDTOMapper::toDTO).collect(Collectors.toList());
+        }
+        return new UserDTO(user.getId(), user.getName(), user.getUserRole().getUserRoleName(), orderDTOList);
     }
 
     @Override
     public User toEntity(UserDTO userDTO) {
-        List<Order> orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
-        return new User(userDTO.getId(), userDTO.getName(), orderList);
+        List<OrderDTO> orderDTOList = userDTO.getOrderList();
+        List<Order> orderList = null;
+        if (orderDTOList != null) {
+            orderList = userDTO.getOrderList().stream().map(orderDTOMapper::toEntity).collect(Collectors.toList());
+        }
+        return new User(userDTO.getId(), userDTO.getName(), new UserRole(userDTO.getName()), orderList);
     }
 }

@@ -1,8 +1,15 @@
 package com.epam.esm.entity;
 
 import com.epam.esm.audit.AuditListener;
+import com.epam.esm.entity.user.User;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

@@ -6,7 +6,7 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.ResourceNotFoundedException;
 import com.epam.esm.mapper.OrderDTOMapper;
@@ -47,8 +47,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO findById(long orderId) {
-        Order order = orderDao.findById(orderId).orElseThrow(
+    public OrderDTO findById(long userId, long orderId) {
+        Order order = orderDao.findByUserIdAndOrderId(userId, orderId).orElseThrow(
                 () -> new ResourceNotFoundedException("Order with this ID not found", ExceptionCauseCode.ORDER));
         return orderDTOMapper.toDTO(order);
     }

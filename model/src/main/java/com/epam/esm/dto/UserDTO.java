@@ -9,12 +9,22 @@ import java.util.List;
  */
 public class UserDTO extends AbstractDTO<UserDTO> {
     private String name;
+    private String userRoleName;
     private List<OrderDTO> orderList;
 
-    public UserDTO(long id, String name, List<OrderDTO> orderList) {
+    public UserDTO(long id, String name, String userRoleName, List<OrderDTO> orderList) {
         this.id = id;
         this.name = name;
+        this.userRoleName = userRoleName;
         this.orderList = orderList;
+    }
+
+    public String getUserRoleName() {
+        return userRoleName;
+    }
+
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 
     public String getName() {

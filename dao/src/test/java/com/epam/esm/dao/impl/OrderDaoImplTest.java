@@ -5,7 +5,7 @@ import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dto.PaginationContainer;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,6 @@ class OrderDaoImplTest {
         int expected = 2;
         List<Order> orders = orderDao.findAllByUserId(userId, new PaginationContainer(0, 0));
         assertSame(expected, orders.size());
-    }
-
-    @Test
-    void findById() {
-        long id = 1;
-        Optional<Order> orderOptional = orderDao.findById(id);
-        assertDoesNotThrow(orderOptional::get);
     }
 
     @Test

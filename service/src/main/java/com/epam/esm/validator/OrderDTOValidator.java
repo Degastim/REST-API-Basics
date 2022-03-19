@@ -4,7 +4,7 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 import com.epam.esm.error.ExceptionCauseCode;
 import com.epam.esm.exception.InvalidFieldValueException;
 import com.epam.esm.exception.ResourceNotFoundedException;

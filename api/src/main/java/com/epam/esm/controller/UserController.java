@@ -6,11 +6,13 @@ import com.epam.esm.hateoas.UserDTOHateoas;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class UserController {
      * @param paginationContainer contains the desired page and the number of elements per page.
      * @return a list of users by HATEOAS.
      */
+    @PreAuthorize("hasAuthority('users:read:all')")
     @GetMapping
     public CollectionModel<UserDTO> findUserList(PaginationContainer paginationContainer) {
         List<UserDTO> userList = userService.finaAll(paginationContainer);
@@ -48,8 +51,9 @@ public class UserController {
      * @param id contains user id for search
      * @return found user by HATEOAS.
      */
+    @PreAuthorize("hasAuthority('users:read:all') or (hasAuthority('users:read') and {@userAccessValidator.isUserValid(#id,#request)}) ")
     @GetMapping("/{id}")
-    public UserDTO findUser(@PathVariable long id) {
+    public UserDTO findUser(HttpServletRequest request,@PathVariable long id) {
         UserDTO result = userService.findById(id);
         userDTOHateoas.build(result);
         return result;

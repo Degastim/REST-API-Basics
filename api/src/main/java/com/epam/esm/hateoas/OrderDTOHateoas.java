@@ -23,12 +23,13 @@ public class OrderDTOHateoas {
     /**
      * Converts the orderDTO according to the rules of HATEOAS.
      *
+     * @param userId   contains user id.
      * @param orderDTO contains an orderDTO for conversion.
      */
-    public void build(OrderDTO orderDTO) {
+    public void build(long userId, OrderDTO orderDTO) {
         long orderDTOId = orderDTO.getId();
         long giftCertificateId = orderDTO.getGiftCertificateId();
-        Link self = linkTo(methodOn(OrderController.class).findByOrderId(orderDTOId)).withSelfRel();
+        Link self = linkTo(methodOn(OrderController.class).findByOrderId(null,userId, orderDTOId)).withSelfRel();
         Link giftCertificateLink = linkTo(methodOn(GiftCertificateController.class).findGiftCertificateById(giftCertificateId))
                 .withRel("gift_certificate");
         orderDTO.add(self, giftCertificateLink);
@@ -41,9 +42,9 @@ public class OrderDTOHateoas {
      */
     public CollectionModel<OrderDTO> build(List<OrderDTO> orderDTOList, PaginationContainer paginationContainer, long userId) {
         for (OrderDTO orderDTO : orderDTOList) {
-            build(orderDTO);
+            build(userId, orderDTO);
         }
-        Link self = linkTo(methodOn(OrderController.class).findAllByUserId(userId, paginationContainer)).withSelfRel();
+        Link self = linkTo(methodOn(OrderController.class).findAllByUserId(null,userId, paginationContainer)).withSelfRel();
         Link giftCertificateLink = linkTo(methodOn(GiftCertificateController.class).findGiftCertificates(null, null))
                 .withRel("gift_certificate_list");
         return CollectionModel.of(orderDTOList, self, giftCertificateLink);

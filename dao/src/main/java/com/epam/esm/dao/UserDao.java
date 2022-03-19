@@ -1,7 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dto.PaginationContainer;
-import com.epam.esm.entity.User;
+import com.epam.esm.entity.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +21,18 @@ public interface UserDao {
      * @return optional which contains the found user.
      */
     Optional<User> findById(long id);
+
+    /**
+     * Finds user by name.
+     *
+     * @return optional which contains the found user.
+     */
+    Optional<User> findByName(String name);
+
+    /**
+     * Save user.
+     *
+     * @param user for save.
+     */
+    void save(User user);
 }

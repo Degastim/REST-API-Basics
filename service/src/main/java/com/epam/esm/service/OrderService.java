@@ -23,10 +23,11 @@ public interface OrderService {
     /**
      * Looking for all orders by its id.
      *
+     * @param userId
      * @param orderId order id to find.
      * @return found orderDTO.
      */
-    OrderDTO findById(long orderId);
+    OrderDTO findById(long userId, long orderId);
 
     /**
      * Adds an order.
